@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.dummy.DummyContent;
+import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
@@ -81,10 +82,10 @@ public class MainActivity extends AppCompatActivity
 
     }
     private void init(){
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(this,
+        mAdapter = new ArrayAdapter<DummyItem>(this,
                 R.layout.finditem_list_item, DummyContent.ITEMS) {
             @Override
-            public DummyContent.DummyItem getItem(int position) {
+            public DummyItem getItem(int position) {
                 return super.getItem(position);
             }
 
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     view = convertView;
                 }
-                DummyContent.DummyItem mDummyItem = getItem(position);
+                DummyItem mDummyItem = getItem(position);
                 ImageView img = (ImageView) view.findViewById(R.id.image);
                 TextView title = (TextView) view.findViewById(R.id.title);
                 TextView type = (TextView) view.findViewById(R.id.type);
@@ -318,6 +319,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(this, InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyContent.DummyItem>) mAdapter).getItem(position))));
+        startActivity(new Intent(this, InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyItem>) mAdapter).getItem(position))));
     }
 }

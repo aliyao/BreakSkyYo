@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.adapter.LinearLayoutAddViewAdapter;
 import com.yao.breakskyyo.dummy.DownloadInfoItem;
 import com.yao.breakskyyo.dummy.DummyContent;
+import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
 import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InfoActivityScrollingActivity extends AppCompatActivity {
-    DummyContent.DummyItem mDummyItem;
+    DummyItem mDummyItem;
     InfoVideos mInfoVideos;
     ImageView showImg;
     TextView tag;
@@ -70,7 +71,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             finish();
             return;
         }
-        mDummyItem= JSON.parseObject(jsonFindItemInfo,DummyContent.DummyItem.class);
+        mDummyItem= JSON.parseObject(jsonFindItemInfo,DummyItem.class);
         if(mDummyItem==null){
             finish();
             return;
