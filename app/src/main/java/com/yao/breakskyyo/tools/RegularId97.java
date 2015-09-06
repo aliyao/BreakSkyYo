@@ -25,10 +25,10 @@ import java.util.regex.Pattern;
  * 修改备注：
  */
 public class RegularId97 {
-    static final String id97Url = "http://www.id97.com";
+    static final String id97Url = "http://www.id97.com/videos/play";
     static final String urlBaiduPan = "http://pan.baidu.com";
     static String regularTable = "【导演】([\\s\\S]*?)<div class=\"am-g\">";
-    static String regularZaixianUrl ="<li class=\"list-group-item\"><a target=\"_blank\" href=\""+id97Url+"(.*?)\\\">";
+    static String regularZaixianUrl ="videos/play([\\s\\S]*?)\"";
     static String regularBaidupanUrl = urlBaiduPan + "(.*?)\">.*?</a>";
     static String regularBaidupanName = urlBaiduPan + ".*?\">(.*?)</a>";
     static String regularBaidupanUrlMima = "密码：(.*?)</";
@@ -45,6 +45,7 @@ public class RegularId97 {
             itemList=getObjByRegular(htmlStr, regular[item]);
            // KJLoger.debug("yoyo:--"+ regular[item]+"--" + itemStr);
             if(itemList!=null){
+                KJLoger.debug("yoyo:--"+ regular[item]+"--" + itemList.get(0));
                 switch (item){
                     case 0:
                         mInfoVideos.setMovie_jvqing("【导演】"+itemList.get(0).replace("<br/>",""));
@@ -53,7 +54,7 @@ public class RegularId97 {
                         mInfoVideos.setMovie_payZaixian(id97Url + itemList.get(0));
                         break;
                     case 2:
-                        mInfoVideos.setBaiduPanUrl(id97Url + itemList.get(0));
+                        mInfoVideos.setBaiduPanUrl(urlBaiduPan + itemList.get(0));
                         break;
                     case 3:
                         mInfoVideos.setBaiduPanName(itemList.get(0));
