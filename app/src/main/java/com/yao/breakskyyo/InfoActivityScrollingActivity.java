@@ -38,7 +38,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
     LinearLayoutAddViewAdapter  adapter;
     LinearLayout resource_download_list;
     TextView plot_introduction;
-   // Button play_bt;
+    Button play_bt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         tag=(TextView)findViewById(R.id.tag);
         resource_download_list=(LinearLayout)findViewById(R.id.resource_download_list);
         plot_introduction=(TextView)findViewById(R.id.plot_introduction);
-        //play_bt=(Button)findViewById(R.id.play_bt);
+        play_bt=(Button)findViewById(R.id.play_bt);
         adapter = new LinearLayoutAddViewAdapter(InfoActivityScrollingActivity.this, resource_download_list.getId());
         String jsonFindItemInfo=getIntent().getStringExtra("jsonFindItemInfo");
         if(TextUtils.isEmpty(jsonFindItemInfo)){
@@ -130,6 +130,11 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         adapter.clearmdata();
         adapter.addmdata(downloadInfoItemList);
         adapter.addCommentView();
+        if(TextUtils.isEmpty(mInfoVideos.getMovie_payZaixian())){
+            play_bt.setVisibility(View.GONE);
+        }else{
+            play_bt.setVisibility(View.VISIBLE);
+        }
 
     }
     public void onClickDo(View view){

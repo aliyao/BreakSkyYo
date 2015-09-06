@@ -11,6 +11,7 @@ package com.yao.breakskyyo.adapter;
  */
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -62,7 +63,12 @@ public class LinearLayoutAddViewAdapter {
             TextView title = (TextView) convertView.findViewById(R.id.title);
             TextView mima = (TextView) convertView.findViewById(R.id.mima);
             title.setText(mdata.get(i).getName());
-            mima.setText(mdata.get(i).getMima());
+            if(!TextUtils.isEmpty(mdata.get(i).getMima())){
+                mima.setText("密码--"+mdata.get(i).getMima());
+            }else{
+                mima.setText("");
+            }
+
             final int itemNum =i;
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override

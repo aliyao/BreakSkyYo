@@ -27,10 +27,7 @@ import java.util.regex.Pattern;
 public class RegularId97 {
     static final String id97Url = "http://www.id97.com";
     static final String urlBaiduPan = "http://pan.baidu.com";
-    static String regularTable = "</div>\n" +
-            "\n([\\s\\S]*?)\n" +
-            "\n" +
-            "<div class=\"am-g\">";
+    static String regularTable = "【导演】([\\s\\S]*?)<div class=\"am-g\">";
     static String regularZaixianUrl ="<li class=\"list-group-item\"><a target=\"_blank\" href=\""+id97Url+"(.*?)\\\">";
     static String regularBaidupanUrl = urlBaiduPan + "(.*?)\">.*?</a>";
     static String regularBaidupanName = urlBaiduPan + ".*?\">(.*?)</a>";
@@ -50,7 +47,7 @@ public class RegularId97 {
             if(itemList!=null){
                 switch (item){
                     case 0:
-                        mInfoVideos.setMovie_jvqing(itemList.get(0));
+                        mInfoVideos.setMovie_jvqing("【导演】"+itemList.get(0).replace("<br/>",""));
                         break;
                     case 1:
                         mInfoVideos.setMovie_payZaixian(id97Url + itemList.get(0));

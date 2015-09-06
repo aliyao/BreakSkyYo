@@ -43,6 +43,7 @@
                 android:layout_below="@+id/plot_introduction"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="16dp"
+                android:textSize="16sp"
                 android:text="资源下载：" />
           <LinearLayout
               android:id="@+id/resource_download_list"
