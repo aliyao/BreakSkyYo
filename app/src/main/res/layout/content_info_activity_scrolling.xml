@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/play_bt"
                 android:layout_marginTop="16dp"
-                android:text="more revealing as the couples begin to open up." />
+                android:text="" />
 
             <TextView
                 android:id="@+id/resource_download"

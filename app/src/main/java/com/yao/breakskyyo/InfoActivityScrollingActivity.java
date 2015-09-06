@@ -63,6 +63,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         resource_download_list=(LinearLayout)findViewById(R.id.resource_download_list);
         plot_introduction=(TextView)findViewById(R.id.plot_introduction);
         play_bt=(Button)findViewById(R.id.play_bt);
+        play_bt.setVisibility(View.GONE);
         adapter = new LinearLayoutAddViewAdapter(InfoActivityScrollingActivity.this, resource_download_list.getId());
         String jsonFindItemInfo=getIntent().getStringExtra("jsonFindItemInfo");
         if(TextUtils.isEmpty(jsonFindItemInfo)){
