@@ -2,6 +2,7 @@ package com.yao.breakskyyo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,11 +63,25 @@ public class HelloActivity extends AppCompatActivity {
         findViewById(R.id.dummy_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HelloActivity.this, MainActivity.class));
-                finish();
+                toMainActivity();
             }
         });
+        mainHandle.sendEmptyMessageDelayed(1,3000);
     }
+
+    private void toMainActivity(){
+        startActivity(new Intent(HelloActivity.this, MainActivity.class));
+        finish();
+    }
+    Handler mainHandle=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what==1){
+                toMainActivity();
+            }
+        }
+    };
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
