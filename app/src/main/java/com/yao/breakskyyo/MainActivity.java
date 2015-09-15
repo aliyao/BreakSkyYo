@@ -24,8 +24,10 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.net.HttpUrl;
+import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 
 import org.kymjs.kjframe.KJHttp;
@@ -101,8 +103,8 @@ public class MainActivity extends AppCompatActivity
                 TextView tag = (TextView) view.findViewById(R.id.tag);
                 TextView score = (TextView) view.findViewById(R.id.score);
                 title.setText((String) mDummyItem.getContent());
-                tag.setText(removeNull(mDummyItem.getTag()));
-                score.setText(removeNull(mDummyItem.getScore())+"分");
+                tag.setText(StringDo.removeNull(mDummyItem.getTag()));
+                score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
                 List<String> typelist=mDummyItem.getType();
                 String typeStr="类型：";
                 if(typelist!=null&&typelist.size()>0){
@@ -116,8 +118,8 @@ public class MainActivity extends AppCompatActivity
                 }else{
                     typeStr="";
                 }
-                type.setText(removeNull(typeStr));
-                YOBitmap.getmKJBitmap().display(img,removeNull(mDummyItem.getImgUrl()));
+                type.setText(StringDo.removeNull(typeStr));
+                YOBitmap.getmKJBitmap().display(img,StringDo.removeNull(mDummyItem.getImgUrl()));
                 return view;
             }
         };
@@ -134,12 +136,7 @@ public class MainActivity extends AppCompatActivity
         httpGetFindList();
 
     }
-    public String removeNull(Object mObject){
-        if(mObject==null){
-            return "";
-        }
-        return (String)mObject;
-    }
+
 
     public void httpGetFindList() {
         KJHttp kjh = new KJHttp();
@@ -315,6 +312,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(this, InfoActivityScrollingActivity.class).putExtra("id", ((ArrayAdapter<DummyContent.DummyItem>) mAdapter).getItem(position).getId()).putExtra("url", (String)((ArrayAdapter<DummyContent.DummyItem>) mAdapter).getItem(position).getUrl()));
+        startActivity(new Intent(this, InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyContent.DummyItem>) mAdapter).getItem(position))));
     }
 }

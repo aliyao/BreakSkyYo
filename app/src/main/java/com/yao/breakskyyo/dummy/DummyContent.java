@@ -67,6 +67,9 @@ public class DummyContent {
             this.type = (List<String>) type;
             this.score = score;
         }
+        public DummyItem(){
+
+        }
 
         public String getId() {
             return id;
@@ -123,6 +126,7 @@ public class DummyContent {
         public void setScore(Object score) {
             this.score = score;
         }
+
 
         @Override
         public String toString() {
