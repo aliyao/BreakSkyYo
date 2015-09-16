@@ -67,7 +67,6 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             finish();
             return;
         }
-
         tag.setText(StringDo.removeNull(mDummyItem.getTag()));
         YOBitmap.getmKJBitmap().display(showImg, StringDo.removeNull(mDummyItem.getImgUrl()));
         httpGetItemInfo();

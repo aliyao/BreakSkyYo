@@ -56,6 +56,13 @@ public class DummyContent {
         public Object tag;
         public List<String> type;
         public Object score;
+        public Object movie_title;
+        public Object movie_year;
+        public Object pay_href;
+        public Object pay_tip;
+        public Object look_time;
+        public Object update_time;
+
 
 
         public DummyItem(String id, Object content, Object url, Object imgUrl, Object tag, Object type, Object score) {

@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_info_activity_scrolling" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yao.breakskyyo.InfoActivityScrollingActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.yao.breakskyyo.InfoActivityScrollingActivity"
+    tools:showIn="@layout/activity_info_activity_scrolling">
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin" android:text="@string/large_text" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/text_margin"
+        >
+
+        <ListView
+            android:id="@+id/gv_list_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/plot_introduction_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gv_list_info"
+            android:text="剧情介绍："
+            />
+
+        <TextView
+            android:id="@+id/plot_introduction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/plot_introduction_tip"
+             />
+        <TextView
+            android:id="@+id/film_screenshot_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/plot_introduction"
+            android:text="影片截图："
+            />
+        <ImageView
+            android:id="@+id/film_screenshot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/film_screenshot_tip"
+            />
+        <TextView
+            android:id="@+id/resource_download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/film_screenshot"
+            android:text="资源下载：" />
+        <ListView
+            android:id="@+id/gv_list_resource_download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/resource_download"
+            />
+
+    </RelativeLayout>
+
 
 </android.support.v4.widget.NestedScrollView>
