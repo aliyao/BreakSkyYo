@@ -40,7 +40,6 @@ public class DummyContent {
     private static void addItem(DummyItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
-
         KJLoger.debug("DummyItem:" + item.toString());
 
     }
@@ -56,12 +55,6 @@ public class DummyContent {
         public Object tag;
         public List<String> type;
         public Object score;
-        public Object movie_title;
-        public Object movie_year;
-        public Object pay_href;
-        public Object pay_tip;
-        public Object look_time;
-        public Object update_time;
 
 
 
