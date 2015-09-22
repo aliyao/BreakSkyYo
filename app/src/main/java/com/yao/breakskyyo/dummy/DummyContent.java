@@ -26,6 +26,15 @@ public class DummyContent {
     public static Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
     public static void setData(List<Map<String, Object>> listData) {
+        ITEM_MAP.clear();
+        for (int itemNum = 0; itemNum < listData.size(); itemNum++) {
+            addItem(new DummyItem((String) listData.get(itemNum).get("id"), listData.get(itemNum).get("title"), listData.get(itemNum).get("url"), listData.get(itemNum).get("imgurl"),
+                    listData.get(itemNum).get("tag"), listData.get(itemNum).get("type"), listData.get(itemNum).get("score")));
+
+        }
+    }
+
+    public static void addData(List<Map<String, Object>> listData) {
 
         /*addItem(new DummyItem("1", listData));
         addItem(new DummyItem("2", "Item 2"));
@@ -36,7 +45,6 @@ public class DummyContent {
 
         }
     }
-
     private static void addItem(DummyItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);

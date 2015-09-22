@@ -129,22 +129,24 @@ public class MainActivity extends AppCompatActivity
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                httpGetFindList();
+                httpGetFindList(1);
             }
         });
         mListView.setOnItemClickListener(this);
-        httpGetFindList();
+        httpGetFindList(1);
 
     }
 
 
-    public void httpGetFindList() {
+    public void httpGetFindList(final int page) {
         KJHttp kjh = new KJHttp();
         /*HttpParams params = new HttpParams();
         params.put("id", "1"); //传递参数
         params.put("name", "kymjs");*/
         //HttpCallback中有很多方法，可以根据需求选择实现
-        kjh.get(HttpUrl.FindList, new HttpCallBack() {
+
+        String url=HttpUrl.FindList+"page="+page;
+        kjh.get(url, new HttpCallBack() {
             @Override
             public void onPreStart() {
                 super.onPreStart();
@@ -227,8 +229,12 @@ public class MainActivity extends AppCompatActivity
                     result.add(map);
                 }
                 //adapter = new ArrayAdapter(this,R.layout.view,R.id.textview1,list1);
-                DummyContent.setData(result);
-                //mListView.addFooterView(view);
+                if(page==1){
+                    ((ArrayAdapter) mAdapter).clear();
+                    DummyContent.setData(result);
+                }else{
+                    DummyContent.addData(result);
+                }
                 ((ArrayAdapter) mAdapter).notifyDataSetChanged();
             }
 
