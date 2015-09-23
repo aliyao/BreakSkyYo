@@ -167,13 +167,15 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction trx = getFragmentManager().beginTransaction();
 
         for (int index=0;index<fragments.length;index++) {
-            if (!fragments[index].isAdded()) {
+            if (fragments[index]!=null&&!fragments[index].isAdded()) {
                 trx.add(R.id.showLayout, fragments[index]);
             }
             if(page==index){
                 trx.show(fragments[index]);
             }else{
-                trx.hide(fragments[index]);
+                if (fragments[index]!=null&&fragments[index].isAdded()) {
+                    trx.hide(fragments[index]);
+                }
             }
 
         }
