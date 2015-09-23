@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,8 +129,14 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
     public void getListByPage(int page){
        List<DummyItem> list= DummyItemDb.findList(getActivity());
         if (page == 1) {
+            if(list==null||list.size()<1){
+                FloatingActionButton fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fab);
+                Snackbar.make(fab, "没有记录", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
             ((ArrayAdapter) mAdapter).clear();
             ((ArrayAdapter) mAdapter).addAll(list);
+
         } else {
             //((ArrayAdapter) mAdapter).addAll();
         }

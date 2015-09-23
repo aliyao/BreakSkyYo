@@ -18,9 +18,23 @@ import java.util.List;
  * 修改备注：
  */
 public class DummyItemDb {
-    public static void saveList(List<DummyItem> listDummyItem,Context context){
-        KJDB db = DbMain.getDb(context);
-        db.save(listDummyItem);
+    public static boolean save(DummyItem dummyItem,Context context){
+        try{
+            KJDB db = DbMain.getDb(context);
+            db.save(dummyItem);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+    public static boolean saveList(List<DummyItem> listDummyItem,Context context){
+        try{
+            KJDB db = DbMain.getDb(context);
+            db.save(listDummyItem);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
     public static List<DummyItem>  findList(Context context){

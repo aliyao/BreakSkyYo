@@ -14,7 +14,7 @@ public class DummyItem {
     public Object tag;
     public List<String> type;
     public Object score;
-    public Date keepDate;
+    public Date saveDate;
 
     public DummyItem(String id, Object content, Object url, Object imgUrl, Object tag, Object type, Object score) {
         this.id = id;
@@ -25,7 +25,7 @@ public class DummyItem {
         this.type = (List<String>) type;
         this.score = score;
     }
-    public DummyItem(String id, Object content, Object url, Object imgUrl, Object tag, Object type, Object score,Date keepDate) {
+    /*public DummyItem(String id, Object content, Object url, Object imgUrl, Object tag, Object type, Object score,Date saveDate) {
         this.id = id;
         this.content = content;
         this.url = url;
@@ -33,8 +33,8 @@ public class DummyItem {
         this.tag = tag;
         this.type = (List<String>) type;
         this.score = score;
-        this.keepDate=keepDate;
-    }
+        this.saveDate=saveDate;
+    }*/
     public DummyItem(){
 
     }
@@ -95,6 +95,13 @@ public class DummyItem {
         this.score = score;
     }
 
+    public Date getSaveDate() {
+        return saveDate;
+    }
+
+    public void setSaveDate(Date saveDate) {
+        this.saveDate = saveDate;
+    }
 
     @Override
     public String toString() {

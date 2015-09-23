@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.adapter.AddViewAdapter;
+import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DownloadInfoItem;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
@@ -27,6 +28,7 @@ import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +54,12 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                mDummyItem.setSaveDate(new Date());
+                String tip="保存失败";
+               if( DummyItemDb.save(mDummyItem,InfoActivityScrollingActivity.this)){
+                   tip="保存成功";
+               }
+                Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
