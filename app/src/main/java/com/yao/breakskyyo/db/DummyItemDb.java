@@ -41,7 +41,7 @@ public class DummyItemDb {
         List<DummyItem> list;
         try{
             KJDB db = DbMain.getDb(context);
-            list=db.findAll(DummyItem.class);
+            list=db.findAll(DummyItem.class,"saveDate");
         }catch (Exception e){
             return null;
         }

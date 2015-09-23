@@ -122,13 +122,14 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
     public void getListByPage(int page){
        List<DummyItem> list= DummyItemDb.findList(getActivity());
         if (page == 1) {
+            ((ArrayAdapter) mAdapter).clear();
             if(list==null||list.size()<1){
                 FloatingActionButton fab = (FloatingActionButton) this.getActivity().findViewById(R.id.fab);
                 Snackbar.make(fab, "没有记录", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }else {
+                ((ArrayAdapter) mAdapter).addAll(list);
             }
-            ((ArrayAdapter) mAdapter).clear();
-            ((ArrayAdapter) mAdapter).addAll(list);
 
         } else {
             //((ArrayAdapter) mAdapter).addAll();
