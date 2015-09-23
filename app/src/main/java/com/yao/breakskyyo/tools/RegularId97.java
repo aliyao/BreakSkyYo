@@ -32,8 +32,8 @@ public class RegularId97 {
     static String regularBaidupanUrl = urlBaiduPan + "(.*?)\">.*?</a>";
     static String regularBaidupanName = urlBaiduPan + ".*?\">(.*?)</a>";
     static String regularBaidupanUrlMima = "密码：(.*?)</";
-    static String regularChili = "<li><a class=\"am-inline am-text-break\" href=\"(.*?)\">";
-    static String regularChiliName = "<li><a class=\"am-inline am-text-break\" href=\".*?\">(.*?)</a>";
+    //static String regularChili = "<a class=\"am-inline am-text-break\" href=\"(.*?)\">";
+    static String regularChiliName = "<a class=\"am-inline am-text-break\" href=\"(.*?)\">(.*?)</a>";
 
     static String[] regular={regularTable,regularZaixianUrl,regularBaidupanUrl,regularBaidupanName,regularBaidupanUrlMima,regularChiliName };
 
@@ -66,8 +66,8 @@ public class RegularId97 {
                         List<Map<String, String>> regularChili=new ArrayList<>();
                         for(int i=1;i<itemList.size();i=i+2){
                             Map<String, String> map=new HashMap<>();
-                            map.put("url",itemList.get(i-1));
-                            map.put("name",itemList.get(i));
+                            map.put("url",itemList.get(i));
+                            map.put("name",itemList.get(i-1));
                             regularChili.add(map);
                         }
                         mInfoVideos.setRegularChili(regularChili);
