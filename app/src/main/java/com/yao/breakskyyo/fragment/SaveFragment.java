@@ -141,6 +141,7 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
             //((ArrayAdapter) mAdapter).addAll();
         }
         ((ArrayAdapter) mAdapter).notifyDataSetChanged();
+        refreshView.setRefreshing(false);
     }
 
 

@@ -105,11 +105,11 @@ public class DummyItem {
 
     @Override
     public String toString() {
-        String typeStr = "";
+       /* String typeStr = "";
         for (String tp : type
                 ) {
             typeStr = typeStr + "--" + tp;
-        }
-        return id + "--" + content + "--" + url + "--" + imgUrl + "--" + tag + "--" + score + "--" + typeStr;
+        }*/
+        return id + "--" + content + "--" + url + "--" + imgUrl + "--" + tag + "--" + score + "--" ;
     }
 }

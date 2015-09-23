@@ -38,7 +38,14 @@ public class DummyItemDb {
     }
 
     public static List<DummyItem>  findList(Context context){
-        KJDB db = DbMain.getDb(context);
-       return db.findAll(DummyItem.class);
+        List<DummyItem> list;
+        try{
+            KJDB db = DbMain.getDb(context);
+            list=db.findAll(DummyItem.class);
+        }catch (Exception e){
+            return null;
+        }
+        return list;
+
     }
 }
