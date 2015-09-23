@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,17 +97,8 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
                 title.setText((String) mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
                 score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
-                List<String> typelist=mDummyItem.getType();
-                String typeStr="类型：";
-                if(typelist!=null&&typelist.size()>0){
-                    for(int item=0;item<typelist.size();item++){
-                        if (item==0){
-                            typeStr=typeStr+typelist.get(item);
-                        }else{
-                            typeStr=typeStr+"|"+typelist.get(item);
-                        }
-                    }
-                }else{
+                String typeStr="类型："+mDummyItem.getType();
+                if(TextUtils.isEmpty(mDummyItem.getType())){
                     typeStr="";
                 }
                 type.setText(StringDo.removeNull(typeStr));

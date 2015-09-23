@@ -28,8 +28,8 @@ public class DummyContent {
     public static void setData(List<Map<String, Object>> listData) {
         ITEM_MAP.clear();
         for (int itemNum = 0; itemNum < listData.size(); itemNum++) {
-            addItem(new DummyItem((String) listData.get(itemNum).get("id"), listData.get(itemNum).get("title"), listData.get(itemNum).get("url"), listData.get(itemNum).get("imgurl"),
-                    listData.get(itemNum).get("tag"), listData.get(itemNum).get("type"), listData.get(itemNum).get("score")));
+            addItem(new DummyItem((String) listData.get(itemNum).get("id"), (String) listData.get(itemNum).get("title"),(String)  listData.get(itemNum).get("url"), (String) listData.get(itemNum).get("imgurl"),
+                    (String) listData.get(itemNum).get("tag"), (String)listData.get(itemNum).get("type"), (String) listData.get(itemNum).get("score")));
 
         }
     }
@@ -40,8 +40,8 @@ public class DummyContent {
         addItem(new DummyItem("2", "Item 2"));
         addItem(new DummyItem("3", "Item 3"));*/
         for (int itemNum = 0; itemNum < listData.size(); itemNum++) {
-            addItem(new DummyItem((String) listData.get(itemNum).get("id"), listData.get(itemNum).get("title"), listData.get(itemNum).get("url"), listData.get(itemNum).get("imgurl"),
-                    listData.get(itemNum).get("tag"), listData.get(itemNum).get("type"), listData.get(itemNum).get("score")));
+            addItem(new DummyItem((String) listData.get(itemNum).get("id"), (String)listData.get(itemNum).get("title"), (String)listData.get(itemNum).get("url"),(String) listData.get(itemNum).get("imgurl"),
+                    (String)listData.get(itemNum).get("tag"),(String)listData.get(itemNum).get("type"),(String) listData.get(itemNum).get("score")));
 
         }
     }

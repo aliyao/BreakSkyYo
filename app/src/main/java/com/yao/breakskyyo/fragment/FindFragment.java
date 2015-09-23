@@ -119,17 +119,8 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 title.setText((String) mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
                 score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
-                List<String> typelist=mDummyItem.getType();
-                String typeStr="类型：";
-                if(typelist!=null&&typelist.size()>0){
-                    for(int item=0;item<typelist.size();item++){
-                        if (item==0){
-                            typeStr=typeStr+typelist.get(item);
-                        }else{
-                            typeStr=typeStr+"|"+typelist.get(item);
-                        }
-                    }
-                }else{
+                String typeStr="类型："+mDummyItem.getType();
+                if(TextUtils.isEmpty(mDummyItem.getType())){
                     typeStr="";
                 }
                 type.setText(StringDo.removeNull(typeStr));
@@ -250,16 +241,22 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                                     if (!TextUtils.isEmpty(mr.group(groupItem).trim())) {
                                         Pattern pType = Pattern.compile(zhengZeType);
                                         Matcher mType = pType.matcher(mr.group(groupItem));
-                                        List<String> typeList = new ArrayList<String>();
+                                       // List<String> typeList = new ArrayList<String>();
+                                        String typeStr="";
                                         while (mType.find()) { //循环查找匹配字串
                                             MatchResult mrType = mType.toMatchResult();
                                             for (int groupTypeItem = 1; groupTypeItem <= mrType.groupCount(); groupTypeItem++) {
                                                 if (mrType != null && mrType.group(groupTypeItem) != null) {
-                                                    typeList.add(mrType.group(groupTypeItem));
+                                                    if(TextUtils.isEmpty(typeStr)){
+                                                        typeStr=mrType.group(groupTypeItem);
+                                                    }else{
+                                                        typeStr=typeStr+"|"+mrType.group(groupTypeItem);
+                                                    }
+
                                                 }
                                             }
                                         }
-                                        map.put("type", typeList);//找到后group(1)是表达式第一个括号的内容
+                                        map.put("type", typeStr);//找到后group(1)是表达式第一个括号的内容
                                     }
 
                                     break;

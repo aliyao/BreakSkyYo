@@ -8,24 +8,24 @@ import java.util.List;
  */
 public class DummyItem {
     public String id;
-    public Object content;
-    public Object url;
-    public Object imgUrl;
-    public Object tag;
-    public List<String> type;
-    public Object score;
+    public String content;
+    public String url;
+    public String imgUrl;
+    public String tag;
+    public String type;
+    public String score;
     public Date saveDate;
 
-    public DummyItem(String id, Object content, Object url, Object imgUrl, Object tag, Object type, Object score) {
+    public DummyItem(String id, String content, String url, String imgUrl, String tag, String type, String score) {
         this.id = id;
         this.content = content;
         this.url = url;
         this.imgUrl = imgUrl;
         this.tag = tag;
-        this.type = (List<String>) type;
+        this.type =type;
         this.score = score;
     }
-    /*public DummyItem(String id, Object content, Object url, Object imgUrl, Object tag, Object type, Object score,Date saveDate) {
+    /*public DummyItem(String id, String content, String url, String imgUrl, String tag, List<String> type, String score,Date saveDate) {
         this.id = id;
         this.content = content;
         this.url = url;
@@ -47,51 +47,51 @@ public class DummyItem {
         this.id = id;
     }
 
-    public Object getContent() {
+    public String getContent() {
         return content;
     }
 
-    public void setContent(Object content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
-    public Object getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(Object url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 
-    public Object getImgUrl() {
+    public String getImgUrl() {
         return imgUrl;
     }
 
-    public void setImgUrl(Object imgUrl) {
+    public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
 
-    public Object getTag() {
+    public String getTag() {
         return tag;
     }
 
-    public void setTag(Object tag) {
+    public void setTag(String tag) {
         this.tag = tag;
     }
 
-    public List<String> getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(List<String> type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public Object getScore() {
+    public String getScore() {
         return score;
     }
 
-    public void setScore(Object score) {
+    public void setScore(String score) {
         this.score = score;
     }
 
