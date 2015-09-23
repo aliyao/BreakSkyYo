@@ -13,8 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.yao.breakskyyo.adapter.AddViewAdapter;
 import com.yao.breakskyyo.db.DummyItemDb;
+import com.yao.breakskyyo.dummy.AddViewAdapter;
 import com.yao.breakskyyo.dummy.DownloadInfoItem;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
