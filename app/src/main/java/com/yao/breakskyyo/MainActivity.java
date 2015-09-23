@@ -79,7 +79,14 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager
                 .beginTransaction();
-        fragmentTransaction.add(R.id.showLayout, fragments[0]);
+
+        if(!fragments[0].isAdded()){
+            fragmentTransaction.add(R.id.showLayout, fragments[0]);
+        }
+        fragmentTransaction.show(fragments[0]);
+        if(fragments[1].isAdded()){
+            fragmentTransaction.hide(fragments[1]);
+        }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -155,12 +162,13 @@ public class MainActivity extends AppCompatActivity
 
         }
         FragmentTransaction trx = getFragmentManager().beginTransaction();
-        if (!fragments[page].isAdded()) {
-            trx.add(R.id.showLayout, fragments[page]);
-        }
+
         for (int index=0;index<fragments.length;index++) {
+            if (!fragments[index].isAdded()) {
+                trx.add(R.id.showLayout, fragments[index]);
+            }
             if(page==index){
-                trx.show(fragments[page]);
+                trx.show(fragments[index]);
             }else{
                 trx.hide(fragments[index]);
             }
