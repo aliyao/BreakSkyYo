@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,7 +20,9 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.InfoActivityScrollingActivity;
+import com.yao.breakskyyo.MainActivity;
 import com.yao.breakskyyo.R;
+import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.net.HttpUrl;
@@ -47,7 +50,7 @@ import java.util.regex.Pattern;
  * Use the {@link FindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindFragment extends Fragment  implements AbsListView.OnItemClickListener{
+public class FindFragment extends Fragment  implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener{
     private OnFragmentInteractionListener mListener;
     private AbsListView mListView;
     SwipeRefreshLayout refreshView;
@@ -138,6 +141,7 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
             }
         });
         mListView.setOnItemClickListener(this);
+        mListView.setOnItemLongClickListener(this);
         httpGetFindList(1);
     }
 
@@ -241,16 +245,16 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                                     if (!TextUtils.isEmpty(mr.group(groupItem).trim())) {
                                         Pattern pType = Pattern.compile(zhengZeType);
                                         Matcher mType = pType.matcher(mr.group(groupItem));
-                                       // List<String> typeList = new ArrayList<String>();
-                                        String typeStr="";
+                                        // List<String> typeList = new ArrayList<String>();
+                                        String typeStr = "";
                                         while (mType.find()) { //循环查找匹配字串
                                             MatchResult mrType = mType.toMatchResult();
                                             for (int groupTypeItem = 1; groupTypeItem <= mrType.groupCount(); groupTypeItem++) {
                                                 if (mrType != null && mrType.group(groupTypeItem) != null) {
-                                                    if(TextUtils.isEmpty(typeStr)){
-                                                        typeStr=mrType.group(groupTypeItem);
-                                                    }else{
-                                                        typeStr=typeStr+"|"+mrType.group(groupTypeItem);
+                                                    if (TextUtils.isEmpty(typeStr)) {
+                                                        typeStr = mrType.group(groupTypeItem);
+                                                    } else {
+                                                        typeStr = typeStr + "|" + mrType.group(groupTypeItem);
                                                     }
 
                                                 }
@@ -270,10 +274,10 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 if (page == 1) {
                     ((ArrayAdapter) mAdapter).clear();
                     DummyContent.setData(result);
-                    pageNum=1;
+                    pageNum = 1;
                 } else {
                     DummyContent.addData(result);
-                    pageNum=page;
+                    pageNum = page;
                 }
                 ((ArrayAdapter) mAdapter).notifyDataSetChanged();
             }
@@ -295,6 +299,25 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
 
         });
 
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent,final View view, final int position, long id) {
+        Snackbar.make(view, "是否保存", Snackbar.LENGTH_LONG)
+                .setAction("保存", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean isDbDoTrue = DummyItemDb.save(((ArrayAdapter<DummyItem>) mAdapter).getItem(position), FindFragment.this.getActivity());
+                        String tip = "保存成功！";
+                        if (!isDbDoTrue) {
+                            tip = "保存失败！";
+                        } else {
+                            ((MainActivity)getActivity()).updateSaveFragment();
+                        }
+                        Snackbar.make(view, tip, Snackbar.LENGTH_LONG).show();
+                    }
+                }).show();
+        return true;
     }
 
 }

@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener , FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {
     Fragment fragments[];
+    boolean isFinish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            isFinish=true;
             finish();
             System.exit(0);
             return true;
@@ -181,5 +183,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void finish() {
+        if(isFinish){
+            super.finish();
+        }else{
+            this.openOptionsMenu();
+        }
+
+    }
+    public void updateSaveFragment(){
+        if(fragments[1]!=null&&fragments[1].isAdded()){
+            ((SaveFragment)fragments[1]).update();
+        }
     }
 }

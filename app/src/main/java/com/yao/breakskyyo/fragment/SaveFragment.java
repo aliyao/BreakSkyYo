@@ -194,4 +194,7 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
                 }).show();
         return true;
     }
+    public void update(){
+        getListByPage(1);
+    }
 }
