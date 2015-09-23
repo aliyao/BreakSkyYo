@@ -1,5 +1,6 @@
 package com.yao.breakskyyo.dummy;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,8 +14,7 @@ public class DummyItem {
     public Object tag;
     public List<String> type;
     public Object score;
-
-
+    public Date keepDate;
 
     public DummyItem(String id, Object content, Object url, Object imgUrl, Object tag, Object type, Object score) {
         this.id = id;
@@ -24,6 +24,16 @@ public class DummyItem {
         this.tag = tag;
         this.type = (List<String>) type;
         this.score = score;
+    }
+    public DummyItem(String id, Object content, Object url, Object imgUrl, Object tag, Object type, Object score,Date keepDate) {
+        this.id = id;
+        this.content = content;
+        this.url = url;
+        this.imgUrl = imgUrl;
+        this.tag = tag;
+        this.type = (List<String>) type;
+        this.score = score;
+        this.keepDate=keepDate;
     }
     public DummyItem(){
 

@@ -13,5 +13,8 @@
     <string name="title_activity_about">破天</string>
     <string name="update_app">检查更新</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
