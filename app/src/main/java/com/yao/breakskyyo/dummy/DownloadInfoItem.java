@@ -13,14 +13,16 @@ public class DownloadInfoItem {
     String name;
     String url;
     String  mima;
+    int type;//1百度   2在线  3磁力
 
     public DownloadInfoItem(){
 
     }
-    public DownloadInfoItem(String name,String url, String  mima){
+    public DownloadInfoItem(String name,String url, String  mima,int type){
         this.name=name;
         this.url=url;
         this.mima=mima;
+        this.type=type;
     }
 
     public String getName() {
@@ -45,5 +47,13 @@ public class DownloadInfoItem {
 
     public void setMima(String mima) {
         this.mima = mima;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

@@ -135,12 +135,12 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         plot_introduction.setText(mInfoVideos.getMovie_jvqing());
         List<DownloadInfoItem> downloadInfoItemList=new ArrayList<>();
         if(!TextUtils.isEmpty(mInfoVideos.getBaiduPanUrl())){
-            downloadInfoItemList.add(new DownloadInfoItem(mInfoVideos.getBaiduPanName(),mInfoVideos.getBaiduPanUrl(),mInfoVideos.getBaiduPanUrlMima()));
+            downloadInfoItemList.add(new DownloadInfoItem(mInfoVideos.getBaiduPanName(),mInfoVideos.getBaiduPanUrl(),mInfoVideos.getBaiduPanUrlMima(),1));
         }
         if( mInfoVideos.getRegularChili()!=null){
             for ( Map<String,String> map:
                     mInfoVideos.getRegularChili()) {
-                downloadInfoItemList.add(new DownloadInfoItem(map.get("url"),map.get("name"),null));
+                downloadInfoItemList.add(new DownloadInfoItem(map.get("url"),map.get("name"),null,3));
             }
         }
         adapter.clearmdata();
