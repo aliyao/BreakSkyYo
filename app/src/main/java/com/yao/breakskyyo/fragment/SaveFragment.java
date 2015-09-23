@@ -37,7 +37,7 @@ import java.util.List;
  * Use the {@link SaveFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SaveFragment extends Fragment implements AbsListView.OnItemClickListener{
+public class SaveFragment extends Fragment implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener{
     private OnFragmentInteractionListener mListener;
     private AbsListView mListView;
     SwipeRefreshLayout refreshView;
@@ -116,6 +116,7 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
             }
         });
         mListView.setOnItemClickListener(this);
+        mListView.setOnItemLongClickListener(this);
         getListByPage(1);
     }
     public void getListByPage(int page){
@@ -173,6 +174,24 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyItem>) mAdapter).getItem(position))));
+    }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent,final View view, final int position, long id) {
+        Snackbar.make(view, "是否删除保存", Snackbar.LENGTH_LONG)
+                .setAction("删除", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean isDbDoTrue = DummyItemDb.delete(((ArrayAdapter<DummyItem>) mAdapter).getItem(position).getId(), SaveFragment.this.getActivity());
+                        String tip = "删除成功！";
+                        if (!isDbDoTrue) {
+                            tip = "删除失败！";
+                        } else {
+                            getListByPage(1);
+                        }
+                        Snackbar.make(view, tip, Snackbar.LENGTH_LONG).show();
+                    }
+                }).show();
+        return true;
     }
 }

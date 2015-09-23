@@ -48,4 +48,14 @@ public class DummyItemDb {
         return list;
 
     }
+
+    public static boolean delete(String id,Context context){
+        try{
+            KJDB db = DbMain.getDb(context);
+            db.deleteById(DummyItem.class, id);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
 }
