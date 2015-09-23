@@ -13,9 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.yao.breakskyyo.adapter.LinearLayoutAddViewAdapter;
+import com.yao.breakskyyo.adapter.LinearAddViewAdapter;
 import com.yao.breakskyyo.dummy.DownloadInfoItem;
-import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
 import com.yao.breakskyyo.tools.RegularId97;
@@ -36,7 +35,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
     InfoVideos mInfoVideos;
     ImageView showImg;
     TextView tag;
-    LinearLayoutAddViewAdapter  adapter;
+    LinearAddViewAdapter adapter;
     LinearLayout resource_download_list;
     TextView plot_introduction;
     Button play_bt;
@@ -65,7 +64,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         plot_introduction=(TextView)findViewById(R.id.plot_introduction);
         play_bt=(Button)findViewById(R.id.play_bt);
         play_bt.setVisibility(View.GONE);
-        adapter = new LinearLayoutAddViewAdapter(InfoActivityScrollingActivity.this, resource_download_list.getId());
+        adapter = new LinearAddViewAdapter(InfoActivityScrollingActivity.this, resource_download_list.getId());
         String jsonFindItemInfo=getIntent().getStringExtra("jsonFindItemInfo");
         if(TextUtils.isEmpty(jsonFindItemInfo)){
             finish();
