@@ -1,5 +1,6 @@
 package com.yao.breakskyyo;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -43,6 +44,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener , FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {
+    Fragment fragments[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +74,12 @@ public class MainActivity extends AppCompatActivity
 
     }
     private void init(){
+        fragments=new Fragment[2];
+        fragments[0]=FindFragment.newInstance();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager
                 .beginTransaction();
-        fragmentTransaction.add(R.id.showLayout, FindFragment.newInstance());
+        fragmentTransaction.add(R.id.showLayout, fragments[0]);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -124,9 +128,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_slideshow) {
-            // Handle the camera action
+            showPage(0);
         } else if (id == R.id.nav_save) {
-
+            showPage(1);
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(MainActivity.this,AboutActivity.class));
         } /*else if (id == R.id.nav_manage) {
@@ -140,6 +144,30 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void showPage(int page){
+        switch (page){
+            case 1:
+                if(fragments[page]==null){
+                    fragments[page]=SaveFragment.newInstance();
+                }
+                break;
+
+        }
+        FragmentTransaction trx = getFragmentManager().beginTransaction();
+        if (!fragments[page].isAdded()) {
+            trx.add(R.id.showLayout, fragments[page]);
+        }
+        for (int index=0;index<fragments.length;index++) {
+            if(page==index){
+                trx.show(fragments[page]);
+            }else{
+                trx.hide(fragments[index]);
+            }
+
+        }
+        trx.commit();
+
     }
 
     @Override

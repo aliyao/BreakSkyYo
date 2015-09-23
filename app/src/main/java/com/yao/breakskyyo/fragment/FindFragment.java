@@ -56,6 +56,7 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
     final String zhengZeId = "id/(.*?).html";
     final String zhengZeType = "<a.*?class=\"movietype\">(.*?)</a>";
     final String zhengZeTag = "[\\s\\S]*?>(.*?)</";
+    int pageNum;
 
 
     public static FindFragment newInstance() {
@@ -272,8 +273,10 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 if (page == 1) {
                     ((ArrayAdapter) mAdapter).clear();
                     DummyContent.setData(result);
+                    pageNum=1;
                 } else {
                     DummyContent.addData(result);
+                    pageNum=page;
                 }
                 ((ArrayAdapter) mAdapter).notifyDataSetChanged();
             }

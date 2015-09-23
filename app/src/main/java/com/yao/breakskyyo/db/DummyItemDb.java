@@ -22,4 +22,9 @@ public class DummyItemDb {
         KJDB db = DbMain.getDb(context);
         db.save(listDummyItem);
     }
+
+    public static List<DummyItem>  findList(Context context){
+        KJDB db = DbMain.getDb(context);
+       return db.findAll(DummyItem.class);
+    }
 }
