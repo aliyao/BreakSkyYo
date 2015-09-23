@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.alibaba.fastjson.JSON;
+import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.fragment.FindFragment;
@@ -190,7 +191,14 @@ public class MainActivity extends AppCompatActivity
         if(isFinish){
             super.finish();
         }else{
-            this.openOptionsMenu();
+            Snackbar.make(findViewById(R.id.fab), "是否退出", Snackbar.LENGTH_LONG)
+                    .setAction("退出", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            isFinish=true;
+                            finish();
+                        }
+                    }).show();
         }
 
     }
