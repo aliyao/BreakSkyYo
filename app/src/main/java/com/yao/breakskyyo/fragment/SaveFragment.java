@@ -96,7 +96,7 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
                 TextView score = (TextView) view.findViewById(R.id.score);
                 title.setText( mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
-                score.setText(StringDo.removeNull(mDummyItem.getSaveDate())+"分");
+                score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
                 String typeStr="类型："+mDummyItem.getType();
                 if(TextUtils.isEmpty(mDummyItem.getType())){
                     typeStr="";
