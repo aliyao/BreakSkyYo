@@ -14,7 +14,8 @@
     <string name="update_app">检查更新</string>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_web_view">破天</string>
 
 
 </resources>

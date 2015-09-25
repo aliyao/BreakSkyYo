@@ -1,5 +1,6 @@
 package com.yao.breakskyyo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,7 @@ import com.yao.breakskyyo.dummy.InfoVideos;
 import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
+import com.yao.breakskyyo.webview.WebViewActivity;
 
 import org.kymjs.kjframe.KJHttp;
 import org.kymjs.kjframe.http.HttpCallBack;
@@ -154,7 +156,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
     public void onClickDo(View view){
         switch (view.getId()){
             case R.id.play_bt:
-
+                startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getMovie_payZaixian()));
                 break;
 
         }
