@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_below="@id/logo"
-        android:text="BreakSky" />
+        android:text="@string/app_name" />
 
     <TextView
         android:id="@+id/app_version"
