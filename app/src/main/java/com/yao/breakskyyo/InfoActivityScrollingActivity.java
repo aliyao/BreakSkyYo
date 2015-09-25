@@ -54,7 +54,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDummyItem.setSaveDate(new Date());
+                mDummyItem.setSaveDate(new Date().getTime());
                 String tip="保存失败";
                if( DummyItemDb.save(mDummyItem,InfoActivityScrollingActivity.this)){
                    tip="保存成功";

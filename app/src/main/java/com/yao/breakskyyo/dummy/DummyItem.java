@@ -1,8 +1,5 @@
 package com.yao.breakskyyo.dummy;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by nideyoyo on 2015/9/7.
  */
@@ -14,7 +11,7 @@ public class DummyItem {
     public String tag;
     public String type;
     public String score;
-    public Date saveDate;
+    public long saveDate;
 
     public DummyItem(String id, String content, String url, String imgUrl, String tag, String type, String score) {
         this.id = id;
@@ -95,11 +92,11 @@ public class DummyItem {
         this.score = score;
     }
 
-    public Date getSaveDate() {
+    public long getSaveDate() {
         return saveDate;
     }
 
-    public void setSaveDate(Date saveDate) {
+    public void setSaveDate(long saveDate) {
         this.saveDate = saveDate;
     }
 

@@ -35,6 +35,7 @@ import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -307,7 +308,9 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 .setAction("保存", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        boolean isDbDoTrue = DummyItemDb.save(((ArrayAdapter<DummyItem>) mAdapter).getItem(position), FindFragment.this.getActivity());
+                        DummyItem dummyItem=((ArrayAdapter<DummyItem>) mAdapter).getItem(position);
+                        dummyItem.setSaveDate(new Date().getTime());
+                        boolean isDbDoTrue = DummyItemDb.save(dummyItem, FindFragment.this.getActivity());
                         String tip = "保存成功！";
                         if (!isDbDoTrue) {
                             tip = "保存失败！";

@@ -94,9 +94,9 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
                 TextView type = (TextView) view.findViewById(R.id.type);
                 TextView tag = (TextView) view.findViewById(R.id.tag);
                 TextView score = (TextView) view.findViewById(R.id.score);
-                title.setText((String) mDummyItem.getContent());
+                title.setText( mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
-                score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
+                score.setText(StringDo.removeNull(mDummyItem.getSaveDate())+"分");
                 String typeStr="类型："+mDummyItem.getType();
                 if(TextUtils.isEmpty(mDummyItem.getType())){
                     typeStr="";
@@ -130,17 +130,12 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
             }else {
                 ((ArrayAdapter) mAdapter).addAll(list);
             }
-
         } else {
             //((ArrayAdapter) mAdapter).addAll();
         }
         ((ArrayAdapter) mAdapter).notifyDataSetChanged();
         refreshView.setRefreshing(false);
     }
-
-
-
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
