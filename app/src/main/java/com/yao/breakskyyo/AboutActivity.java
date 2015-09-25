@@ -15,12 +15,14 @@ import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.dummy.UpdateApkInfo;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
+import com.yao.breakskyyo.tools.DownloadManagerDo;
 import com.yao.breakskyyo.tools.HttpDo;
 
 import org.kymjs.kjframe.ui.ViewInject;
 
 public class AboutActivity extends AppCompatActivity {
     Button bt_update;
+    UpdateApkInfo updateApkInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +44,7 @@ public class AboutActivity extends AppCompatActivity {
     }
     private void refresh(){
         String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
-        UpdateApkInfo updateApkInfo= JSON.parseObject(updateJson, UpdateApkInfo.class);
+        updateApkInfo= JSON.parseObject(updateJson, UpdateApkInfo.class);
         Object appVersionCode= AppInfoUtil.getVersionCode(AboutActivity.this);
         if(updateJson==null||updateApkInfo==null||updateApkInfo.getVersionCode()==0||appVersionCode==null||appVersionCode.equals(updateApkInfo.getVersionCode())){
             bt_update.setVisibility(View.GONE);
@@ -51,7 +53,7 @@ public class AboutActivity extends AppCompatActivity {
             bt_update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    DownloadManagerDo.download(AboutActivity.this,updateApkInfo.getUrl());
                 }
             });
 

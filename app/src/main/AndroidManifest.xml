@@ -34,6 +34,12 @@
             android:name=".AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
+        <receiver android:name="com.yao.breakskyyo.tools.DownloadReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
