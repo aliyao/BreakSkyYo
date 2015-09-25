@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.yao.breakskyyo.dummy.UpdateApkInfo;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 
@@ -24,9 +26,10 @@ public class AboutActivity extends AppCompatActivity {
 
         TextView app_version=(TextView)findViewById(R.id.app_version);
         Button bt_update=(Button)findViewById(R.id.bt_update);
-        Object latestVersionCode= ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.LatestVersionCode);
+        String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
+        UpdateApkInfo updateApkInfo= JSON.parseObject(updateJson, UpdateApkInfo.class);
         Object appVersionCode= AppInfoUtil.getVersionCode(AboutActivity.this);
-        if(appVersionCode==null||latestVersionCode==null||appVersionCode.equals(latestVersionCode)){
+        if(appVersionCode==null||updateJson==null||appVersionCode.equals(updateApkInfo.getVersionCode())){
             bt_update.setVisibility(View.GONE);
         }else{
             bt_update.setVisibility(View.VISIBLE);

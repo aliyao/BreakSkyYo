@@ -18,30 +18,18 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import com.alibaba.fastjson.JSON;
-import com.yao.breakskyyo.db.DummyItemDb;
-import com.yao.breakskyyo.dummy.DummyContent;
-import com.yao.breakskyyo.dummy.DummyItem;
+import com.yao.breakskyyo.dummy.UpdateApkInfo;
 import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
 import com.yao.breakskyyo.net.HttpUrl;
+import com.yao.breakskyyo.tools.ACacheUtil;
 
 import org.kymjs.kjframe.KJHttp;
 import org.kymjs.kjframe.http.HttpCallBack;
 import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener , FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {
@@ -91,6 +79,7 @@ public class MainActivity extends AppCompatActivity
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        updateApp();
     }
 
 
@@ -209,4 +198,46 @@ public class MainActivity extends AppCompatActivity
             ((SaveFragment)fragments[1]).update();
         }
     }
+
+
+    public void updateApp() {
+        KJHttp kjh = new KJHttp();
+        kjh.get(HttpUrl.UpdateApp, new HttpCallBack() {
+            @Override
+            public void onPreStart() {
+                super.onPreStart();
+                KJLoger.debug("在请求开始之前调用");
+            }
+
+            @Override
+            public void onSuccess(String t) {
+                super.onSuccess(t);
+                ViewInject.longToast("请求成功");
+                if(!TextUtils.isEmpty(t)){
+                    try{
+                        UpdateApkInfo updateApkInfo= JSON.parseObject(t, UpdateApkInfo.class);
+                        ACacheUtil.put(MainActivity.this, ACacheUtil.UpdateJson,JSON.toJSONString(updateApkInfo));
+                    }catch (Exception e){
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                KJLoger.debug("exception:" + strMsg);
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                KJLoger.debug("请求完成，不管成功或者失败都会调用");
+            }
+        });
+
+
+    }
+
 }

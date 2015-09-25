@@ -11,8 +11,8 @@ public class ACacheUtil {
     static ACache mCache;
     final  static String LoginStatus="LoginStatus";//1登录
     final  static String FirstOpen="FirstOpen";//1第一次打开
-   public final  static String LatestVersionCode="LatestVersionCode";//1第一次打开
-    public final  static String DownloadManager_ID="DownloadManager_ID";//1第一次打开
+    public final  static String UpdateJson="UpdateJson";
+    public final  static String DownloadManager_ID="DownloadManager_ID";
 
 
     public static boolean isFirstOpen(Context mContext){

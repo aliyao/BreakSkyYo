@@ -49,9 +49,6 @@ public class AppInfoUtil {
             info = manager.getPackageInfo(mContext.getPackageName(), 0);
 
         } catch (PackageManager.NameNotFoundException e) {
-
-// TODO Auto-generated catch block
-
             e.printStackTrace();
             return 0;
 
