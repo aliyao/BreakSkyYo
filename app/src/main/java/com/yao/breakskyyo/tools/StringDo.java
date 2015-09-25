@@ -14,6 +14,6 @@ public class StringDo {
         if(mObject==null){
             return "";
         }
-        return (String)mObject;
+        return mObject+"";
     }
 }
