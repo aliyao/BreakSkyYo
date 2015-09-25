@@ -56,8 +56,14 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mDummyItem.setSaveDate(new Date().getTime());
                 String tip="保存失败";
-               if( DummyItemDb.save(mDummyItem,InfoActivityScrollingActivity.this)){
-                   tip="保存成功";
+               switch (DummyItemDb.save(mDummyItem,InfoActivityScrollingActivity.this)){
+                   case 1:
+                       tip="保存成功";
+                       break;
+                   case 2:
+                       tip="已经保存";
+                       break;
+
                }
                 Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

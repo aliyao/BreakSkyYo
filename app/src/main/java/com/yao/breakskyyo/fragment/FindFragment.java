@@ -308,14 +308,18 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 .setAction("保存", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DummyItem dummyItem=((ArrayAdapter<DummyItem>) mAdapter).getItem(position);
+                        DummyItem dummyItem = ((ArrayAdapter<DummyItem>) mAdapter).getItem(position);
                         dummyItem.setSaveDate(new Date().getTime());
-                        boolean isDbDoTrue = DummyItemDb.save(dummyItem, FindFragment.this.getActivity());
-                        String tip = "保存成功！";
-                        if (!isDbDoTrue) {
-                            tip = "保存失败！";
-                        } else {
-                            ((MainActivity)getActivity()).updateSaveFragment();
+                        String tip = "保存失败";
+                        switch (DummyItemDb.save(dummyItem, FindFragment.this.getActivity())) {
+                            case 1:
+                                tip = "保存成功";
+                                ((MainActivity) getActivity()).updateSaveFragment();
+                                break;
+                            case 2:
+                                tip = "已经保存";
+                                break;
+
                         }
                         Snackbar.make(view, tip, Snackbar.LENGTH_LONG).show();
                     }
