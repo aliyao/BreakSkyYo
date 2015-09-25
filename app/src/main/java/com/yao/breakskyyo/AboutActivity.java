@@ -21,7 +21,6 @@ import org.kymjs.kjframe.ui.ViewInject;
 
 public class AboutActivity extends AppCompatActivity {
     Button bt_update;
-    String updateJson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +31,7 @@ public class AboutActivity extends AppCompatActivity {
 
         TextView app_version=(TextView)findViewById(R.id.app_version);
          bt_update=(Button)findViewById(R.id.bt_update);
-         updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
-
+        refresh();
 
         String versionName= AppInfoUtil.getVersionName(AboutActivity.this);
         if(TextUtils.isEmpty(versionName)){
@@ -43,9 +41,10 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
     private void refresh(){
+        String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
         UpdateApkInfo updateApkInfo= JSON.parseObject(updateJson, UpdateApkInfo.class);
         Object appVersionCode= AppInfoUtil.getVersionCode(AboutActivity.this);
-        if(appVersionCode==null||updateJson==null||appVersionCode.equals(updateApkInfo.getVersionCode())){
+        if(updateJson==null||updateApkInfo==null||updateApkInfo.getVersionCode()==0||appVersionCode==null||appVersionCode.equals(updateApkInfo.getVersionCode())){
             bt_update.setVisibility(View.GONE);
         }else{
             bt_update.setVisibility(View.VISIBLE);
