@@ -14,25 +14,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.yao.breakskyyo.dummy.NetRootJsonInfo;
-import com.yao.breakskyyo.dummy.UpdateApkInfo;
 import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
-import com.yao.breakskyyo.net.HttpUrl;
-import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.HttpDo;
-
-import org.kymjs.kjframe.KJHttp;
-import org.kymjs.kjframe.http.HttpCallBack;
-import org.kymjs.kjframe.ui.ViewInject;
-import org.kymjs.kjframe.utils.KJLoger;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener , FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {

@@ -9,7 +9,7 @@ package com.yao.breakskyyo.dummy;
  * 修改时间：2015/9/25 19:56
  * 修改备注：
  */
-public class netRootJsonInfo<I> {
+public class RootJsonInfo<I> {
     int code;
     I info;
     String tip;
@@ -36,5 +36,9 @@ public class netRootJsonInfo<I> {
 
     public void setTip(String tip) {
         this.tip = tip;
+    }
+
+    public boolean isHttpSuccess(){
+        return code<1000;
     }
 }
