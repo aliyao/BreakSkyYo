@@ -1,5 +1,7 @@
 package com.yao.breakskyyo;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,9 +15,13 @@ import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.dummy.UpdateApkInfo;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
+import com.yao.breakskyyo.tools.HttpDo;
+
+import org.kymjs.kjframe.ui.ViewInject;
 
 public class AboutActivity extends AppCompatActivity {
-
+    Button bt_update;
+    String updateJson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +31,18 @@ public class AboutActivity extends AppCompatActivity {
     private void init(){
 
         TextView app_version=(TextView)findViewById(R.id.app_version);
-        Button bt_update=(Button)findViewById(R.id.bt_update);
-        String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
+         bt_update=(Button)findViewById(R.id.bt_update);
+         updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
+
+
+        String versionName= AppInfoUtil.getVersionName(AboutActivity.this);
+        if(TextUtils.isEmpty(versionName)){
+            app_version.setVisibility(View.GONE);
+        }else{
+            app_version.setText(versionName);
+        }
+    }
+    private void refresh(){
         UpdateApkInfo updateApkInfo= JSON.parseObject(updateJson, UpdateApkInfo.class);
         Object appVersionCode= AppInfoUtil.getVersionCode(AboutActivity.this);
         if(appVersionCode==null||updateJson==null||appVersionCode.equals(updateApkInfo.getVersionCode())){
@@ -40,13 +56,6 @@ public class AboutActivity extends AppCompatActivity {
                 }
             });
 
-        }
-
-        String versionName= AppInfoUtil.getVersionName(AboutActivity.this);
-        if(TextUtils.isEmpty(versionName)){
-            app_version.setVisibility(View.GONE);
-        }else{
-            app_version.setText(versionName);
         }
     }
 
@@ -66,9 +75,24 @@ public class AboutActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.update_app) {
+            HttpDo.updateApp(AboutActivity.this, updateHandle);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+    Handler updateHandle=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0:
+                    ViewInject.longToast("网络不给力");
+                    break;
+                case 1:
+                    refresh();
+                    break;
+            }
+        }
+    };
 }
