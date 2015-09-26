@@ -48,7 +48,7 @@ public class RegularId97 {
                 KJLoger.debug("yoyo:--"+ regular[item]+"--" + itemList.get(0));
                 switch (item){
                     case 0:
-                        mInfoVideos.setMovie_jvqing("【导演】"+itemList.get(0).replace("<br/>",""));
+                        mInfoVideos.setMovie_jvqing("【导演】"+itemList.get(0).replace("<br/>", "\n").replace("<br />","\n"));
                         break;
                     case 1:
                         mInfoVideos.setMovie_payZaixian(id97Url + itemList.get(0));
