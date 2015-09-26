@@ -4,12 +4,13 @@ package com.yao.breakskyyo.dummy;
  * 项目名称：BreakSkyYo
  * 类描述：
  * 创建人：yoyo
- * 创建时间：2015/9/25 16:41
+ * 创建时间：2015/9/26 13:09
  * 修改人：yoyo
- * 修改时间：2015/9/25 16:41
+ * 修改时间：2015/9/26 13:09
  * 修改备注：
  */
-public class UpdateApkInfo {
+public class InfoUpdateApk {
+
     int versionCode;
     String url;
     String description;
