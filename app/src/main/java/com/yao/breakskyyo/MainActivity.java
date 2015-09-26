@@ -20,7 +20,7 @@ import android.view.View;
 
 import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
-import com.yao.breakskyyo.tools.HttpDo;
+import com.yao.breakskyyo.net.HttpDo;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener , FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        HttpDo.updateApp(this,null);
+        HttpDo.updateApp(this, null);
     }
 
 
