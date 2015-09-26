@@ -1,9 +1,9 @@
 package com.yao.breakskyyo;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,17 +12,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.yao.breakskyyo.dummy.UpdateApkInfo;
+import com.yao.breakskyyo.dummy.InfoUpdateApk;
+import com.yao.breakskyyo.net.HttpDo;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 import com.yao.breakskyyo.tools.DownloadManagerDo;
-import com.yao.breakskyyo.tools.HttpDo;
 
 import org.kymjs.kjframe.ui.ViewInject;
 
 public class AboutActivity extends AppCompatActivity {
     Button bt_update;
-    UpdateApkInfo updateApkInfo;
+    InfoUpdateApk updateApkInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +44,7 @@ public class AboutActivity extends AppCompatActivity {
     }
     private void refresh(){
         String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
-        updateApkInfo= JSON.parseObject(updateJson, UpdateApkInfo.class);
+        updateApkInfo= JSON.parseObject(updateJson, InfoUpdateApk.class);
         Object appVersionCode= AppInfoUtil.getVersionCode(AboutActivity.this);
         if(updateJson==null||updateApkInfo==null||updateApkInfo.getVersionCode()==0||appVersionCode==null||appVersionCode.equals(updateApkInfo.getVersionCode())){
             bt_update.setVisibility(View.GONE);
