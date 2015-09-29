@@ -50,7 +50,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info_activity_scrolling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         init();
-        toolbar.setTitle((String) mDummyItem.getContent());
+        toolbar.setTitle(mDummyItem.getContent());
         setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +65,6 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
                    case 2:
                        tip="已经保存";
                        break;
-
                }
                 Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -157,6 +156,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.play_bt:
                 startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getMovie_payZaixian()));
+                // startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getBaiduPanUrl()).putExtra("BaiduMima",mInfoVideos.getBaiduPanUrlMima()));
                 break;
 
         }
