@@ -26,6 +26,7 @@ import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.net.HttpUrl;
+import com.yao.breakskyyo.tools.CommonUtil;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 
@@ -143,6 +144,8 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
         });
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
+        refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(FindFragment.this.getActivity(), 24));
+         refreshView.setRefreshing(true);
         httpGetFindList(1);
     }
 
