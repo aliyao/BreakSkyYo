@@ -26,12 +26,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener , FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {
     Fragment fragments[];
     boolean isFinish;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity
 
     }
     private void init(){
+        toolbar.setSubtitle(R.string.title_section1);
         fragments=new Fragment[2];
         fragments[0]=FindFragment.newInstance();
         FragmentManager fragmentManager = getFragmentManager();
@@ -142,6 +144,10 @@ public class MainActivity extends AppCompatActivity
                 if(fragments[page]==null){
                     fragments[page]=SaveFragment.newInstance();
                 }
+                toolbar.setSubtitle(R.string.title_section2);
+                break;
+            case 0:
+                toolbar.setSubtitle(R.string.title_section1);
                 break;
 
         }

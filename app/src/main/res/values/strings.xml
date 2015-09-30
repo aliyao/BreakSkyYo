@@ -10,7 +10,7 @@
     <string name="navigation_drawer_open">打开导航抽屉</string>
     <string name="navigation_drawer_close">关闭导航抽屉</string>
     <string name="title_activity_info_activity_scrolling">详情</string>
-    <string name="title_activity_about">破天</string>
+    <string name="title_activity_about">关于</string>
     <string name="update_app">检查更新</string>
 
 <!-- TODO: Remove or change this placeholder text -->
