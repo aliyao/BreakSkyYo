@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,6 +22,7 @@ import android.widget.ProgressBar;
 
 import com.yao.breakskyyo.GlobalKey;
 import com.yao.breakskyyo.R;
+import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
 
 public class WebViewActivity extends AppCompatActivity {
@@ -69,11 +71,12 @@ public class WebViewActivity extends AppCompatActivity {
                                 copy();
                                 break;
                             case 3:
-                                Intent intentHellp = new Intent();
+                               /* Intent intentHellp = new Intent();
                                 intentHellp.setAction(Intent.ACTION_VIEW);
-                                Uri hellp_url = Uri.parse(getIntent().getStringExtra(GlobalKey.HellpUrl));
+                                Uri hellp_url = Uri.parse(HttpUrl.HellpUrl);
                                 intentHellp.setData(hellp_url);
-                                startActivity(intentHellp);
+                                startActivity(intentHellp);*/
+                                webView.loadUrl(HttpUrl.HellpUrl);
                                 break;
                             case 4:
                                 webView.reload();
@@ -125,10 +128,10 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                if (newProgress==100){
+                if (newProgress == 100) {
                     progressBar.setVisibility(View.GONE);
-                }else{
-                    if (progressBar.getVisibility()!=View.VISIBLE){
+                } else {
+                    if (progressBar.getVisibility() != View.VISIBLE) {
                         progressBar.setVisibility(View.VISIBLE);
                     }
                     progressBar.setProgress(newProgress);
@@ -171,7 +174,19 @@ public class WebViewActivity extends AppCompatActivity {
         // 允许启动新的Activity
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // 目标应用寻找对话框的标题
-        startActivity(Intent.createChooser(intent,getIntent().getStringExtra("title")));
+        startActivity(Intent.createChooser(intent, getIntent().getStringExtra("title")));
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack())
+        {
+            webView.goBack();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode,event);
+
     }
 
     @Override

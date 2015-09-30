@@ -10,5 +10,5 @@ package com.yao.breakskyyo;
  * 修改备注：
  */
 public class GlobalKey {
-    public final static String HellpUrl="http://www.id97.com/topic/91";
+
 }
