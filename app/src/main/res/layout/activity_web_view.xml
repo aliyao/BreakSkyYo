@@ -25,6 +25,7 @@
         android:src="@android:drawable/ic_dialog_dialer" />
     <ProgressBar
         android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="100dp" />
 
