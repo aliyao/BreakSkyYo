@@ -23,7 +23,6 @@ import com.yao.breakskyyo.tools.ClipboardManagerDo;
 public class WebViewActivity extends AppCompatActivity {
     WebView webView;
     FloatingActionButton fab;
-    Snackbar snackbarMima;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +52,7 @@ public class WebViewActivity extends AppCompatActivity {
                             case 0:
                                 Intent intent = new Intent();
                                 intent.setAction(Intent.ACTION_VIEW);
-                                Uri content_url = Uri.parse("http://www.163.com");
+                                Uri content_url = Uri.parse(getIntent().getStringExtra("url"));
                                 intent.setData(content_url);
                                 startActivity(intent);
                                 break;
@@ -63,6 +62,19 @@ public class WebViewActivity extends AppCompatActivity {
                             case 2:
                                 copy();
                                 break;
+                           case 3:
+
+                               break;
+                           case 4:
+                               final  Snackbar  snackbarMima=Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
+                               snackbarMima.setAction("隐藏", new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View v) {
+                                       snackbarMima.dismiss();
+                                   }
+                               });
+                               snackbarMima.show();
+                               break;
 
                         }
 
@@ -97,7 +109,7 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
         if(!TextUtils.isEmpty(getIntent().getStringExtra("mima"))){
-            snackbarMima=Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
+           final Snackbar  snackbarMima=Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
             snackbarMima.setAction("隐藏", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
