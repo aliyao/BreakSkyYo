@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
                 .beginTransaction();
 
         if(!fragments[0].isAdded()){
-            fragmentTransaction.add(R.id.showLayout, fragments[0]);
+            fragmentTransaction.replace(R.id.showLayout, fragments[0]);
         }
         fragmentTransaction.show(fragments[0]);
         if(fragments[1]!=null&&fragments[1].isAdded()){
