@@ -1,5 +1,6 @@
 package com.yao.breakskyyo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.dummy.InfoUpdateApk;
 import com.yao.breakskyyo.net.HttpDo;
+import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 import com.yao.breakskyyo.tools.DownloadManagerDo;
+import com.yao.breakskyyo.webview.WebViewActivity;
 
 import org.kymjs.kjframe.ui.ViewInject;
 
@@ -41,6 +44,7 @@ public class AboutActivity extends AppCompatActivity {
         }else{
             app_version.setText(versionName);
         }
+        HttpDo.updateApp(AboutActivity.this, updateHandle);
     }
     private void refresh(){
         String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
@@ -76,7 +80,8 @@ public class AboutActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.update_app) {
-            HttpDo.updateApp(AboutActivity.this, updateHandle);
+           // HttpDo.updateApp(AboutActivity.this, updateHandle);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", HttpUrl.UpdateAppWeb));
             return true;
         }
 
