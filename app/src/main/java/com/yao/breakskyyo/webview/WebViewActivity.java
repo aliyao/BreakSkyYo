@@ -35,7 +35,7 @@ public class WebViewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        progressBar = (ProgressBar) findViewById(R.id.fab);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
