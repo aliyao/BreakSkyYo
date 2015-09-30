@@ -13,16 +13,21 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
+import com.yao.breakskyyo.GlobalKey;
 import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
 
 public class WebViewActivity extends AppCompatActivity {
     WebView webView;
     FloatingActionButton fab;
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,25 +35,26 @@ public class WebViewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        progressBar = (ProgressBar) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(WebViewActivity.this);
                 //    指定下拉列表的显示数据
                 String[] toDo;
-                if(!TextUtils.isEmpty(getIntent().getStringExtra("mima"))){
-                    String[] dos = {"打开浏览器","分享", "复制","帮助","显示密码"};
-                    toDo=dos;
-                }else{
-                    String[] dos = {"打开浏览器","分享", "复制", "帮助"};
-                    toDo=dos;
+                if (!TextUtils.isEmpty(getIntent().getStringExtra("mima"))) {
+                    String[] dos = {"打开浏览器", "分享", "复制", "帮助", "显示密码"};
+                    toDo = dos;
+                } else {
+                    String[] dos = {"打开浏览器", "分享", "复制", "帮助"};
+                    toDo = dos;
                 }
 
                 //    设置一个下拉的列表选择项
                 builder.setItems(toDo, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       switch (which) {
+                        switch (which) {
                             case 0:
                                 Intent intent = new Intent();
                                 intent.setAction(Intent.ACTION_VIEW);
@@ -62,19 +68,23 @@ public class WebViewActivity extends AppCompatActivity {
                             case 2:
                                 copy();
                                 break;
-                           case 3:
-
-                               break;
-                           case 4:
-                               final  Snackbar  snackbarMima=Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
-                               snackbarMima.setAction("隐藏", new View.OnClickListener() {
-                                   @Override
-                                   public void onClick(View v) {
-                                       snackbarMima.dismiss();
-                                   }
-                               });
-                               snackbarMima.show();
-                               break;
+                            case 3:
+                                Intent intentHellp = new Intent();
+                                intentHellp.setAction(Intent.ACTION_VIEW);
+                                Uri hellp_url = Uri.parse(getIntent().getStringExtra(GlobalKey.HellpUrl));
+                                intentHellp.setData(hellp_url);
+                                startActivity(intentHellp);
+                                break;
+                            case 4:
+                                final Snackbar snackbarMima = Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
+                                snackbarMima.setAction("隐藏", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        snackbarMima.dismiss();
+                                    }
+                                });
+                                snackbarMima.show();
+                                break;
 
                         }
 
@@ -106,6 +116,20 @@ public class WebViewActivity extends AppCompatActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
+            }
+        });
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (newProgress==100){
+                    progressBar.setVisibility(View.GONE);
+                }else{
+                    if (progressBar.getVisibility()!=View.VISIBLE){
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    progressBar.setProgress(newProgress);
+                }
             }
         });
         if(!TextUtils.isEmpty(getIntent().getStringExtra("mima"))){
