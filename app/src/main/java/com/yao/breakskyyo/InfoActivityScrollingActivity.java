@@ -155,7 +155,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
     public void onClickDo(View view){
         switch (view.getId()){
             case R.id.play_bt:
-                startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getMovie_payZaixian()));
+                startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getMovie_payZaixian()).putExtra("title",mInfoVideos.getMovie_title()));
                 // startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getBaiduPanUrl()).putExtra("BaiduMima",mInfoVideos.getBaiduPanUrlMima()));
                 break;
 

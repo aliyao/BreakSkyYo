@@ -2,7 +2,10 @@ package com.yao.breakskyyo.dummy;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yao.breakskyyo.R;
+import com.yao.breakskyyo.tools.ClipboardManagerDo;
+import com.yao.breakskyyo.webview.WebViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,32 +68,97 @@ public class AddViewAdapter {
             final int itemNum = i;
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    // if (mdata.get(i).getType()==1||mdata.get(i).getType()==2) {
-                    // 分享的intent
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    // 分享的数据类型
-                    intent.setType("text/plain");
-                    // 分享的主题
-                    intent.putExtra(Intent.EXTRA_SUBJECT, mdata.get(itemNum).getName());
-                    String text = mdata.get(itemNum).getName() + "---(" + mdata.get(itemNum).getUrl()+") ";
-                    if (!TextUtils.isEmpty(mdata.get(itemNum).getMima())) {
-                        text=text+"  (密码--"+mdata.get(itemNum).getMima()+")";
+                public void onClick(final View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                /*    builder.setIcon(R.mipmap.ic_launcher);*/
+                   /* builder.setTitle("操作");*/
+                    //    指定下拉列表的显示数据
+                    String[] toDo;
+                    if(mdata.get(itemNum).getType()==3){
+                         String[] dos = {"分享", "复制"};
+                        toDo=dos;
+                    }else{
+                         String[] dos = {"分享", "复制", "打开"};
+                        toDo=dos;
                     }
-                    // 分享的内容
-                    intent.putExtra(Intent.EXTRA_TEXT, text);
-                    // 允许启动新的Activity
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    // 目标应用寻找对话框的标题
-                    mActivity.startActivity(Intent.createChooser(intent, mdata.get(itemNum).getName()));
-                    // }else{
 
-                    //  }
+                    //    设置一个下拉的列表选择项
+                    builder.setItems(toDo, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    share(itemNum);
+                                    break;
+                                case 1:
+                                    copy(itemNum,v);
+                                    break;
+                                case 2:
+                                    open(itemNum);
+                                    break;
+
+                            }
+
+
+                        }
+                    });
+                    builder.show();
+
 
                 }
             });
 
             ll_list.addView(convertView, i);
         }
+    }
+
+    private void copy(int itemNum,final View v) {
+        String text="";
+        switch (mdata.get(itemNum).getType()){
+            case 1:
+                text = mdata.get(itemNum).getName() + "---(" + mdata.get(itemNum).getUrl() + ") ";
+                if (!TextUtils.isEmpty(mdata.get(itemNum).getMima())) {
+                    text = text + "  (密码--" + mdata.get(itemNum).getMima() + ")";
+                }
+                break;
+            case 2:
+                text = mdata.get(itemNum).getUrl();
+                break;
+            case 3:
+                text = mdata.get(itemNum).getUrl();
+                break;
+            default:
+                return;
+
+        }
+        ClipboardManagerDo.copy(text, mActivity);
+        Snackbar.make(v, "复制成功", Snackbar.LENGTH_LONG).show();
+    }
+    private void share(int itemNum) {
+        // 分享的intent
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        // 分享的数据类型
+        intent.setType("text/plain");
+        // 分享的主题
+        intent.putExtra(Intent.EXTRA_SUBJECT, mdata.get(itemNum).getName());
+        String text = mdata.get(itemNum).getName() + "---(" + mdata.get(itemNum).getUrl() + ") ";
+        if (!TextUtils.isEmpty(mdata.get(itemNum).getMima())) {
+            text = text + "  (密码--" + mdata.get(itemNum).getMima() + ")";
+        }
+        // 分享的内容
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        // 允许启动新的Activity
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        // 目标应用寻找对话框的标题
+        mActivity.startActivity(Intent.createChooser(intent, mdata.get(itemNum).getName()));
+    }
+    private void open(int itemNum){
+        Intent mIntent= new Intent(mActivity, WebViewActivity.class);
+        mIntent.putExtra("url", mdata.get(itemNum).getUrl());
+        mIntent.putExtra("title", mdata.get(itemNum).getName());
+        if (mdata.get(itemNum).getType()==1){
+            mIntent .putExtra("mima", mdata.get(itemNum).getMima());
+        }
+        mActivity.startActivity(mIntent);
     }
 }
