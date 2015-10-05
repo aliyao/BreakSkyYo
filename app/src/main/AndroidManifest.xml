@@ -47,6 +47,14 @@
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".webview.PlayFullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_play_fullscreen"
+            android:screenOrientation="landscape"
+            android:hardwareAccelerated ="true"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
     </application>
 
 </manifest>
