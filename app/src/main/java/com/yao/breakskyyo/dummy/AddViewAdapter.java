@@ -2,8 +2,11 @@ package com.yao.breakskyyo.dummy;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -13,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yao.breakskyyo.R;
+import com.yao.breakskyyo.tools.AppInfoUtil;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
 import com.yao.breakskyyo.webview.WebViewActivity;
 
@@ -153,6 +157,29 @@ public class AddViewAdapter {
         mActivity.startActivity(Intent.createChooser(intent, mdata.get(itemNum).getName()));
     }
     private void open(int itemNum){
+        if(!AppInfoUtil.isRunningBaiduDisk(mActivity)) {
+            try {
+                PackageManager packageManager = mActivity.getPackageManager();
+                Intent intent=new Intent();
+                intent = packageManager.getLaunchIntentForPackage(AppInfoUtil.BaiduDiskPackageName);
+                mActivity.startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Snackbar.make(mActivity.findViewById(R.id.fab), "你还没有安装百度云，为了保存和在线观看视频，现在安装百度云！", Snackbar.LENGTH_LONG)
+                        .setAction("安装", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent viewIntent = new
+                                        Intent("android.intent.action.VIEW", Uri.parse("http://www.baidu.com/s?wd=百度云"));
+                                mActivity.startActivity(viewIntent);
+                            }
+                        }).show();
+
+                return;
+            }
+        }
+
+
         Intent mIntent= new Intent(mActivity, WebViewActivity.class);
         mIntent.putExtra("url", mdata.get(itemNum).getUrl());
         mIntent.putExtra("title", mdata.get(itemNum).getName());
