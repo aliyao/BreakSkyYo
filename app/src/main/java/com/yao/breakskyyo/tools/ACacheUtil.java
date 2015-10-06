@@ -13,6 +13,10 @@ public class ACacheUtil {
     final  static String FirstOpen="FirstOpen";//1第一次打开
     public final  static String UpdateJson="UpdateJson";
     public final  static String DownloadManager_ID="DownloadManager_ID";
+   // public final  static String StatusBarHeight="statusBarHeight";
+    public final  static String ScreenWidth="screenWidth";
+    public final  static String ScreenHeight="screenHeight";
+    public final  static String ContentTop="contentTop";
 
 
     public static boolean isFirstOpen(Context mContext){

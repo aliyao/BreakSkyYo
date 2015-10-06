@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,16 +15,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
+import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
 import com.yao.breakskyyo.net.HttpDo;
+import com.yao.breakskyyo.tools.ACacheUtil;
+
+import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener , FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {
     Fragment fragments[];
     boolean isFinish;
     Toolbar toolbar;
@@ -56,27 +65,45 @@ public class MainActivity extends AppCompatActivity
         init();
 
     }
-    private void init(){
+
+    private void init() {
         toolbar.setSubtitle(R.string.title_section1);
-        fragments=new Fragment[2];
-        fragments[0]=FindFragment.newInstance();
+        fragments = new Fragment[2];
+        fragments[0] = FindFragment.newInstance();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager
                 .beginTransaction();
 
-        if(!fragments[0].isAdded()){
+        if (!fragments[0].isAdded()) {
             fragmentTransaction.replace(R.id.showLayout, fragments[0]);
         }
         fragmentTransaction.show(fragments[0]);
-        if(fragments[1]!=null&&fragments[1].isAdded()){
+        if (fragments[1] != null && fragments[1].isAdded()) {
             fragmentTransaction.hide(fragments[1]);
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         HttpDo.updateApp(this, null);
+        phoneInfo();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        phoneInfo();
+    }
 
+    private void phoneInfo() {
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        int screenWidth = display.getWidth();
+        int screenHeight = display.getHeight();
+        ACacheUtil.put(MainActivity.this, ACacheUtil.ScreenHeight, screenHeight);
+        ACacheUtil.put(MainActivity.this, ACacheUtil.ScreenWidth, screenWidth);
+        int contentTop = screenHeight - findViewById(R.id.showLayout).getHeight();
+        ACacheUtil.put(MainActivity.this, ACacheUtil.ContentTop, contentTop);
+        Log.e("请求成功", contentTop+ "--" + screenWidth + "--" + screenHeight);
+    }
 
 
     @Override
@@ -105,7 +132,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            isFinish=true;
+            isFinish = true;
             finish();
             System.exit(0);
             return true;
@@ -125,7 +152,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_save) {
             showPage(1);
         } else if (id == R.id.nav_about) {
-            startActivity(new Intent(MainActivity.this,AboutActivity.class));
+            startActivity(new Intent(MainActivity.this, AboutActivity.class));
         } /*else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -138,11 +165,12 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private void showPage(int page){
-        switch (page){
+
+    private void showPage(int page) {
+        switch (page) {
             case 1:
-                if(fragments[page]==null){
-                    fragments[page]=SaveFragment.newInstance();
+                if (fragments[page] == null) {
+                    fragments[page] = SaveFragment.newInstance();
                 }
                 toolbar.setSubtitle(R.string.title_section2);
                 break;
@@ -153,14 +181,14 @@ public class MainActivity extends AppCompatActivity
         }
         FragmentTransaction trx = getFragmentManager().beginTransaction();
 
-        for (int index=0;index<fragments.length;index++) {
-            if (fragments[index]!=null&&!fragments[index].isAdded()) {
+        for (int index = 0; index < fragments.length; index++) {
+            if (fragments[index] != null && !fragments[index].isAdded()) {
                 trx.add(R.id.showLayout, fragments[index]);
             }
-            if(page==index){
+            if (page == index) {
                 trx.show(fragments[index]);
-            }else{
-                if (fragments[index]!=null&&fragments[index].isAdded()) {
+            } else {
+                if (fragments[index] != null && fragments[index].isAdded()) {
                     trx.hide(fragments[index]);
                 }
             }
@@ -177,27 +205,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void finish() {
-        if(isFinish){
+        if (isFinish) {
             super.finish();
-        }else{
+        } else {
             Snackbar.make(findViewById(R.id.fab), "是否退出", Snackbar.LENGTH_LONG)
                     .setAction("退出", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            isFinish=true;
+                            isFinish = true;
                             finish();
                         }
                     }).show();
         }
 
     }
-    public void updateSaveFragment(){
-        if(fragments[1]!=null&&fragments[1].isAdded()){
-            ((SaveFragment)fragments[1]).update();
+
+    public void updateSaveFragment() {
+        if (fragments[1] != null && fragments[1].isAdded()) {
+            ((SaveFragment) fragments[1]).update();
         }
     }
-
-
 
 
 }

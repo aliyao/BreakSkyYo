@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,9 +15,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
@@ -28,6 +32,7 @@ import android.widget.ProgressBar;
 
 import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.net.HttpUrl;
+import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
 import com.yao.breakskyyo.webview.util.SystemUiHider;
 
@@ -78,12 +83,15 @@ public class PlayFullscreenActivity extends Activity {
     private WebChromeClient chromeClient = null;
     private View myView = null;
     private WebChromeClient.CustomViewCallback myCallBack = null;
+
+
     public PlayFullscreenActivity() {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_fullscreen);
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -229,10 +237,14 @@ public class PlayFullscreenActivity extends Activity {
         if(TextUtils.isEmpty(url)){
             finish();
         }
-       // httpGetHtml();
+
         webView.setBackgroundColor(0); // 设置背景色
+        webView.getSettings().setDefaultFontSize(18);
         //webView.getBackground().setAlpha(0); // 设置填充透明度 范围：0-255
-        webView.loadUrl(url);
+        //webView.loadUrl(url);
+
+
+         httpGetHtml();
     }
 
     private void copy() {
@@ -450,9 +462,10 @@ public class PlayFullscreenActivity extends Activity {
 
           //  webView.loadUrl(("javascript:" + QuanpingJS));
         }
+
     }
-    final String QuanpingJS="   <script type=\"text/javascript\"> document.write(\"yoyo\");</script>";
-    // final String QuanpingJS=" document.getElementById(\"video_1\").style.height='800px';";
+    //final String QuanpingJS="   <script type=\"text/javascript\"> document.write(\"yoyo\");</script>";
+    final String QuanpingJS="   <script type=\"text/javascript\">  document.getElementById(\"video_1\").style.height='(px)';</script>";
 
     public class MyChromeClient extends WebChromeClient{
         @Override
@@ -470,25 +483,61 @@ public class PlayFullscreenActivity extends Activity {
 
         @Override
         public void onShowCustomView(View view, CustomViewCallback callback) {
-            if(myView != null){
+            /*if(myView != null){
                 callback.onCustomViewHidden();
                 return;
             }
             frameLayout.removeView(webView);
             frameLayout.addView(view);
             myView = view;
-            myCallBack = callback;
+            myCallBack = callback;*/
+            if (myCallback != null) {
+                myCallback.onCustomViewHidden();
+                myCallback = null ;
+                return;
+            }
+
+            long id = Thread.currentThread().getId();
+           // WrtLog. v("WidgetChromeClient", "rong debug in showCustomView Ex: " + id);
+
+            ViewGroup parent = (ViewGroup) webView.getParent();
+            String s = parent.getClass().getName();
+            //WrtLog. v("WidgetChromeClient", "rong debug Ex: " + s);
+            parent.removeView( webView);
+            parent.addView(view);
+            myView = view;
+            myCallback = callback;
+            chromeClient = this ;
         }
+        private View myView = null;
+        private CustomViewCallback myCallback = null;
 
         @Override
         public void onHideCustomView() {
-            if(myView == null){
+            /*if(myView == null){
                 return;
             }
             frameLayout.removeView(myView);
             myView = null;
             frameLayout.addView(webView);
-            myCallBack.onCustomViewHidden();
+            myCallBack.onCustomViewHidden();*/
+            long id = Thread.currentThread().getId();
+            // WrtLog. v("WidgetChromeClient", "rong debug in hideCustom Ex: " + id);
+
+
+            if (myView != null) {
+
+                if (myCallback != null) {
+                    myCallback.onCustomViewHidden();
+                    myCallback = null;
+                }
+
+                ViewGroup parent = (ViewGroup) myView.getParent();
+                parent.removeView(myView);
+                parent.addView(webView);
+                myView = null;
+
+            }
         }
 
         @Override
@@ -500,7 +549,7 @@ public class PlayFullscreenActivity extends Activity {
 
 
     }
-   /* public void httpGetHtml() {
+   public void httpGetHtml() {
         KJHttp kjh = new KJHttp();
         String url =getIntent().getStringExtra("url");
         kjh.get(url, new HttpCallBack() {
@@ -513,8 +562,14 @@ public class PlayFullscreenActivity extends Activity {
             @Override
             public void onSuccess(String t) {
                 super.onSuccess(t);
-                ViewInject.longToast("请求成功");
-                webView.loadData(t, "text/html", "utf-8");
+                int screenHeight=(int) ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ScreenWidth)-((int)ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ContentTop));
+                String htmlstr=t;
+                if(screenHeight>100){
+                     htmlstr=t.replace("465px",screenHeight+"px");
+                }
+                webView.loadDataWithBaseURL("http://m.acfun.tv.id97.com", htmlstr, "text/html", "utf-8", null);
+
+
 
             }
 
@@ -535,5 +590,5 @@ public class PlayFullscreenActivity extends Activity {
 
         });
 
-    }*/
+    }
 }
