@@ -562,15 +562,12 @@ public class PlayFullscreenActivity extends Activity {
             @Override
             public void onSuccess(String t) {
                 super.onSuccess(t);
-                int screenHeight=(int) ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ScreenWidth)-((int)ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ContentTop));
+                int screenHeight=(int) ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ScreenWidth)-(int)ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ContentTop)-10;
                 String htmlstr=t;
                 if(screenHeight>100){
                      htmlstr=t.replace("465px",screenHeight+"px");
                 }
                 webView.loadDataWithBaseURL("http://m.acfun.tv.id97.com", htmlstr, "text/html", "utf-8", null);
-
-
-
             }
 
             @Override
