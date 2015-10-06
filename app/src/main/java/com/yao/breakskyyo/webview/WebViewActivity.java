@@ -29,11 +29,13 @@ public class WebViewActivity extends AppCompatActivity {
     WebView webView;
     FloatingActionButton fab;
     ProgressBar progressBar;
+    boolean isOpenBaiduDiskApp=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
+        isOpenBaiduDiskApp=getIntent().getBooleanExtra("isOpenBaiduDiskApp",false);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -212,4 +214,15 @@ public class WebViewActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isOpenBaiduDiskApp){
+            isOpenBaiduDiskApp=false;
+            Intent intent = new Intent(this,this.getClass());
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            this.startActivity(intent);
+        }
+    }
 }

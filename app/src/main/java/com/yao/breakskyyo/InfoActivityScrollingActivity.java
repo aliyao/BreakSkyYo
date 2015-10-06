@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -45,6 +46,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
     TextView plot_introduction;
     Button play_bt;
     View resource_download;
+    public boolean isOpenBaiduDiskApp=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,5 +171,29 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         }
 
     }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isOpenBaiduDiskApp){
+            isOpenBaiduDiskApp=false;
+            new Thread(){
+                public void run(){
+                    Log.e("yoyo", "yoyo Thread is running.11111111111");
+                    try {
+                        Thread.sleep(10000);
+                    }catch (Exception e){
+
+                    }
+
+                    Log.e("yoyo", "yoyo Thread is running.222222222");
+                    Intent intent = new Intent(InfoActivityScrollingActivity.this,WebViewActivity.class);
+                    InfoActivityScrollingActivity.this.startActivity(intent);
+                }
+            }.start();
+
+
+        }
+    }
+
 
 }

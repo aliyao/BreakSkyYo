@@ -29,6 +29,7 @@
         <activity
             android:name=".InfoActivityScrollingActivity"
             android:label="@string/title_activity_info_activity_scrolling"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity

@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity
         ACacheUtil.put(MainActivity.this, ACacheUtil.ScreenWidth, screenWidth);
         int contentTop = screenHeight - findViewById(R.id.showLayout).getHeight();
         ACacheUtil.put(MainActivity.this, ACacheUtil.ContentTop, contentTop);
-        Log.e("请求成功", contentTop+ "--" + screenWidth + "--" + screenHeight);
     }
 
 
