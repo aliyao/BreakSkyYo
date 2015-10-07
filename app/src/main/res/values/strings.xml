@@ -5,13 +5,13 @@
     <string name="dummy_button">立即进入</string>
     <string name="dummy_content">何时\n石破天惊</string>
     <string name="title_section1">发现</string>
-    <string name="title_section2">收藏</string>
+    <string name="title_section2">保存</string>
     <string name="title_section3">关于</string>
     <string name="navigation_drawer_open">打开导航抽屉</string>
     <string name="navigation_drawer_close">关闭导航抽屉</string>
     <string name="title_activity_info_activity_scrolling">详情</string>
-    <string name="title_activity_about">破天</string>
-    <string name="update_app">检查更新</string>
+    <string name="title_activity_about">关于</string>
+    <string name="update_app">查看更新</string>
 
 <!-- TODO: Remove or change this placeholder text -->
 
