@@ -121,7 +121,7 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 TextView type = (TextView) view.findViewById(R.id.type);
                 TextView tag = (TextView) view.findViewById(R.id.tag);
                 TextView score = (TextView) view.findViewById(R.id.score);
-                title.setText((String) mDummyItem.getContent());
+                title.setText(mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
                 score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
                 String typeStr="类型："+mDummyItem.getType();
