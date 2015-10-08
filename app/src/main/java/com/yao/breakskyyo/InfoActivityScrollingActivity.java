@@ -114,6 +114,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
                 KJLoger.debug("yoyo 结果:" + (String) mDummyItem.getUrl() + "--" + t);
 
                 mInfoVideos = RegularId97.getInfoVideos(t);
+                mInfoVideos.setMovie_title(mDummyItem.getContent());
                 initInfoVideos();
             }
 

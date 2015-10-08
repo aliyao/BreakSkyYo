@@ -1,5 +1,6 @@
 package com.yao.breakskyyo.webview;
 
+import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
 import com.yao.breakskyyo.webview.util.SystemUiHider;
@@ -30,10 +31,24 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.yao.breakskyyo.R;
+
+import org.kymjs.kjframe.KJHttp;
+import org.kymjs.kjframe.http.HttpCallBack;
+import org.kymjs.kjframe.ui.ViewInject;
+import org.kymjs.kjframe.utils.KJLoger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -73,37 +88,16 @@ public class PlayFullscreenActivity extends Activity {
     WebView webView;
     FloatingActionButton fab;
     ProgressBar progressBar;
-
-
     private FrameLayout frameLayout = null;
     private WebChromeClient chromeClient = null;
     private View myView = null;
     private WebChromeClient.CustomViewCallback myCallBack = null;
-
-
     public PlayFullscreenActivity() {
     }
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_play_fullscreen);
-
-       // final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        //final View contentView = findViewById(R.id.fullscreen_content);
-
-        // Set up an instance of SystemUiHider to control the system UI for
-
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -144,8 +138,6 @@ public class PlayFullscreenActivity extends Activity {
                             case 5:
                                 finish();
                                 break;
-
-
                         }
 
 
@@ -183,14 +175,11 @@ public class PlayFullscreenActivity extends Activity {
         if(savedInstanceState != null){
             webView.restoreState(savedInstanceState);
         }
-
-
         init();
     }
 
 
     private void init() {
-
         // this activity.
         mSystemUiHider = SystemUiHider.getInstance(this, webView, HIDER_FLAGS);
         mSystemUiHider.setup();
@@ -248,40 +237,17 @@ public class PlayFullscreenActivity extends Activity {
         WebSettings settings = webView.getSettings();
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
+        settings.setTextSize( WebSettings.TextSize.SMALLEST);
         String url =getIntent().getStringExtra("url");
 
         if(TextUtils.isEmpty(url)){
             finish();
         }
-        webView.loadUrl(url);
-
-
-      /*  webView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });*/
-      /*  webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                if (newProgress == 100) {
-                    progressBar.setVisibility(View.GONE);
-                } else {
-                    if (progressBar.getVisibility() != View.VISIBLE) {
-                        progressBar.setVisibility(View.VISIBLE);
-                    }
-                    progressBar.setProgress(newProgress);
-                }
-            }
-        });*/
-
+        httpGetHtml();
     }
 
     private void copy() {
-        String text = getIntent().getStringExtra("title") + "---(" + getIntent().getStringExtra("url")  + ") ";
-
+        String text = getIntent().getStringExtra("url");
         ClipboardManagerDo.copy(text, PlayFullscreenActivity.this);
         Snackbar.make(webView, "复制成功", Snackbar.LENGTH_LONG).show();
     }
@@ -488,7 +454,16 @@ public class PlayFullscreenActivity extends Activity {
             response = super.shouldInterceptRequest(view, url);
             return response;
         }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+
+          //  webView.loadUrl(("javascript:" + QuanpingJS));
+        }
     }
+    final String QuanpingJS="   <script type=\"text/javascript\"> document.write(\"yoyo\");</script>";
+    // final String QuanpingJS=" document.getElementById(\"video_1\").style.height='800px';";
 
     public class MyChromeClient extends WebChromeClient{
         @Override
@@ -533,6 +508,43 @@ public class PlayFullscreenActivity extends Activity {
             Log.d("ZR", consoleMessage.message() + " at " + consoleMessage.sourceId() + ":" + consoleMessage.lineNumber());
             return super.onConsoleMessage(consoleMessage);
         }
-    }
 
+
+    }
+    public void httpGetHtml() {
+        KJHttp kjh = new KJHttp();
+        String url =getIntent().getStringExtra("url");
+        kjh.get(url, new HttpCallBack() {
+            @Override
+            public void onPreStart() {
+                super.onPreStart();
+                KJLoger.debug("在请求开始之前调用");
+            }
+
+            @Override
+            public void onSuccess(String t) {
+                super.onSuccess(t);
+                ViewInject.longToast("请求成功");
+                webView.loadData(t, "text/html", "utf-8");
+
+            }
+
+            @Override
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                KJLoger.debug("exception:" + strMsg);
+                webView.loadUrl(getIntent().getStringExtra("url"));
+            }
+
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                KJLoger.debug("请求完成，不管成功或者失败都会调用");
+            }
+
+
+        });
+
+    }
 }
