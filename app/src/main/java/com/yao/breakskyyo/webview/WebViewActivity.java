@@ -26,6 +26,7 @@ public class WebViewActivity extends AppCompatActivity {
     WebView webView;
     FloatingActionButton fab;
     ProgressBar progressBar;
+     Snackbar  snackbarMima;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +44,10 @@ public class WebViewActivity extends AppCompatActivity {
                 //    指定下拉列表的显示数据
                 String[] toDo;
                 if (!TextUtils.isEmpty(getIntent().getStringExtra("mima"))) {
-                    String[] dos = {"打开浏览器", "分享", "复制", "帮助","刷新","退出", "显示密码"};
+                    String[] dos = {"打开浏览器", "分享", "复制", "帮助", "刷新", "退出", "显示密码"};
                     toDo = dos;
                 } else {
-                    String[] dos = {"打开浏览器", "分享", "复制", "帮助","刷新","退出"};
+                    String[] dos = {"打开浏览器", "分享", "复制", "帮助", "刷新", "退出"};
                     toDo = dos;
                 }
 
@@ -83,7 +84,7 @@ public class WebViewActivity extends AppCompatActivity {
                                 finish();
                                 break;
                             case 6:
-                                final Snackbar snackbarMima = Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
+                                snackbarMima = Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
                                 snackbarMima.setAction("隐藏", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -125,6 +126,15 @@ public class WebViewActivity extends AppCompatActivity {
                 view.loadUrl(url);
                 return true;
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                if(webView.canGoBack()){
+                    snackbarMima.dismiss();
+                }
+
+            }
         });
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -141,7 +151,7 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
         if(!TextUtils.isEmpty(getIntent().getStringExtra("mima"))){
-           final Snackbar  snackbarMima=Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
+          snackbarMima=Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
             snackbarMima.setAction("隐藏", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
