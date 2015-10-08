@@ -12,8 +12,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:textColor="@android:color/holo_red_light"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         />
 
     <TextView
@@ -24,8 +24,8 @@
         android:layout_centerVertical="true"
         android:textColor="@android:color/holo_blue_light"
         android:layout_toLeftOf="@+id/mima"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
 
         />
     <View
