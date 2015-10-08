@@ -22,6 +22,7 @@ import com.yao.breakskyyo.dummy.InfoVideos;
 import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
+import com.yao.breakskyyo.webview.PlayFullscreenActivity;
 import com.yao.breakskyyo.webview.WebViewActivity;
 
 import org.kymjs.kjframe.KJHttp;
@@ -159,7 +160,8 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
     public void onClickDo(View view){
         switch (view.getId()){
             case R.id.play_bt:
-                startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getMovie_payZaixian()).putExtra("title",mInfoVideos.getMovie_title()));
+                String url=getResources().getString(R.string.zai_xian_url).replace("(id)",mDummyItem.getId());
+                startActivity(new Intent(InfoActivityScrollingActivity.this, PlayFullscreenActivity.class).putExtra("url",url).putExtra("title",mInfoVideos.getMovie_title()));
                 // startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getBaiduPanUrl()).putExtra("BaiduMima",mInfoVideos.getBaiduPanUrlMima()));
                 break;
 
