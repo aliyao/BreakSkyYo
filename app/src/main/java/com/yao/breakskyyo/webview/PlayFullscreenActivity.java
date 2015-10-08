@@ -1,10 +1,5 @@
 package com.yao.breakskyyo.webview;
 
-import com.yao.breakskyyo.dummy.DummyContent;
-import com.yao.breakskyyo.net.HttpUrl;
-import com.yao.breakskyyo.tools.ClipboardManagerDo;
-import com.yao.breakskyyo.webview.util.SystemUiHider;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -20,35 +15,26 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.yao.breakskyyo.R;
+import com.yao.breakskyyo.net.HttpUrl;
+import com.yao.breakskyyo.tools.ClipboardManagerDo;
+import com.yao.breakskyyo.webview.util.SystemUiHider;
 
 import org.kymjs.kjframe.KJHttp;
 import org.kymjs.kjframe.http.HttpCallBack;
 import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -237,13 +223,14 @@ public class PlayFullscreenActivity extends Activity {
         WebSettings settings = webView.getSettings();
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-        settings.setTextSize( WebSettings.TextSize.SMALLEST);
+        settings.setTextSize(WebSettings.TextSize.SMALLEST);
         String url =getIntent().getStringExtra("url");
 
         if(TextUtils.isEmpty(url)){
             finish();
         }
-        httpGetHtml();
+       // httpGetHtml();
+        webView.loadUrl(url);
     }
 
     private void copy() {
@@ -511,7 +498,7 @@ public class PlayFullscreenActivity extends Activity {
 
 
     }
-    public void httpGetHtml() {
+   /* public void httpGetHtml() {
         KJHttp kjh = new KJHttp();
         String url =getIntent().getStringExtra("url");
         kjh.get(url, new HttpCallBack() {
@@ -546,5 +533,5 @@ public class PlayFullscreenActivity extends Activity {
 
         });
 
-    }
+    }*/
 }
