@@ -158,13 +158,15 @@ public class AddViewAdapter {
         mActivity.startActivity(Intent.createChooser(intent, mdata.get(itemNum).getName()));
     }
     private void open(int itemNum){
-        //boolean isOpenBaiduDiskApp=false;
         if(!AppInfoUtil.isRunningBaiduDisk(mActivity)) {
             try {
                 PackageManager packageManager = mActivity.getPackageManager();
                 Intent intent= packageManager.getLaunchIntentForPackage(AppInfoUtil.BaiduDiskPackageName);
                 mActivity.startActivity(intent);
-                handlerToWebViewActivity.sendEmptyMessageDelayed(1, 3000);
+                Message msg= Message.obtain();
+                msg.what=1;
+                msg.obj=itemNum;
+                handlerToWebViewActivity.sendMessageDelayed(msg, 3000);
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -185,7 +187,6 @@ public class AddViewAdapter {
         Intent mIntent= new Intent(mActivity, WebViewActivity.class);
         mIntent.putExtra("url", mdata.get(itemNum).getUrl());
         mIntent.putExtra("title", mdata.get(itemNum).getName());
-        //mIntent.putExtra("isOpenBaiduDiskApp", isOpenBaiduDiskApp);
         if (mdata.get(itemNum).getType()==1){
             mIntent .putExtra("mima", mdata.get(itemNum).getMima());
         }
@@ -196,7 +197,15 @@ public class AddViewAdapter {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            int num=(int)msg.obj;
             Intent mIntent = new Intent(mActivity.getApplication(), WebViewActivity.class);
+            mIntent.putExtra("url", mdata.get(num).getUrl());
+            mIntent.putExtra("title", mdata.get(num).getName());
+
+            if (mdata.get(num).getType()==1){
+                mIntent .putExtra("mima", mdata.get(num).getMima());
+            }
+            mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mActivity.getApplication().startActivity(mIntent);
         }
     };
