@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,7 +23,6 @@ import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 import com.yao.breakskyyo.webview.PlayFullscreenActivity;
-import com.yao.breakskyyo.webview.WebViewActivity;
 
 import org.kymjs.kjframe.KJHttp;
 import org.kymjs.kjframe.http.HttpCallBack;
@@ -46,7 +44,6 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
     TextView plot_introduction;
     Button play_bt;
     View resource_download;
-    public boolean isOpenBaiduDiskApp=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,37 +58,38 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mDummyItem.setSaveDate(new Date().getTime());
-                String tip="保存失败";
-               switch (DummyItemDb.save(mDummyItem,InfoActivityScrollingActivity.this)){
-                   case 1:
-                       tip="保存成功";
-                       break;
-                   case 2:
-                       tip="已经保存";
-                       break;
-               }
+                String tip = "保存失败";
+                switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
+                    case 1:
+                        tip = "保存成功";
+                        break;
+                    case 2:
+                        tip = "已经保存";
+                        break;
+                }
                 Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
     }
-    private void init(){
-        showImg=(ImageView)findViewById(R.id.showImg);
-        tag=(TextView)findViewById(R.id.tag);
-        resource_download_list=(LinearLayout)findViewById(R.id.resource_download_list);
-        resource_download=findViewById(R.id.resource_download);
+
+    private void init() {
+        showImg = (ImageView) findViewById(R.id.showImg);
+        tag = (TextView) findViewById(R.id.tag);
+        resource_download_list = (LinearLayout) findViewById(R.id.resource_download_list);
+        resource_download = findViewById(R.id.resource_download);
         resource_download.setVisibility(View.GONE);
-        plot_introduction=(TextView)findViewById(R.id.plot_introduction);
-        play_bt=(Button)findViewById(R.id.play_bt);
+        plot_introduction = (TextView) findViewById(R.id.plot_introduction);
+        play_bt = (Button) findViewById(R.id.play_bt);
         play_bt.setVisibility(View.GONE);
         adapter = new AddViewAdapter(InfoActivityScrollingActivity.this, resource_download_list.getId());
-        String jsonFindItemInfo=getIntent().getStringExtra("jsonFindItemInfo");
-        if(TextUtils.isEmpty(jsonFindItemInfo)){
+        String jsonFindItemInfo = getIntent().getStringExtra("jsonFindItemInfo");
+        if (TextUtils.isEmpty(jsonFindItemInfo)) {
             finish();
             return;
         }
-        mDummyItem= JSON.parseObject(jsonFindItemInfo,DummyItem.class);
-        if(mDummyItem==null){
+        mDummyItem = JSON.parseObject(jsonFindItemInfo, DummyItem.class);
+        if (mDummyItem == null) {
             finish();
             return;
         }
@@ -137,63 +135,39 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         });
 
     }
-    public void initInfoVideos(){
+
+    public void initInfoVideos() {
         plot_introduction.setText(mInfoVideos.getMovie_jvqing());
-        List<DownloadInfoItem> downloadInfoItemList=new ArrayList<>();
-        if(!TextUtils.isEmpty(mInfoVideos.getBaiduPanUrl())){
-            downloadInfoItemList.add(new DownloadInfoItem(mInfoVideos.getBaiduPanName(),mInfoVideos.getBaiduPanUrl(),mInfoVideos.getBaiduPanUrlMima(),1));
+        List<DownloadInfoItem> downloadInfoItemList = new ArrayList<>();
+        if (!TextUtils.isEmpty(mInfoVideos.getBaiduPanUrl())) {
+            downloadInfoItemList.add(new DownloadInfoItem(mInfoVideos.getBaiduPanName(), mInfoVideos.getBaiduPanUrl(), mInfoVideos.getBaiduPanUrlMima(), 1));
         }
-        if( mInfoVideos.getRegularChili()!=null){
-            for ( Map<String,String> map:
+        if (mInfoVideos.getRegularChili() != null) {
+            for (Map<String, String> map :
                     mInfoVideos.getRegularChili()) {
-                downloadInfoItemList.add(new DownloadInfoItem(map.get("url"),map.get("name"),null,3));
+                downloadInfoItemList.add(new DownloadInfoItem(map.get("url"), map.get("name"), null, 3));
             }
         }
         adapter.clearmdata();
         adapter.addmdata(downloadInfoItemList);
         adapter.addCommentView();
         resource_download.setVisibility(View.VISIBLE);
-        if(TextUtils.isEmpty(mInfoVideos.getMovie_payZaixian())){
+        if (TextUtils.isEmpty(mInfoVideos.getMovie_payZaixian())) {
             play_bt.setVisibility(View.GONE);
-        }else{
+        } else {
             play_bt.setVisibility(View.VISIBLE);
         }
 
     }
-    public void onClickDo(View view){
-        switch (view.getId()){
+
+    public void onClickDo(View view) {
+        switch (view.getId()) {
             case R.id.play_bt:
-                String url=getResources().getString(R.string.zai_xian_url).replace("(id)",mDummyItem.getId());
-                startActivity(new Intent(InfoActivityScrollingActivity.this, PlayFullscreenActivity.class).putExtra("url",url).putExtra("title",mInfoVideos.getMovie_title()));
+                String url = getResources().getString(R.string.zai_xian_url).replace("(id)", mDummyItem.getId());
+                startActivity(new Intent(InfoActivityScrollingActivity.this, PlayFullscreenActivity.class).putExtra("url", url).putExtra("title", mInfoVideos.getMovie_title()));
                 // startActivity(new Intent(InfoActivityScrollingActivity.this, WebViewActivity.class).putExtra("url",mInfoVideos.getBaiduPanUrl()).putExtra("BaiduMima",mInfoVideos.getBaiduPanUrlMima()));
                 break;
-
         }
 
     }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (isOpenBaiduDiskApp){
-            isOpenBaiduDiskApp=false;
-            new Thread(){
-                public void run(){
-                    Log.e("yoyo", "yoyo Thread is running.11111111111");
-                    try {
-                        Thread.sleep(10000);
-                    }catch (Exception e){
-
-                    }
-
-                    Log.e("yoyo", "yoyo Thread is running.222222222");
-                    Intent intent = new Intent(InfoActivityScrollingActivity.this,WebViewActivity.class);
-                    InfoActivityScrollingActivity.this.startActivity(intent);
-                }
-            }.start();
-
-
-        }
-    }
-
-
 }

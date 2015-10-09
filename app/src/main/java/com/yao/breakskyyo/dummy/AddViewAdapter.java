@@ -2,21 +2,20 @@ package com.yao.breakskyyo.dummy;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yao.breakskyyo.InfoActivityScrollingActivity;
 import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
@@ -159,20 +158,14 @@ public class AddViewAdapter {
         mActivity.startActivity(Intent.createChooser(intent, mdata.get(itemNum).getName()));
     }
     private void open(int itemNum){
-        boolean isOpenBaiduDiskApp=false;
+        //boolean isOpenBaiduDiskApp=false;
         if(!AppInfoUtil.isRunningBaiduDisk(mActivity)) {
             try {
                 PackageManager packageManager = mActivity.getPackageManager();
-                Intent intent=new Intent();
-                intent = packageManager.getLaunchIntentForPackage(AppInfoUtil.BaiduDiskPackageName);
-               /* intent.setAction("android.intent.action.MAIN");
-                intent.addCategory("android.intent.category.HOME");*/
+                Intent intent= packageManager.getLaunchIntentForPackage(AppInfoUtil.BaiduDiskPackageName);
                 mActivity.startActivity(intent);
-                isOpenBaiduDiskApp=true;
-                ((InfoActivityScrollingActivity)mActivity).isOpenBaiduDiskApp=true;
-                mActivity. moveTaskToBack(true);
-                Log.e("isOpenBaiduDiskApp", "yoyo Thread is running."+isOpenBaiduDiskApp);
-
+                handlerToWebViewActivity.sendEmptyMessageDelayed(1, 3000);
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
                 Snackbar.make(mActivity.findViewById(R.id.fab), "你还没有安装百度云，为了保存和在线观看视频，现在安装百度云！", Snackbar.LENGTH_LONG)
@@ -189,14 +182,22 @@ public class AddViewAdapter {
             }
         }
 
-
         Intent mIntent= new Intent(mActivity, WebViewActivity.class);
         mIntent.putExtra("url", mdata.get(itemNum).getUrl());
         mIntent.putExtra("title", mdata.get(itemNum).getName());
-        mIntent.putExtra("isOpenBaiduDiskApp", isOpenBaiduDiskApp);
+        //mIntent.putExtra("isOpenBaiduDiskApp", isOpenBaiduDiskApp);
         if (mdata.get(itemNum).getType()==1){
             mIntent .putExtra("mima", mdata.get(itemNum).getMima());
         }
         mActivity.startActivity(mIntent);
     }
+
+    Handler handlerToWebViewActivity = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Intent mIntent = new Intent(mActivity.getApplication(), WebViewActivity.class);
+            mActivity.getApplication().startActivity(mIntent);
+        }
+    };
 }

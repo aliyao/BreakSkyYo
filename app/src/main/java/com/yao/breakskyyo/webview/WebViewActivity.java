@@ -12,15 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.yao.breakskyyo.GlobalKey;
 import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
@@ -29,13 +26,12 @@ public class WebViewActivity extends AppCompatActivity {
     WebView webView;
     FloatingActionButton fab;
     ProgressBar progressBar;
-    boolean isOpenBaiduDiskApp=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-        isOpenBaiduDiskApp=getIntent().getBooleanExtra("isOpenBaiduDiskApp",false);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -217,12 +213,5 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (isOpenBaiduDiskApp){
-            isOpenBaiduDiskApp=false;
-            Intent intent = new Intent(this,this.getClass());
-            intent.setAction(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            this.startActivity(intent);
-        }
     }
 }
