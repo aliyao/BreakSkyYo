@@ -12,6 +12,13 @@ package com.yao.breakskyyo.dummy;
 public class SelectHeadItem {
     String url;
     String text;
+    public SelectHeadItem(){
+
+    }
+
+    public SelectHeadItem(String text){
+        this.text=text;
+    }
 
     public String getUrl() {
         return url;

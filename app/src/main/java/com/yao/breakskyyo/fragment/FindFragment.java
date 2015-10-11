@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,11 +68,16 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     final String zhengZeId = "id/(.*?).html";
     final String zhengZeType = "<a.*?class=\"movietype\">(.*?)</a>";
     final String zhengZeTag = "[\\s\\S]*?>(.*?)</";
-    int pageNum;
+
     List<List<SelectHeadItem>> listSelectHeadItemlist;
     Button bt_select[];
     int selectedNum =-100;
-    int  positionItem=-100;
+
+    int pageNum;
+    int  positionItemYear=-100;
+    int  positionItemRating=-100;
+    int  positionItemCountry=-100;
+    int  positionItemTags=-100;
 
 
     public static FindFragment newInstance() {
@@ -176,7 +182,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                httpGetFindList(1,positionItem);
+                httpGetFindList(1);
             }
         });
         mListView.setOnItemClickListener(this);
@@ -184,13 +190,44 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         select_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                httpGetFindList(1, position);
+                switch (selectedNum){
+                    case 0:
+                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())){
+                            positionItemYear  =-100;
+                        }else{
+                            positionItemYear  =position;
+                        }
+
+                        break;
+                    case 1:
+                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())){
+                            positionItemRating  =-100;
+                        }else{
+                            positionItemRating  =position;
+                        }
+                        break;
+                    case 2:
+                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())){
+                            positionItemCountry  =-100;
+                        }else{
+                            positionItemCountry  =position;
+                        }
+                        break;
+                    case 3:
+                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())){
+                            positionItemTags  =-100;
+                        }else{
+                            positionItemTags  =position;
+                        }
+                        break;
+                }
+                httpGetFindList(1);
                 select_list.setVisibility(View.GONE);
             }
         });
         refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(FindFragment.this.getActivity(), 24));
         refreshView.setRefreshing(true);
-        httpGetFindList(1, -110);
+        httpGetFindList(1);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -237,26 +274,35 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyItem>) mAdapter).getItem(position))));
     }
 
-    public void httpGetFindList(final int page,final int position) {
+    public void httpGetFindList(final int page) {
         KJHttp kjh = new KJHttp();
-        String url = HttpUrl.FindList + "&page=" + page;
-        if(position>=0){
-           switch (selectedNum){
-               case 0:
-                   url= url+HttpUrl.year+listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
-                   break;
-               case 1:
-                   url= url+HttpUrl.rating+listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
-                   break;
-               case 2:
-                   url= url+HttpUrl.country+listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
-                   break;
-               case 3:
-                   url= url+HttpUrl.tags+listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
-                   break;
-
-           }
+        String url = HttpUrl.FindList + "page=" + page;
+        if(positionItemYear>=0) {
+            url = url + HttpUrl.year + listSelectHeadItemlist.get(0).get(positionItemYear).getUrl();
+            bt_select[0].setText(listSelectHeadItemlist.get(0).get(positionItemYear).getText());
+        }else{
+            bt_select[0].setText("年份");
         }
+        if(positionItemRating>=0) {
+            url = url + HttpUrl.rating + listSelectHeadItemlist.get(1).get(positionItemRating).getUrl();
+            bt_select[1].setText(listSelectHeadItemlist.get(1).get(positionItemRating).getText());
+        }else{
+            bt_select[1].setText("评分");
+        }
+        if(positionItemCountry>=0) {
+            url = url + HttpUrl.country + listSelectHeadItemlist.get(2).get(positionItemCountry).getUrl();
+            bt_select[2].setText(listSelectHeadItemlist.get(2).get(positionItemCountry).getText());
+        }else{
+            bt_select[2].setText("地区");
+        }
+        if(positionItemTags>=0) {
+            url = url + HttpUrl.tags + listSelectHeadItemlist.get(3).get(positionItemTags).getUrl();
+            bt_select[3].setText(listSelectHeadItemlist.get(3).get(positionItemTags).getText());
+        }else{
+            bt_select[3].setText("类型");
+        }
+        Log.e("url", "url:" + url);
+
         kjh.get(url, new HttpCallBack() {
             @Override
             public void onPreStart() {
@@ -268,7 +314,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
             public void onSuccess(String t) {
                 super.onSuccess(t);
                 ViewInject.longToast("请求成功");
-                System.out.println(t.toString());
                 KJLoger.debug("log:" + t.toString());
                 Pattern p = Pattern.compile(zhengZeItem);
                 Matcher m = p.matcher(t.toString());
@@ -347,11 +392,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     pageNum = page;
                 }
                 ((ArrayAdapter) mAdapter).notifyDataSetChanged();
-                positionItem=position;
-                if(position<0) {
+                if(positionItemYear<0&&positionItemRating<0&&positionItemCountry<0&&positionItemTags<0) {
                     listSelectHeadItemlist = RegularId97.getSelectHeadItem(t.toString());
-                }else{
-                    bt_select[selectedNum].setText(listSelectHeadItemlist.get(selectedNum).get(position).getText());
                 }
                 ll_head_select.setVisibility(View.VISIBLE);
 
@@ -362,6 +404,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
             public void onFailure(int errorNo, String strMsg) {
                 super.onFailure(errorNo, strMsg);
                 KJLoger.debug("exception:" + strMsg);
+                if (page == 1) {
+                    ((ArrayAdapter) mAdapter).clear();
+                    pageNum = 1;
+                    ((ArrayAdapter) mAdapter).notifyDataSetChanged();
+                }
             }
 
 
@@ -406,10 +453,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_year:
-                selectedNum =0;
                 if (selectedNum ==0&&select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
+                    selectedNum =0;
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> selectHeadItemlistYear = new ArrayList<>();
@@ -419,13 +466,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
 
                     }
                     mSelectAdapter.addAll(selectHeadItemlistYear);
+
                 }
                 break;
             case R.id.bt_score_sort:
-                selectedNum =1;
+
                 if (selectedNum ==1&&select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
+                    selectedNum =1;
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemRating = new ArrayList<>();
@@ -438,10 +487,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 }
                 break;
             case R.id.bt_national_area:
-                selectedNum =2;
+
                 if (selectedNum ==2&&select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
+                    selectedNum =2;
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemCountry = new ArrayList<>();
@@ -454,10 +504,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 }
                 break;
             case R.id.bt_film_area:
-                selectedNum =3;
+
                 if (selectedNum ==3&&select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
+                    selectedNum  =3;
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemTags = new ArrayList<>();

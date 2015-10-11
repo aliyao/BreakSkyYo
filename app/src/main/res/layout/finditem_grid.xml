@@ -13,6 +13,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:text="年份" />
 
         <Button
@@ -20,6 +22,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:text="评分" />
 
         <Button
@@ -27,13 +31,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="国家" />
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="地区" />
 
         <Button
             android:id="@+id/bt_film_area"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:text="类型" />
     </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout

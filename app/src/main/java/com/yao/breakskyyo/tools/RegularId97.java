@@ -115,13 +115,13 @@ public class RegularId97 {
                             break;
                         case 2:
                             SelectHeadItem mSelectHeadItemCountry=new SelectHeadItem();
-                            mSelectHeadItemCountry.setUrl(itemList.get(num - 1));
+                            mSelectHeadItemCountry.setUrl(itemList.get(num-1));
                             mSelectHeadItemCountry.setText(itemList.get(num));
                             listSelectHeadItemCountry.add(mSelectHeadItemCountry);
                             break;
                         case 3:
                             SelectHeadItem mSelectHeadItemTags=new SelectHeadItem();
-                            mSelectHeadItemTags.setUrl(itemList.get(num - 1));
+                            mSelectHeadItemTags.setUrl(itemList.get(num-1));
                             mSelectHeadItemTags.setText(itemList.get(num));
                             listSelectHeadItemTags.add(mSelectHeadItemTags);
                             break;
@@ -129,6 +129,10 @@ public class RegularId97 {
                 }
             }
         }
+        listSelectHeadItemYear.add(0,new SelectHeadItem("全部"));
+        listSelectHeadItemRating.add(0,new SelectHeadItem("全部"));
+        listSelectHeadItemCountry.add(0,new SelectHeadItem("全部"));
+        listSelectHeadItemTags.add(0,new SelectHeadItem("全部"));
         List< List<SelectHeadItem>> listListSelectHeadItem=new ArrayList<>();
         listListSelectHeadItem.add(listSelectHeadItemYear);
         listListSelectHeadItem.add(listSelectHeadItemRating);
