@@ -42,7 +42,7 @@ public class RegularId97 {
     static String year = "/videos/movie\\?year=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     static String rating = "/videos/movie\\?rating=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     static String country = "/videos/movie\\?country=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
-    static String tags = "/videos/movie\\?tags=([\\s\\S]*?)\"movie-tags[\\s\\S]*?>([\\s\\S]*?)<";
+    static String tags = "/videos/movie\\?tags=([\\s\\S]*?)\" class=\"movie-tags[\\s\\S]*?>([\\s\\S]*?)<";
     static String[] regularSelectHead = {year, rating, country, tags};
 
 
