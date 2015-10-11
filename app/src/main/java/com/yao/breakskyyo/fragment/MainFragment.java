@@ -154,6 +154,8 @@ public class MainFragment extends Fragment  {
         };
         mListView = (ListView) getView().findViewById(R.id.lv_main);
         refreshView = (SwipeRefreshLayout) getView().findViewById(R.id.refreshView);
+       View view = getActivity().getLayoutInflater().inflate(R.layout.activity_hello, null, false);
+        mListView.addHeaderView(view);
         mListView.setAdapter(mAdapter);
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
