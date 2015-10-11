@@ -23,17 +23,6 @@ public class DummyItem {
         this.type = type;
         this.score = score;
     }
-
-    /*public DummyItem(String id, String content, String url, String imgUrl, String tag, List<String> type, String score,Date saveDate) {
-        this.id = id;
-        this.content = content;
-        this.url = url;
-        this.imgUrl = imgUrl;
-        this.tag = tag;
-        this.type = (List<String>) type;
-        this.score = score;
-        this.saveDate=saveDate;
-    }*/
     public DummyItem() {
 
     }
@@ -44,6 +33,7 @@ public class DummyItem {
         this.imgUrl = imgUrl;
         this.content = content;
         this.browseNum=browseNum;
+        this.url="http://www.id97.com/videos/resource/id/"+id+".html";
     }
 
     public String getId() {

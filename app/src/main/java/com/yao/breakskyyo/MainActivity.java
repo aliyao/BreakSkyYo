@@ -33,11 +33,13 @@ public class MainActivity extends AppCompatActivity
     Fragment fragments[];
     boolean isFinish;
     Toolbar toolbar;
+    static MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainActivity=this;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

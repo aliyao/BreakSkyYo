@@ -98,13 +98,27 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
 
 
                 title.setText( mDummyItem.getContent());
-                tag.setText(StringDo.removeNull(mDummyItem.getTag()));
-                score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
-                String typeStr="类型："+mDummyItem.getType();
-                if(TextUtils.isEmpty(mDummyItem.getType())){
-                    typeStr="";
+                if(TextUtils.isEmpty(mDummyItem.getTag())){
+                    tag.setVisibility(View.GONE);
+                }else{
+                    tag.setText(StringDo.removeNull(mDummyItem.getTag()));
+                    tag.setVisibility(View.VISIBLE);
                 }
-                type.setText(StringDo.removeNull(typeStr));
+                if(TextUtils.isEmpty(mDummyItem.getScore())){
+                    score.setVisibility(View.GONE);
+                }else{
+                    score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
+                    score.setVisibility(View.VISIBLE);
+                }
+                if(TextUtils.isEmpty(mDummyItem.getType())){
+                    type.setVisibility(View.GONE);
+                }else{
+                    String typeStr="类型："+mDummyItem.getType();
+                    type.setText(StringDo.removeNull(typeStr));
+                    type.setVisibility(View.VISIBLE);
+                }
+
+
                 YOBitmap.getmKJBitmap().display(img,StringDo.removeNull(mDummyItem.getImgUrl()));
                 return view;
             }

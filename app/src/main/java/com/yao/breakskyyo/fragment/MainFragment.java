@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -40,7 +39,7 @@ public class MainFragment extends Fragment  {
     private OnFragmentInteractionListener mListener;
     private ListView mListView;
     SwipeRefreshLayout refreshView;
-    private ArrayAdapter mAdapter;
+    private ArrayAdapter<List<DummyItem>> mAdapter;
     int hotSize=-1;
 
     public static MainFragment newInstance() {
@@ -71,8 +70,6 @@ public class MainFragment extends Fragment  {
     public void init() {
         mAdapter = new ArrayAdapter<List<DummyItem>>(getActivity(),
                 R.layout.main_list_item) {
-
-            View rl_item2,rl_item1;
             @Override
             public List<DummyItem> getItem(int position) {
                 return super.getItem(position);
@@ -92,18 +89,18 @@ public class MainFragment extends Fragment  {
                 ImageView img2 = (ImageView) view.findViewById(R.id.image2);
                 TextView title2 = (TextView) view.findViewById(R.id.title2);
                 TextView browseNum2 = (TextView) view.findViewById(R.id.browseNum2);
-                 rl_item2=view.findViewById(R.id.rl_item2);
-                 rl_item1=view.findViewById(R.id.rl_item1);
+                View  rl_item2=view.findViewById(R.id.rl_item2);
+                View  rl_item1=view.findViewById(R.id.rl_item1);
                 rl_item1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onItemClick(rl_item1, position);
+                        onMainItemClick(0, position);
                     }
                 });
                 rl_item1.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onItemLongClick(rl_item1,position);
+                        onMainItemLongClick(v,0, position);
                         return true;
                     }
                 });
@@ -111,13 +108,13 @@ public class MainFragment extends Fragment  {
                 rl_item2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onItemClick(rl_item2,position);
+                        onMainItemClick(1, position);
                     }
                 });
                 rl_item2.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onItemLongClick(rl_item2 position);
+                        onMainItemLongClick(v,1, position);
                         return true;
                     }
                 });
@@ -164,8 +161,7 @@ public class MainFragment extends Fragment  {
                 httpGet();
             }
         });
-        mListView.setOnItemClickListener(this);
-        mListView.setOnItemLongClickListener(this);
+
         httpGet();
     }
 
@@ -200,10 +196,10 @@ public class MainFragment extends Fragment  {
 
     }
 
-   /* @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyItem>) mAdapter).getItem(position))));
-    }*/
+
+    public void onMainItemClick(int itemNum, int position) {
+        startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(mAdapter.getItem(position).get(itemNum))));
+    }
 
     public void httpGet() {
         KJHttp kjh = new KJHttp();
@@ -222,22 +218,22 @@ public class MainFragment extends Fragment  {
                 super.onSuccess(t);
                 ViewInject.longToast("请求成功");
                 KJLoger.debug("log:" + t.toString());
-                List<List<DummyItem>>  dummyItemListList=RegularId97.getHotNewItem(t.toString());
-                if(dummyItemListList!=null&&dummyItemListList.size()==2&&dummyItemListList.get(0)!=null){
-                    if(dummyItemListList.get(0).size()%2!=0){
+                List<List<DummyItem>> dummyItemListList = RegularId97.getHotNewItem(t.toString());
+                if (dummyItemListList != null && dummyItemListList.size() == 2 && dummyItemListList.get(0) != null) {
+                    if (dummyItemListList.get(0).size() % 2 != 0) {
                         dummyItemListList.get(0).add(null);
                     }
-                    if(dummyItemListList.get(1).size()%2!=0){
+                    if (dummyItemListList.get(1).size() % 2 != 0) {
                         dummyItemListList.get(1).add(null);
                     }
-                    hotSize=dummyItemListList.get(0).size()/2;
-                    List<DummyItem>  dummyItemList=new ArrayList<DummyItem>();
+                    hotSize = dummyItemListList.get(0).size() / 2;
+                    List<DummyItem> dummyItemList = new ArrayList<DummyItem>();
                     dummyItemList.addAll(dummyItemListList.get(0));
                     dummyItemList.addAll(dummyItemListList.get(1));
-                    List<List<DummyItem>>  dummyItemListListResult= new ArrayList<List<DummyItem>>();
-                    for (int num=1; num< dummyItemList.size();num=num+2) {
-                        List<DummyItem> dummyItemListResult=new ArrayList<DummyItem>();
-                        dummyItemListResult.add(dummyItemList.get(num-1));
+                    List<List<DummyItem>> dummyItemListListResult = new ArrayList<List<DummyItem>>();
+                    for (int num = 1; num < dummyItemList.size(); num = num + 2) {
+                        List<DummyItem> dummyItemListResult = new ArrayList<DummyItem>();
+                        dummyItemListResult.add(dummyItemList.get(num - 1));
                         dummyItemListResult.add(dummyItemList.get(num));
                         dummyItemListListResult.add(dummyItemListResult);
                     }
@@ -270,12 +266,12 @@ public class MainFragment extends Fragment  {
     }
 
 
-    public boolean onItemLongClick( View view, final int position) {
+    public boolean onMainItemLongClick(final View view, final int itemNum, final int position) {
         Snackbar.make(view, "是否保存", Snackbar.LENGTH_LONG)
                 .setAction("保存", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DummyItem dummyItem = ((ArrayAdapter<DummyItem>) mAdapter).getItem(position);
+                        DummyItem dummyItem =mAdapter.getItem(position).get(itemNum);
                         dummyItem.setSaveDate(new Date().getTime());
                         String tip = "保存失败";
                         switch (DummyItemDb.save(dummyItem, MainFragment.this.getActivity())) {

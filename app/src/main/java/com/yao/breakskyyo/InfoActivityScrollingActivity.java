@@ -74,6 +74,9 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
                                 switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
                                     case 1:
                                         tip = "保存成功";
+                                        if ( MainActivity.mainActivity!=null){
+                                            MainActivity.mainActivity.updateSaveFragment();
+                                        }
                                         break;
                                     case 2:
                                         tip = "已经保存";
