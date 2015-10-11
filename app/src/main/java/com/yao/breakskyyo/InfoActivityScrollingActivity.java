@@ -74,7 +74,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
                                 switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
                                     case 1:
                                         tip = "保存成功";
-                                        if ( MainActivity.mainActivity!=null){
+                                        if (MainActivity.mainActivity != null) {
                                             MainActivity.mainActivity.updateSaveFragment();
                                         }
                                         break;
@@ -116,7 +116,13 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             finish();
             return;
         }
-        tag.setText(StringDo.removeNull(mDummyItem.getTag()));
+        if(TextUtils.isEmpty(mDummyItem.getTag())){
+            tag.setVisibility(View.GONE);
+        }else{
+            tag.setVisibility(View.VISIBLE);
+            tag.setText(StringDo.removeNull(mDummyItem.getTag()));
+        }
+
         YOBitmap.getmKJBitmap().display(showImg, StringDo.removeNull(mDummyItem.getImgUrl()));
         httpGetItemInfo();
         if((boolean)ACacheUtil.getAsObjectDefault(InfoActivityScrollingActivity.this,ACacheUtil.IsShowWifiTip,true)){
@@ -133,7 +139,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
 
     public void httpGetItemInfo() {
         KJHttp kjh = new KJHttp();
-        kjh.get((String) mDummyItem.getUrl(), new HttpCallBack() {
+        kjh.get( mDummyItem.getUrl(), new HttpCallBack() {
             @Override
             public void onPreStart() {
                 super.onPreStart();
@@ -144,7 +150,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             public void onSuccess(String t) {
                 super.onSuccess(t);
                 ViewInject.longToast("请求成功");
-                KJLoger.debug("yoyo 结果:" + (String) mDummyItem.getUrl() + "--" + t);
+                KJLoger.debug("yoyo 结果:" +  mDummyItem.getUrl() + "--" + t);
 
                 mInfoVideos = RegularId97.getInfoVideos(t);
                 mInfoVideos.setMovie_title(mDummyItem.getContent());
