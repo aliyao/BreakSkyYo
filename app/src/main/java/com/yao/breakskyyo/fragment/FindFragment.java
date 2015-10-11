@@ -37,9 +37,11 @@ import com.yao.breakskyyo.tools.YOBitmap;
 
 import org.kymjs.kjframe.KJHttp;
 import org.kymjs.kjframe.http.HttpCallBack;
+import org.kymjs.kjframe.http.HttpParams;
 import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -276,6 +278,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
 
     public void httpGetFindList(final int page) {
         KJHttp kjh = new KJHttp();
+
+        HttpParams params = new HttpParams();
         String url = HttpUrl.FindList + "page=" + page;
         if(positionItemYear>=0) {
             url = url + HttpUrl.year + listSelectHeadItemlist.get(0).get(positionItemYear).getUrl();
@@ -290,13 +294,26 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
             bt_select[1].setText("评分");
         }
         if(positionItemCountry>=0) {
-            url = url + HttpUrl.country + listSelectHeadItemlist.get(2).get(positionItemCountry).getUrl();
+            String countryStr= listSelectHeadItemlist.get(2).get(positionItemCountry).getUrl();
+            try {
+                countryStr= URLEncoder.encode(countryStr, "utf-8");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            url = url + HttpUrl.country +countryStr;
             bt_select[2].setText(listSelectHeadItemlist.get(2).get(positionItemCountry).getText());
         }else{
             bt_select[2].setText("地区");
         }
         if(positionItemTags>=0) {
-            url = url + HttpUrl.tags + listSelectHeadItemlist.get(3).get(positionItemTags).getUrl();
+            String tagsStr= listSelectHeadItemlist.get(3).get(positionItemTags).getUrl();
+            try {
+                tagsStr= URLEncoder.encode(tagsStr,"utf-8");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            url = url + HttpUrl.tags +tagsStr;
             bt_select[3].setText(listSelectHeadItemlist.get(3).get(positionItemTags).getText());
         }else{
             bt_select[3].setText("类型");
@@ -392,7 +409,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     pageNum = page;
                 }
                 ((ArrayAdapter) mAdapter).notifyDataSetChanged();
-                if(positionItemYear<0&&positionItemRating<0&&positionItemCountry<0&&positionItemTags<0) {
+                if (positionItemYear < 0 && positionItemRating < 0 && positionItemCountry < 0 && positionItemTags < 0) {
                     listSelectHeadItemlist = RegularId97.getSelectHeadItem(t.toString());
                 }
                 ll_head_select.setVisibility(View.VISIBLE);
