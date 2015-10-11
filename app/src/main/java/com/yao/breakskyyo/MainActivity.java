@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     boolean isFinish;
     Toolbar toolbar;
     static MainActivity mainActivity;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getMenu().findItem(R.id.nav_main).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
         init();
@@ -212,6 +213,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    public void toFindItemFragment(){
+        navigationView.getMenu().findItem(R.id.nav_slideshow).setChecked(true);
+        showPage(1);
     }
 
     private void showPage(int page) {

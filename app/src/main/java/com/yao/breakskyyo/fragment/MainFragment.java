@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -91,6 +92,7 @@ public class MainFragment extends Fragment  {
                 TextView browseNum2 = (TextView) view.findViewById(R.id.browseNum2);
                 View  rl_item2=view.findViewById(R.id.rl_item2);
                 View  rl_item1=view.findViewById(R.id.rl_item1);
+                Button bt_more_movie=(Button)view.findViewById(R.id.bt_more_movie);
                 rl_item1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -128,6 +130,18 @@ public class MainFragment extends Fragment  {
                     tv_lable.setVisibility(View.VISIBLE);
                 }else{
                     tv_lable.setVisibility(View.GONE);
+                }
+
+                if(position==(getCount()-1)){
+                    bt_more_movie.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((MainActivity)getActivity()).toFindItemFragment();
+                        }
+                    });
+                    bt_more_movie.setVisibility(View.VISIBLE);
+                }else{
+                    bt_more_movie.setVisibility(View.GONE);
                 }
 
                 title.setText(dummyItemList.get(0).getContent());
