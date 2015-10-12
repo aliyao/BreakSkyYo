@@ -1,5 +1,7 @@
 package com.yao.breakskyyo.dummy;
 
+import com.yao.breakskyyo.net.HttpUrl;
+
 /**
  * 项目名称：BreakSkyYo
  * 类描述：
@@ -22,7 +24,7 @@ public class SearchItem {
         this.imgUrl=imgUrl;
         this.hdtag=hdtag;
         this.content=content;
-        this.url="http://www.id97.com/videos/resource/id/"+id+".html";
+        this.url= String.format(HttpUrl.videosResourceIdUrl,id);
         this.title=title;
     }
 

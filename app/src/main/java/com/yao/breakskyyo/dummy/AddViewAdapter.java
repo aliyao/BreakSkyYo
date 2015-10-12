@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yao.breakskyyo.R;
+import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
 import com.yao.breakskyyo.webview.WebViewActivity;
@@ -184,7 +185,7 @@ public class AddViewAdapter {
                             @Override
                             public void onClick(View v) {
                                 Intent viewIntent = new
-                                        Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=百度云"));
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(HttpUrl.SearchBaiduUrl+"百度云"));
                                 mActivity.startActivity(viewIntent);
                             }
                         }).show();
@@ -215,7 +216,7 @@ public class AddViewAdapter {
                             @Override
                             public void onClick(View v) {
                                 Intent viewIntent = new
-                                        Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=android迅雷"));
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(HttpUrl.SearchBaiduUrl+"android迅雷"));
                                 mActivity.startActivity(viewIntent);
                             }
                         }).show();

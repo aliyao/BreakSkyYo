@@ -25,6 +25,7 @@ import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.MainFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
 import com.yao.breakskyyo.net.HttpDo;
+import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity
                                 @Override
                                 public void onClick(View v) {
                                     Intent viewIntent = new
-                                            Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=百度云"));
+                                            Intent(Intent.ACTION_VIEW, Uri.parse(HttpUrl.SearchBaiduUrl+"百度云"));
                                    startActivity(viewIntent);
                                 }
                             }).show();
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity
                                 @Override
                                 public void onClick(View v) {
                                     Intent viewIntent = new
-                                            Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=android迅雷"));
+                                            Intent(Intent.ACTION_VIEW, Uri.parse(HttpUrl.SearchBaiduUrl+"android迅雷"));
                                     startActivity(viewIntent);
                                 }
                             }).show();

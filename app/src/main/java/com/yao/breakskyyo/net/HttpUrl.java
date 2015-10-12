@@ -46,5 +46,7 @@ public class HttpUrl {
     public static final String zhengZeHotHtml = "<h3>热门电影：</h3>([\\s\\S]*?)<h3>最新电影：</h3>";
     public static final String zhengZeNewHtml = "<h3>最新电影：</h3>([\\s\\S]*?)</body>";
     public static final String  zhengZeSearch="result-item[\\s\\S]*?\"/videos/resource/id/(.*?).html\"[\\s\\S]*?<img class=\"img-thumbnail\"[\\s\\S]*?alt=\"([\\s\\S]*?)\"[\\s\\S]*?src=([\\s\\S]*?)>[\\s\\S]*?<button class=\"hdtag\">(.*?)</button>[\\s\\S]*?<div class=\"col-md-7\">([\\s\\S]*?)<p>资源下载地址";
-
+    public static final String SearchBaiduUrl="http://www.baidu.com/s?wd=";
+    public static final String videosResourceIdUrl="http://www.id97.com/videos/resource/id/%s.html";
+    public static final String UCUrl="http://www.uc.cn/";
 }

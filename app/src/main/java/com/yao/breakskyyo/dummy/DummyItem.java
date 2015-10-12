@@ -1,5 +1,8 @@
 package com.yao.breakskyyo.dummy;
 
+import com.yao.breakskyyo.net.HttpUrl;
+import com.yao.breakskyyo.tools.StringDo;
+
 /**
  * Created by nideyoyo on 2015/9/7.
  */
@@ -33,7 +36,7 @@ public class DummyItem {
         this.imgUrl = imgUrl;
         this.content = content;
         this.browseNum=browseNum;
-        this.url="http://www.id97.com/videos/resource/id/"+id+".html";
+        this.url= String.format(HttpUrl.videosResourceIdUrl,id);
     }
 
     public String getId() {
