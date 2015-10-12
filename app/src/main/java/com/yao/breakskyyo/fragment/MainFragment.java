@@ -24,6 +24,7 @@ import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.net.HttpUrl;
+import com.yao.breakskyyo.tools.CommonUtil;
 import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
@@ -181,7 +182,8 @@ public class MainFragment extends Fragment {
                 httpGet();
             }
         });
-
+        refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(getActivity(), 24));
+        refreshView.setRefreshing(true);
         httpGet();
     }
 

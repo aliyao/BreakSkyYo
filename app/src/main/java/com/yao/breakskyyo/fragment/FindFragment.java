@@ -260,6 +260,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
 
             }
         });
+        refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(getActivity(), 24));
+        refreshView.setRefreshing(true);
         httpGetFindList(1);
     }
 
