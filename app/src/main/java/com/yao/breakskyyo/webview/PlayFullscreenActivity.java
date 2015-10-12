@@ -119,7 +119,7 @@ public class PlayFullscreenActivity extends Activity {
                                                 @Override
                                                 public void onClick(View v) {
                                                     Intent viewIntent = new
-                                                            Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=UC"));
+                                                            Intent(Intent.ACTION_VIEW, Uri.parse("http://www.uc.cn/"));
                                                     startActivity(viewIntent);
                                                 }
                                             }).show();
