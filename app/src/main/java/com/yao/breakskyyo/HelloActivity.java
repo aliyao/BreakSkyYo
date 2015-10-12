@@ -88,10 +88,10 @@ public class HelloActivity extends AppCompatActivity {
             BmobQuery<JsonInfo> query = new BmobQuery<JsonInfo>();
             //查询playerName叫“比目”的数据
             query.addWhereEqualTo("versionCode", versionCode);
-            Date updateAt = Init.getHttpInfo().getUpdateAt();
-            if (updateAt != null) {
-                query.addWhereEqualTo("updateAt", updateAt);
-            }
+            //Date updateAt = Init.getHttpInfo().getUpdateAt();
+            //if (updateAt != null) {
+               // query.addWhereEqualTo("updateAt", updateAt);
+           // }
             //返回50条数据，如果不加上这条语句，默认返回10条数据
             query.setLimit(1);
             //执行查询方法
