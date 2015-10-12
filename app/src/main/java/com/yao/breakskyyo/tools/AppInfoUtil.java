@@ -17,6 +17,7 @@ import java.util.List;
 public class AppInfoUtil {
     public static final String BaiduDiskPackageName = "com.baidu.netdisk";
     public static final String XunleiPackageName = "com.xunlei.downloadprovider";
+    public static final String UCMobilePackageName = "com.UCMobile";
 
     public static String getVersionName(Context mContext) {
         PackageManager manager;

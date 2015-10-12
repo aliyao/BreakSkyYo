@@ -184,7 +184,7 @@ public class AddViewAdapter {
                             @Override
                             public void onClick(View v) {
                                 Intent viewIntent = new
-                                        Intent("android.intent.action.VIEW", Uri.parse("http://www.baidu.com/s?wd=百度云"));
+                                        Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=百度云"));
                                 mActivity.startActivity(viewIntent);
                             }
                         }).show();
@@ -203,17 +203,11 @@ public class AddViewAdapter {
     }
 
     private void download(int itemNum){
-       // if(!AppInfoUtil.isRunningApp(mActivity, AppInfoUtil.XunleiPackageName)) {
             try {
                 ClipboardManagerDo.copy( mdata.get(itemNum).getUrl(), mActivity);
                 PackageManager packageManager = mActivity.getPackageManager();
                 Intent intent= packageManager.getLaunchIntentForPackage(AppInfoUtil.XunleiPackageName);
                 mActivity.startActivity(intent);
-               /* Message msg= Message.obtain();
-                msg.what=2;
-                msg.obj=itemNum;
-                handlerToWebViewActivity.sendMessageDelayed(msg, 3000);*/
-               // return;
             } catch (Exception e) {
                 e.printStackTrace();
                 Snackbar.make(mActivity.findViewById(R.id.fab), "你还没有安装迅雷，为了下载和在线观看视频，现在安装迅雷！", Snackbar.LENGTH_LONG)
@@ -228,15 +222,6 @@ public class AddViewAdapter {
 
                 return;
             }
-       // }
-
-      /*  Intent mIntent= new Intent(mActivity, WebViewActivity.class);
-        mIntent.putExtra("url", mdata.get(itemNum).getUrl());
-        mIntent.putExtra("title", mdata.get(itemNum).getName());
-        if (mdata.get(itemNum).getType()==1){
-            mIntent .putExtra("mima", mdata.get(itemNum).getMima());
-        }
-        mActivity.startActivity(mIntent);*/
     }
 
     Handler handlerToWebViewActivity = new Handler() {

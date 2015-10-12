@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.widget.ProgressBar;
 import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
+import com.yao.breakskyyo.tools.AppInfoUtil;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
 import com.yao.breakskyyo.webview.util.SystemUiHider;
 
@@ -83,6 +85,7 @@ public class PlayFullscreenActivity extends Activity {
 
     public PlayFullscreenActivity() {
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,37 +98,54 @@ public class PlayFullscreenActivity extends Activity {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(PlayFullscreenActivity.this);
                 //    指定下拉列表的显示数据
-                String[] toDo = {"打开浏览器", "分享", "复制", "帮助", "刷新", "退出"};
+                String[] toDo = {"推荐UC浏览器", "其他浏览器", "分享", "复制", "帮助", "刷新", "退出"};
                 //    设置一个下拉的列表选择项
                 builder.setItems(toDo, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
+                                try {
+                                    ClipboardManagerDo.copy(getIntent().getStringExtra("url"), PlayFullscreenActivity.this);
+                                    Intent intent = getPackageManager().getLaunchIntentForPackage(AppInfoUtil.UCMobilePackageName);
+                                    intent.setAction(Intent.ACTION_VIEW);
+                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                    intent.setData(Uri.parse(getIntent().getStringExtra("url")));
+                                    startActivity(intent);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Snackbar.make(findViewById(R.id.fab), "你还没有安装UC，为了下载和在线观看视频，现在安装UC！", Snackbar.LENGTH_LONG)
+                                            .setAction("安装", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent viewIntent = new
+                                                            Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=UC"));
+                                                    startActivity(viewIntent);
+                                                }
+                                            }).show();
+                                    return;
+                                }
+                                break;
+                            case 1:
                                 Intent intent = new Intent();
                                 intent.setAction(Intent.ACTION_VIEW);
                                 Uri content_url = Uri.parse(getIntent().getStringExtra("url"));
                                 intent.setData(content_url);
                                 startActivity(intent);
                                 break;
-                            case 1:
+                            case 2:
                                 share();
                                 break;
-                            case 2:
+                            case 3:
                                 copy();
                                 break;
-                            case 3:
-                               /* Intent intentHellp = new Intent();
-                                intentHellp.setAction(Intent.ACTION_VIEW);
-                                Uri hellp_url = Uri.parse(HttpUrl.HellpUrl);
-                                intentHellp.setData(hellp_url);
-                                startActivity(intentHellp);*/
+                            case 4:
                                 webView.loadUrl(HttpUrl.HellpUrl);
                                 break;
-                            case 4:
+                            case 5:
                                 webView.reload();
                                 break;
-                            case 5:
+                            case 6:
                                 finish();
                                 break;
                         }
@@ -137,7 +157,7 @@ public class PlayFullscreenActivity extends Activity {
 
             }
         });
-        frameLayout = (FrameLayout)findViewById(R.id.framelayout);
+        frameLayout = (FrameLayout) findViewById(R.id.framelayout);
         // 实例化WebView
         webView = (WebView) this.findViewById(R.id.webView);
 
@@ -162,7 +182,7 @@ public class PlayFullscreenActivity extends Activity {
         webView.getSettings().setPluginState(WebSettings.PluginState.ON);
         webView.getSettings().setLoadWithOverviewMode(true);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState);
         }
         init();
@@ -228,9 +248,9 @@ public class PlayFullscreenActivity extends Activity {
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
         settings.setTextSize(WebSettings.TextSize.SMALLEST);
-        String url =getIntent().getStringExtra("url");
+        String url = getIntent().getStringExtra("url");
 
-        if(TextUtils.isEmpty(url)){
+        if (TextUtils.isEmpty(url)) {
             finish();
         }
 
@@ -240,7 +260,7 @@ public class PlayFullscreenActivity extends Activity {
         //webView.loadUrl(url);
 
 
-         httpGetHtml();
+        httpGetHtml();
     }
 
     private void copy() {
@@ -248,13 +268,14 @@ public class PlayFullscreenActivity extends Activity {
         ClipboardManagerDo.copy(text, PlayFullscreenActivity.this);
         Snackbar.make(webView, "复制成功", Snackbar.LENGTH_LONG).show();
     }
+
     private void share() {
         // 分享的intent
         Intent intent = new Intent(Intent.ACTION_SEND);
         // 分享的数据类型
         intent.setType("text/plain");
         // 分享的主题
-        intent.putExtra(Intent.EXTRA_SUBJECT,getIntent().getStringExtra("title"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra("title"));
         String text = getIntent().getStringExtra("title") + "---(" + getIntent().getStringExtra("url") + ") ";
 
         // 分享的内容
@@ -264,8 +285,6 @@ public class PlayFullscreenActivity extends Activity {
         // 目标应用寻找对话框的标题
         startActivity(Intent.createChooser(intent, getIntent().getStringExtra("title")));
     }
-
-
 
 
     @Override
@@ -327,7 +346,7 @@ public class PlayFullscreenActivity extends Activity {
            // video_fullView.addView(view);
             xCustomView = view;
             xCustomViewCallback = callback;*/
-           // video_fullView.setVisibility(View.VISIBLE);
+            // video_fullView.setVisibility(View.VISIBLE);
         }
 
         /*// 视频播放退出全屏会被调用的
@@ -371,7 +390,7 @@ public class PlayFullscreenActivity extends Activity {
      * 全屏时按返加键执行退出全屏方法
      */
     public void hideCustomView() {
-       // xwebchromeclient.onHideCustomView();
+        // xwebchromeclient.onHideCustomView();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
@@ -408,6 +427,7 @@ public class PlayFullscreenActivity extends Activity {
         webView.destroy();
         webView = null;
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -416,19 +436,18 @@ public class PlayFullscreenActivity extends Activity {
                 hideCustomView();
                 return true;
             } else {*/
-                webView.loadUrl("about:blank");
-              finish();
-         //   }
+            webView.loadUrl("about:blank");
+            finish();
+            //   }
         }
         return false;
     }
 
     @Override
     public void onBackPressed() {
-        if(myView == null){
+        if (myView == null) {
             super.onBackPressed();
-        }
-        else{
+        } else {
             chromeClient.onHideCustomView();
         }
     }
@@ -439,11 +458,11 @@ public class PlayFullscreenActivity extends Activity {
         webView.saveState(outState);
     }
 
-    public void addJavaScriptMap(Object obj, String objName){
+    public void addJavaScriptMap(Object obj, String objName) {
         webView.addJavascriptInterface(obj, objName);
     }
 
-    public class MyWebviewCient extends WebViewClient{
+    public class MyWebviewCient extends WebViewClient {
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view,
                                                           String url) {
@@ -456,14 +475,15 @@ public class PlayFullscreenActivity extends Activity {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
 
-          //  webView.loadUrl(("javascript:" + QuanpingJS));
+            //  webView.loadUrl(("javascript:" + QuanpingJS));
         }
 
     }
-    //final String QuanpingJS="   <script type=\"text/javascript\"> document.write(\"yoyo\");</script>";
-    final String QuanpingJS="   <script type=\"text/javascript\">  document.getElementById(\"video_1\").style.height='(px)';</script>";
 
-    public class MyChromeClient extends WebChromeClient{
+    //final String QuanpingJS="   <script type=\"text/javascript\"> document.write(\"yoyo\");</script>";
+    final String QuanpingJS = "   <script type=\"text/javascript\">  document.getElementById(\"video_1\").style.height='(px)';</script>";
+
+    public class MyChromeClient extends WebChromeClient {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             super.onProgressChanged(view, newProgress);
@@ -489,22 +509,23 @@ public class PlayFullscreenActivity extends Activity {
             myCallBack = callback;*/
             if (myCallback != null) {
                 myCallback.onCustomViewHidden();
-                myCallback = null ;
+                myCallback = null;
                 return;
             }
 
             long id = Thread.currentThread().getId();
-           // WrtLog. v("WidgetChromeClient", "rong debug in showCustomView Ex: " + id);
+            // WrtLog. v("WidgetChromeClient", "rong debug in showCustomView Ex: " + id);
 
             ViewGroup parent = (ViewGroup) webView.getParent();
             String s = parent.getClass().getName();
             //WrtLog. v("WidgetChromeClient", "rong debug Ex: " + s);
-            parent.removeView( webView);
+            parent.removeView(webView);
             parent.addView(view);
             myView = view;
             myCallback = callback;
-            chromeClient = this ;
+            chromeClient = this;
         }
+
         private View myView = null;
         private CustomViewCallback myCallback = null;
 
@@ -545,9 +566,10 @@ public class PlayFullscreenActivity extends Activity {
 
 
     }
-   public void httpGetHtml() {
+
+    public void httpGetHtml() {
         KJHttp kjh = new KJHttp();
-        String url =getIntent().getStringExtra("url");
+        String url = getIntent().getStringExtra("url");
         kjh.get(url, new HttpCallBack() {
             @Override
             public void onPreStart() {
@@ -558,10 +580,10 @@ public class PlayFullscreenActivity extends Activity {
             @Override
             public void onSuccess(String t) {
                 super.onSuccess(t);
-                int screenHeight=(int) ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ScreenWidth)-(int)ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ContentTop)-10;
-                String htmlstr=t;
-                if(screenHeight>100){
-                     htmlstr=t.replace("465px",screenHeight+"px");
+                int screenHeight = (int) ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ScreenWidth) - (int) ACacheUtil.getAsObject(PlayFullscreenActivity.this, ACacheUtil.ContentTop) - 10;
+                String htmlstr = t;
+                if (screenHeight > 100) {
+                    htmlstr = t.replace("465px", screenHeight + "px");
                 }
                 webView.loadDataWithBaseURL("http://m.acfun.tv.id97.com", htmlstr, "text/html", "utf-8", null);
             }
