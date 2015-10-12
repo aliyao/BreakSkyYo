@@ -24,7 +24,6 @@ import android.view.WindowManager;
 import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.MainFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
-import com.yao.breakskyyo.net.HttpDo;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        HttpDo.updateApp(this, null);
+        //HttpDo.updateApp(this, null);
         phoneInfo();
     }
 

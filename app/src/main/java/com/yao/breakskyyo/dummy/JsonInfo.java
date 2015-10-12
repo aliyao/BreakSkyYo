@@ -10,6 +10,7 @@ import java.util.Date;
  * Created by nideyoyo on 2015/10/12.
  */
 public class JsonInfo {
+    int newVersionCode;
     int versionCode;
     Date updateAt;
     String mainList;
@@ -342,5 +343,13 @@ public class JsonInfo {
 
     public void setVersionCode(int versionCode) {
         this.versionCode = versionCode;
+    }
+
+    public int getNewVersionCode() {
+        return newVersionCode;
+    }
+
+    public void setNewVersionCode(int newVersionCode) {
+        this.newVersionCode = newVersionCode;
     }
 }

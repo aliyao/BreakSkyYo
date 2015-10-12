@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
+import com.yao.breakskyyo.dummy.InfoUpdateApk;
 import com.yao.breakskyyo.dummy.JsonInfo;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
@@ -100,12 +101,11 @@ public class HelloActivity extends AppCompatActivity {
                     // TODO Auto-generated method stub
                     // toast("查询成功：共" + object.size() + "条数据。");
                     for (JsonInfo httpUrlJson : object) {
-                        /*//获得playerName的信息
-                        gameScore.getPlayerName();
-                        //获得数据的objectId信息
-                        gameScore.getObjectId();
-                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
-                        gameScore.getCreatedAt();*/
+                        InfoUpdateApk infoUpdateApk = new InfoUpdateApk();
+                        infoUpdateApk.setDescription("更新");
+                        infoUpdateApk.setVersionCode(httpUrlJson.getNewVersionCode());
+                        infoUpdateApk.setUrl(httpUrlJson.getUpdateApp());
+                        ACacheUtil.put(HelloActivity.this, ACacheUtil.UpdateJson, JSON.toJSONString(infoUpdateApk));
                         ACacheUtil.put(HelloActivity.this, ACacheUtil.HttpUrlJson, JSON.toJSONString(httpUrlJson));
                         Init.InitBmobHttpUrlJson();
                         break;

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.dummy.InfoUpdateApk;
-import com.yao.breakskyyo.net.HttpDo;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
@@ -44,7 +43,7 @@ public class AboutActivity extends AppCompatActivity {
         }else{
             app_version.setText(versionName);
         }
-        HttpDo.updateApp(AboutActivity.this, updateHandle);
+        //HttpDo.updateApp(AboutActivity.this, updateHandle);
     }
     private void refresh(){
         String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
