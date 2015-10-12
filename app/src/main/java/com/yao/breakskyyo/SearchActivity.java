@@ -114,14 +114,14 @@ public class SearchActivity extends AppCompatActivity {
     }
     // 隐藏键盘
     private void hintKb() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        // 得到InputMethodManager的实例
-        if (imm.isActive()) {
-            // 如果开启
-            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-            // 关闭软键盘，开启方法相同，这个方法是切换开启与关闭状态的
-        }
+
+
+            InputMethodManager imm =  (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            if(imm != null) {
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),
+                        0);
+            }
+
     }
 
     public void httpGetSearchInfo() {
