@@ -161,6 +161,12 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             public void onFailure(int errorNo, String strMsg) {
                 super.onFailure(errorNo, strMsg);
                 KJLoger.debug("exception:" + strMsg);
+                Snackbar.make(showImg, "网络不给力！！！", Snackbar.LENGTH_INDEFINITE) .setAction("刷新", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        httpGetItemInfo();
+                    }
+                }).show();
             }
 
 

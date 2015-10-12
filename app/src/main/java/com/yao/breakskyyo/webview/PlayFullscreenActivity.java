@@ -590,6 +590,7 @@ public class PlayFullscreenActivity extends Activity {
                 super.onFailure(errorNo, strMsg);
                 KJLoger.debug("exception:" + strMsg);
                 webView.loadUrl(getIntent().getStringExtra("url"));
+                Snackbar.make(webView, "网络不给力！！！", Snackbar.LENGTH_LONG).show();
             }
 
 

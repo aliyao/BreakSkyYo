@@ -171,7 +171,7 @@ public class SearchActivity extends AppCompatActivity {
                 KJLoger.debug("exception:" + strMsg);
                 mAdapter.clear();
                 mAdapter.notifyDataSetChanged();
-                Snackbar.make(et_word, "网络异常！！！", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(et_word, "网络不给力！！！", Snackbar.LENGTH_LONG).show();
             }
 
 

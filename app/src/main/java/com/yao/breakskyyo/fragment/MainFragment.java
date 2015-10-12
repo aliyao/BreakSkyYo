@@ -305,6 +305,7 @@ public class MainFragment extends Fragment {
                 KJLoger.debug("exception:" + strMsg);
                 mAdapter.clear();
                 mAdapter.notifyDataSetChanged();
+                Snackbar.make(mListView, "网络不给力！！！", Snackbar.LENGTH_LONG).show();
             }
 
 

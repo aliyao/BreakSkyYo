@@ -174,6 +174,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         bt_select[3] = (Button) getView().findViewById(R.id.bt_film_area);
         tv_bottom_text= (TextView) getView().findViewById(R.id.tv_bottom_text);
         tv_bottom_text.setVisibility(View.INVISIBLE);
+        tv_bottom_text.setEnabled(false);
         mListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -374,6 +375,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     }
                     tv_bottom_text.setVisibility(View.INVISIBLE);
                 }
+                tv_bottom_text.setEnabled(false);
             }
 
             @Override
@@ -477,6 +479,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     ((ArrayAdapter) mAdapter).notifyDataSetChanged();
                 }else{
                     tv_bottom_text.setText("网络不给力！");
+                    tv_bottom_text.setEnabled(true);
                 }
 
 
@@ -593,6 +596,9 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     }
                     mSelectAdapter.addAll(listSelectHeadItemTags);
                 }
+                break;
+            case R.id.tv_bottom_text:
+                httpGetFindList(pageNum + 1);
                 break;
 
         }
