@@ -6,11 +6,12 @@ package com.yao.breakskyyo.net;
 public class DefaultHttpUrl {
     public final static String MainList="http://www.id97.com";
     public final static String FindList="http://www.id97.com/videos/movie?";
-    public final static String UpdateApp="http://113.140.42.200/file/MDAwMDAwMDGUSqG0hrVy3w5ID3XGLSlGWmZupR-lyuX7AGh3pJttmA../1ff192eeee90f0cacf73f177e432770993/updateAppForBreakSky.txt?key=AAABQFYGVH5zsvVV&a=60517824-e93b576-48049-967a776387/020100&mode=download";
+    public final static String UpdateApp="";
+
+
     public final static String  UpdateAppWeb="http://pan.baidu.com/s/1jGzYX9O";
     public final static String HellpUrl="http://www.id97.com/topic/91";
     public final static String SearchInfo = "http://www.id97.com/videos/search/name/";
-
     public final static String year = "&year=";
     public final static String rating = "&rating=";
     public final static String country = "&country=";
@@ -29,12 +30,12 @@ public class DefaultHttpUrl {
     public static final String regularBaidupanName = urlBaiduPan + ".*?\">(.*?)</a>";
     public static final String regularBaidupanUrlMima = "密码：(.*?)</";
     public static final String regularChiliName = "<a class=\"am-inline am-text-break\" href=\"(.*?)\">(.*?)</a>";
-    public static final String[] regular = {regularTable, regularZaixianUrl, regularBaidupanUrl, regularBaidupanName, regularBaidupanUrlMima, regularChiliName};
+    //public static final String[] regular = {regularTable, regularZaixianUrl, regularBaidupanUrl, regularBaidupanName, regularBaidupanUrlMima, regularChiliName};
     public static final String yearRegular = "/videos/movie\\?year=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     public static final String ratingRegular = "/videos/movie\\?rating=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     public static final String countryRegular = "/videos/movie\\?country=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     public static final String tagsRegular = "/videos/movie\\?tags=([\\s\\S]*?)\" class=\"movie-tags[\\s\\S]*?>([\\s\\S]*?)<";
-    public static final String[] regularSelectHead = {yearRegular, ratingRegular, countryRegular, tagsRegular};
+   // public static final String[] regularSelectHead = {yearRegular, ratingRegular, countryRegular, tagsRegular};
     public static final String zhengZeBanerItem = "<a target=\"_blank\" href=\"/videos/resource/id/(.*?).html[\\s\\S]*?\">[\\s\\S]*?<img src=\"([\\s\\S]*?)\" alt=\"(.*?)\"";
     public static final String zhengZeHotNewItem = "/videos/resource/id/(.*?).html\">[\\s\\S]*?<div class=\"index-img\">[\\s\\S]*?<img src=\"(.*?)\" alt=\".*?\" />[\\s\\S]*?</div>[\\s\\S]*?<h3 class=\"am-gallery-title\">(.*?)</h3>[\\s\\S]*?<div class=\"am-gallery-desc\">(.*?)<";
     public static final String zhengZeHotHtml = "<h3>热门电影：</h3>([\\s\\S]*?)<h3>最新电影：</h3>";

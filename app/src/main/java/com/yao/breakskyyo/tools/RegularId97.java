@@ -32,13 +32,14 @@ import java.util.regex.Pattern;
 public class RegularId97 {
 
     public static InfoVideos getInfoVideos(String htmlStr) {
+        String[] regular = {HttpUrl.regularTable, HttpUrl.regularZaixianUrl, HttpUrl.regularBaidupanUrl, HttpUrl.regularBaidupanName, HttpUrl.regularBaidupanUrlMima, HttpUrl.regularChiliName};
         InfoVideos mInfoVideos = new InfoVideos();
         List<String> itemList;
-        for (int item = 0; item < HttpUrl.regular.length; item++) {
-            itemList = getObjByRegular(htmlStr, HttpUrl.regular[item]);
+        for (int item = 0; item < regular.length; item++) {
+            itemList = getObjByRegular(htmlStr, regular[item]);
             // KJLoger.debug("yoyo:--"+ regular[item]+"--" + itemStr);
             if (itemList != null) {
-                KJLoger.debug("yoyo:--" + HttpUrl.regular[item] + "--" + itemList.get(0));
+                KJLoger.debug("yoyo:--" + regular[item] + "--" + itemList.get(0));
                 switch (item) {
                     case 0:
                         mInfoVideos.setMovie_jvqing("【导演】" + itemList.get(0).replace("<br/>", "\n").replace("<br />", "\n"));
@@ -127,14 +128,15 @@ public class RegularId97 {
     }
 
     public static List<List<SelectHeadItem>> getSelectHeadItem(String htmlStr) {
+        String[] regularSelectHead = {HttpUrl.yearRegular, HttpUrl.ratingRegular, HttpUrl.countryRegular, HttpUrl.tagsRegular};
         List<SelectHeadItem> listSelectHeadItemYear = new ArrayList<>();
         List<SelectHeadItem> listSelectHeadItemRating = new ArrayList<>();
         List<SelectHeadItem> listSelectHeadItemCountry = new ArrayList<>();
         List<SelectHeadItem> listSelectHeadItemTags = new ArrayList<>();
         List<String> itemList;
         // System.out.println(htmlStr);
-        for (int item = 0; item < HttpUrl.regularSelectHead.length; item++) {
-            itemList = getObjByRegular(htmlStr, HttpUrl.regularSelectHead[item]);
+        for (int item = 0; item < regularSelectHead.length; item++) {
+            itemList = getObjByRegular(htmlStr, regularSelectHead[item]);
             // KJLoger.debug("yoyo:--"+ regularSelectHead[item]+"--" + itemStr);
             if (itemList != null) {
                 for (int num = 1; num < itemList.size(); num = num + 2) {

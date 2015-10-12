@@ -37,12 +37,12 @@ public class HttpUrl {
     public static String regularBaidupanName = Init.getHttpInfo().getRegularBaidupanName();
     public static String regularBaidupanUrlMima = Init.getHttpInfo().getRegularBaidupanUrlMima();
     public static String regularChiliName = Init.getHttpInfo().getRegularChiliName();
-    public static String[] regular = {regularTable, regularZaixianUrl, regularBaidupanUrl, regularBaidupanName, regularBaidupanUrlMima, regularChiliName};
+   // public static String[] regular = {regularTable, regularZaixianUrl, regularBaidupanUrl, regularBaidupanName, regularBaidupanUrlMima, regularChiliName};
     public static String yearRegular = Init.getHttpInfo().getYearRegular();
     public static String ratingRegular = Init.getHttpInfo().getRatingRegular();
     public static String countryRegular = Init.getHttpInfo().getCountryRegular();
     public static String tagsRegular = Init.getHttpInfo().getTagsRegular();
-    public static String[] regularSelectHead = {yearRegular, ratingRegular, countryRegular, tagsRegular};
+   // public static String[] regularSelectHead = {yearRegular, ratingRegular, countryRegular, tagsRegular};
     public static String zhengZeBanerItem = Init.getHttpInfo().getZhengZeBanerItem();
     public static String zhengZeHotNewItem = Init.getHttpInfo().getZhengZeHotNewItem();
     public static String zhengZeHotHtml =Init.getHttpInfo().getZhengZeHotHtml();
