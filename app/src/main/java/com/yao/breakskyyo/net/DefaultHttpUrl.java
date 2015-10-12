@@ -28,7 +28,7 @@ public class DefaultHttpUrl {
     public static final String regularZaixianUrl = "videos/play([\\s\\S]*?)\"";
     public static final String regularBaidupanUrl = urlBaiduPan + "(.*?)\">.*?</a>";
     public static final String regularBaidupanName = urlBaiduPan + ".*?\">(.*?)</a>";
-    public static final String regularBaidupanUrlMima = "密码：(.*?)</";
+    public static final String regularBaidupanUrlMima = "- 密码：(.*?)</";
     public static final String regularChiliName = "<a class=\"am-inline am-text-break\" href=\"(.*?)\">(.*?)</a>";
     //public static final String[] regular = {regularTable, regularZaixianUrl, regularBaidupanUrl, regularBaidupanName, regularBaidupanUrlMima, regularChiliName};
     public static final String yearRegular = "/videos/movie\\?year=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
