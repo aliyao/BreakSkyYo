@@ -2,13 +2,25 @@ package com.yao.breakskyyo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.alibaba.fastjson.JSON;
+import com.yao.breakskyyo.dummy.HttpUrlJson;
+import com.yao.breakskyyo.tools.ACacheUtil;
+import com.yao.breakskyyo.tools.AppInfoUtil;
+
+import java.util.Date;
+import java.util.List;
+
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -40,14 +52,11 @@ public class HelloActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_hello);
-
+        Bmob.initialize(this, "54801b44cd3013af64a5e478dd162ea9");
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
-
-
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,18 +75,66 @@ public class HelloActivity extends AppCompatActivity {
                 toMainActivity();
             }
         });
-        mainHandle.sendEmptyMessageDelayed(1,3000);
+        // mainHandle.sendEmptyMessageDelayed(1,3000);
+        getJsonMainBy();
+
     }
 
-    private void toMainActivity(){
+    public void getJsonMainBy() {
+        int versionCode = (int) AppInfoUtil.getVersionCode(HelloActivity.this);
+        if (versionCode > 0) {
+
+            BmobQuery<HttpUrlJson> query = new BmobQuery<HttpUrlJson>();
+            //查询playerName叫“比目”的数据
+            query.addWhereEqualTo("versionCode", versionCode);
+           MyApplication.getInstance().getApplicationContext().getCacheDir();
+            Date updateAt=Init.getHttpInfo().getUpdateAt();
+            if(updateAt!=null){
+                query.addWhereEqualTo("updateAt", updateAt);
+            }
+            //返回50条数据，如果不加上这条语句，默认返回10条数据
+            query.setLimit(1);
+            //执行查询方法
+            query.findObjects(this, new FindListener<HttpUrlJson>() {
+                @Override
+                public void onSuccess(List<HttpUrlJson> object) {
+                    // TODO Auto-generated method stub
+                    // toast("查询成功：共" + object.size() + "条数据。");
+                    for (HttpUrlJson httpUrlJson : object) {
+                        /*//获得playerName的信息
+                        gameScore.getPlayerName();
+                        //获得数据的objectId信息
+                        gameScore.getObjectId();
+                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
+                        gameScore.getCreatedAt();*/
+                        ACacheUtil.put(HelloActivity.this, ACacheUtil.HttpUrlJson, JSON.toJSONString(httpUrlJson));
+                        Init.getHttpInfo();
+                        break;
+                    }
+                    mainHandle.sendEmptyMessageDelayed(1, 3000);
+                }
+
+                @Override
+                public void onError(int code, String msg) {
+                    // TODO Auto-generated method stub
+                    //toast("查询失败：" + msg);
+                    mainHandle.sendEmptyMessageDelayed(1, 3000);
+                }
+            });
+
+        }
+    }
+
+    private void toMainActivity() {
         startActivity(new Intent(HelloActivity.this, MainActivity.class));
         finish();
     }
-    Handler mainHandle=new Handler(){
+
+    Handler mainHandle = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what==1){
+            if (msg.what == 1) {
                 toMainActivity();
             }
         }

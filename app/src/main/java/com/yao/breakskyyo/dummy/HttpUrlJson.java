@@ -4,10 +4,14 @@ import android.text.TextUtils;
 
 import com.yao.breakskyyo.net.DefaultHttpUrl;
 
+import java.util.Date;
+
 /**
  * Created by nideyoyo on 2015/10/12.
  */
 public class HttpUrlJson {
+    int versionCode;
+    Date updateAt;
     String mainList;
     String findList;
     String updateApp;
@@ -322,5 +326,21 @@ public class HttpUrlJson {
 
     public void setUcUrl(String ucUrl) {
         this.ucUrl = ucUrl;
+    }
+
+    public Date getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public int getVersionCode() {
+        return versionCode;
+    }
+
+    public void setVersionCode(int versionCode) {
+        this.versionCode = versionCode;
     }
 }

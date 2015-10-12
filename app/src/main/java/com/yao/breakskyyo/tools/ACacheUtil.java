@@ -18,6 +18,7 @@ public class ACacheUtil {
     public final  static String ScreenHeight="screenHeight";
     public final  static String ContentTop="contentTop";
     public final  static String IsShowWifiTip="isShowWifiTip";
+    public final  static String HttpUrlJson="httpUrlJson";
 
 
     public static boolean isFirstOpen(Context mContext){
