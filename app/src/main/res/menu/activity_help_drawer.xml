@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_zaixian" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="在线" />
+        <item android:id="@+id/nav_uc" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="UC" />
+        <item android:id="@+id/nav_baidudisk" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="百度云"/>
+        <item android:id="@+id/nav_xunlei" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="迅雷" />
+        <item android:id="@+id/nav_computer" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="电脑" />
+    </group>
+
+
+
+</menu>

@@ -1,9 +1,11 @@
 package com.yao.breakskyyo;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -56,20 +58,37 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mDummyItem.setSaveDate(new Date().getTime());
-                String tip = "保存失败";
-                switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
-                    case 1:
-                        tip = "保存成功";
-                        break;
-                    case 2:
-                        tip = "已经保存";
-                        break;
-                }
-                Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+            public void onClick(final View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(InfoActivityScrollingActivity.this);
+                        //    指定下拉列表的显示数据
+                        String[] toDo = {"保存", "教程"};
+                        //    设置一个下拉的列表选择项
+                        builder.setItems(toDo, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        mDummyItem.setSaveDate(new Date().getTime());
+                                        String tip = "保存失败";
+                                        switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
+                                            case 1:
+                                                tip = "保存成功";
+                                                break;
+                                            case 2:
+                                                tip = "已经保存";
+                                                break;
+                                        }
+                                        Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null).show();
+                                        break;
+                                    case 1:
+                                        startActivity(new Intent(InfoActivityScrollingActivity.this,HelpActivity.class));
+                                        break;
+                                }
+                            }
+                        });
+                        builder.show();
+                    }
         });
     }
 

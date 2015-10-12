@@ -3,7 +3,7 @@
     package="com.yao.breakskyyo" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name ="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:allowBackup="true"
@@ -53,10 +53,15 @@
         <activity
             android:name=".webview.PlayFullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
             android:label="@string/title_activity_play_fullscreen"
             android:screenOrientation="landscape"
-            android:hardwareAccelerated ="true"
             android:theme="@style/FullscreenTheme" >
+        </activity>
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 
