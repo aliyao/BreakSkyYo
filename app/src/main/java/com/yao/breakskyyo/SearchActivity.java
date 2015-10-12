@@ -106,11 +106,17 @@ public class SearchActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DummyItem dummyItem = new DummyItem(((SearchItem)parent.getAdapter().getItem(position)).getId(), ((SearchItem)parent.getAdapter().getItem(position)).getImgUrl(), ((SearchItem)parent.getAdapter().getItem(position)).getTitle(), null);
+                DummyItem dummyItem = new DummyItem(((SearchItem) parent.getAdapter().getItem(position)).getId(), ((SearchItem) parent.getAdapter().getItem(position)).getImgUrl(), ((SearchItem) parent.getAdapter().getItem(position)).getTitle(), null);
                 startActivity(new Intent(SearchActivity.this, InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(dummyItem)));
             }
         });
         mListView.setAdapter(mAdapter);
+        refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                httpGetSearchInfo();
+            }
+        });
     }
     // 隐藏键盘
     private void hintKb() {
@@ -128,6 +134,9 @@ public class SearchActivity extends AppCompatActivity {
         String word=et_word.getText()+"";
         if(TextUtils.isEmpty(word)){
             Snackbar.make(et_word, "请输入关键字", Snackbar.LENGTH_LONG).show();
+            if (!refreshView.isRefreshing()) {
+                refreshView.setRefreshing(false);
+            }
             return;
         }
         try {
