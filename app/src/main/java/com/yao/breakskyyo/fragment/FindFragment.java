@@ -66,11 +66,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     SwipeRefreshLayout refreshView;
     private ArrayAdapter mSelectAdapter;
     private ListAdapter mAdapter;
-    final String zhengZeItem = "title=\"(.*?)\" target=\"_blank\" href=\"(.*?)\">[\\s\\S]*?<img alt=\".*?\" title=\".*?\" src=\"(.*?)\".*?>([\\s\\S]*?)</a>[\\s\\S]*?<span class=\"otherinfo\"> - (.*?)分</span></div>[\\s\\S]*?<div class=\"otherinfo\">类型：(.*?)</div>";
-    final String zhengZeId = "id/(.*?).html";
-    final String zhengZeType = "<a.*?class=\"movietype\">(.*?)</a>";
-    final String zhengZeTag = "[\\s\\S]*?>(.*?)</";
-
     List<List<SelectHeadItem>> listSelectHeadItemlist;
     Button bt_select[];
     int selectedNum =-100;
@@ -320,7 +315,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
             return;
         }
         KJHttp kjh = new KJHttp();
-        String url = HttpUrl.FindList + "page=" + page;
+        String url = HttpUrl.FindList + HttpUrl.page + page;
         if(positionItemYear>=0) {
             url = url + HttpUrl.year + listSelectHeadItemlist.get(0).get(positionItemYear).getUrl();
             bt_select[0].setText(listSelectHeadItemlist.get(0).get(positionItemYear).getText());
@@ -383,7 +378,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 super.onSuccess(t);
                 ViewInject.longToast("请求成功");
                 KJLoger.debug("log:" + t.toString());
-                Pattern p = Pattern.compile(zhengZeItem);
+                Pattern p = Pattern.compile(HttpUrl.zhengZeItem);
                 Matcher m = p.matcher(t.toString());
                 List<Map<String, Object>> result = new ArrayList<>();
                 while (m.find()) { //循环查找匹配字串
@@ -399,7 +394,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                                     break;
                                 case 2:
                                     map.put("url", mr.group(groupItem));//group(2)是表达式第二个括号的内容
-                                    Pattern pID = Pattern.compile(zhengZeId);
+                                    Pattern pID = Pattern.compile(HttpUrl.zhengZeId);
                                     Matcher mID = pID.matcher(mr.group(groupItem)); //csdn首页的源代码字符串
                                     mID.find();
                                     map.put("id", mID.toMatchResult().group(1));//找到后group(1)是表达式第一个括号的内容
@@ -411,7 +406,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                                 case 4:
                                     String htmlTag = mr.group(groupItem);
                                     if (!TextUtils.isEmpty(htmlTag.trim())) {
-                                        Pattern pTag = Pattern.compile(zhengZeTag);
+                                        Pattern pTag = Pattern.compile(HttpUrl.zhengZeTag);
                                         Matcher mTag = pTag.matcher(mr.group(groupItem)); //csdn首页的源代码字符串
                                         mTag.find();
                                         map.put("tag", mTag.toMatchResult().group(1));//找到后group(1)是表达式第一个括号的内容
@@ -423,7 +418,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                                     break;
                                 case 6:
                                     if (!TextUtils.isEmpty(mr.group(groupItem).trim())) {
-                                        Pattern pType = Pattern.compile(zhengZeType);
+                                        Pattern pType = Pattern.compile(HttpUrl.zhengZeType);
                                         Matcher mType = pType.matcher(mr.group(groupItem));
                                         // List<String> typeList = new ArrayList<String>();
                                         String typeStr = "";

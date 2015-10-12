@@ -8,6 +8,7 @@ import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
 import com.yao.breakskyyo.dummy.SearchItem;
 import com.yao.breakskyyo.dummy.SelectHeadItem;
+import com.yao.breakskyyo.net.HttpUrl;
 
 import org.kymjs.kjframe.utils.KJLoger;
 
@@ -29,50 +30,24 @@ import java.util.regex.Pattern;
  * 修改备注：
  */
 public class RegularId97 {
-    static final String id97Url = "http://www.id97.com/videos/play";
-    static final String urlBaiduPan = "http://pan.baidu.com";
-    static String regularTable = "【导演】([\\s\\S]*?)<div class=\"am-g\">";
-    static String regularZaixianUrl = "videos/play([\\s\\S]*?)\"";
-    static String regularBaidupanUrl = urlBaiduPan + "(.*?)\">.*?</a>";
-    static String regularBaidupanName = urlBaiduPan + ".*?\">(.*?)</a>";
-    static String regularBaidupanUrlMima = "密码：(.*?)</";
-    //static String regularChili = "<a class=\"am-inline am-text-break\" href=\"(.*?)\">";
-    static String regularChiliName = "<a class=\"am-inline am-text-break\" href=\"(.*?)\">(.*?)</a>";
-
-    static String[] regular = {regularTable, regularZaixianUrl, regularBaidupanUrl, regularBaidupanName, regularBaidupanUrlMima, regularChiliName};
-
-    static String year = "/videos/movie\\?year=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
-    static String rating = "/videos/movie\\?rating=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
-    static String country = "/videos/movie\\?country=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
-    static String tags = "/videos/movie\\?tags=([\\s\\S]*?)\" class=\"movie-tags[\\s\\S]*?>([\\s\\S]*?)<";
-    static String[] regularSelectHead = {year, rating, country, tags};
-    static final String zhengZeBanerItem = "<a target=\"_blank\" href=\"/videos/resource/id/(.*?).html[\\s\\S]*?\">[\\s\\S]*?<img src=\"([\\s\\S]*?)\" alt=\"(.*?)\"";
-
-    static final String zhengZeHotNewItem = "/videos/resource/id/(.*?).html\">[\\s\\S]*?<div class=\"index-img\">[\\s\\S]*?<img src=\"(.*?)\" alt=\".*?\" />[\\s\\S]*?</div>[\\s\\S]*?<h3 class=\"am-gallery-title\">(.*?)</h3>[\\s\\S]*?<div class=\"am-gallery-desc\">(.*?)<";
-    static final String zhengZeHotHtml = "<h3>热门电影：</h3>([\\s\\S]*?)<h3>最新电影：</h3>";
-    static final String zhengZeNewHtml = "<h3>最新电影：</h3>([\\s\\S]*?)</body>";
-
-
-    static final String  zhengZeSearch="result-item[\\s\\S]*?\"/videos/resource/id/(.*?).html\"[\\s\\S]*?<img class=\"img-thumbnail\"[\\s\\S]*?alt=\"([\\s\\S]*?)\"[\\s\\S]*?src=([\\s\\S]*?)>[\\s\\S]*?<button class=\"hdtag\">(.*?)</button>[\\s\\S]*?<div class=\"col-md-7\">([\\s\\S]*?)<p>资源下载地址";
-
 
     public static InfoVideos getInfoVideos(String htmlStr) {
         InfoVideos mInfoVideos = new InfoVideos();
         List<String> itemList;
-        for (int item = 0; item < regular.length; item++) {
-            itemList = getObjByRegular(htmlStr, regular[item]);
+        for (int item = 0; item < HttpUrl.regular.length; item++) {
+            itemList = getObjByRegular(htmlStr, HttpUrl.regular[item]);
             // KJLoger.debug("yoyo:--"+ regular[item]+"--" + itemStr);
             if (itemList != null) {
-                KJLoger.debug("yoyo:--" + regular[item] + "--" + itemList.get(0));
+                KJLoger.debug("yoyo:--" + HttpUrl.regular[item] + "--" + itemList.get(0));
                 switch (item) {
                     case 0:
                         mInfoVideos.setMovie_jvqing("【导演】" + itemList.get(0).replace("<br/>", "\n").replace("<br />", "\n"));
                         break;
                     case 1:
-                        mInfoVideos.setMovie_payZaixian(id97Url + itemList.get(0));
+                        mInfoVideos.setMovie_payZaixian(HttpUrl.id97Url + itemList.get(0));
                         break;
                     case 2:
-                        mInfoVideos.setBaiduPanUrl(urlBaiduPan + itemList.get(0));
+                        mInfoVideos.setBaiduPanUrl(HttpUrl.urlBaiduPan + itemList.get(0));
                         break;
                     case 3:
                         mInfoVideos.setBaiduPanName(itemList.get(0));
@@ -99,7 +74,7 @@ public class RegularId97 {
 
     public static List<DummyItem> getBanerItem(String html) {
         List<DummyItem> dummyItemList = new ArrayList<>();
-        Pattern p = Pattern.compile(zhengZeBanerItem);
+        Pattern p = Pattern.compile(HttpUrl.zhengZeBanerItem);
         Matcher m = p.matcher(html);
         while (m.find()) { //循环查找匹配字串
             MatchResult mr = m.toMatchResult();
@@ -114,8 +89,8 @@ public class RegularId97 {
     }
     public static List<List<DummyItem>> getHotNewItem(String html) {
         List<List<DummyItem>>  dummyItemListList=new ArrayList<>();
-        dummyItemListList.add(getHotNewItemByHotNew(getHotNewHtml(html, zhengZeHotHtml)));
-        dummyItemListList.add(getHotNewItemByHotNew(getHotNewHtml(html, zhengZeNewHtml)));
+        dummyItemListList.add(getHotNewItemByHotNew(getHotNewHtml(html, HttpUrl.zhengZeHotHtml)));
+        dummyItemListList.add(getHotNewItemByHotNew(getHotNewHtml(html, HttpUrl.zhengZeNewHtml)));
         return dummyItemListList;
     }
 
@@ -124,7 +99,7 @@ public class RegularId97 {
             return null;
         }
         List<DummyItem> dummyItemList = new ArrayList<>();
-        Pattern p = Pattern.compile(zhengZeHotNewItem);
+        Pattern p = Pattern.compile(HttpUrl.zhengZeHotNewItem);
         Matcher m = p.matcher(html);
         while (m.find()) { //循环查找匹配字串
             MatchResult mr = m.toMatchResult();
@@ -158,8 +133,8 @@ public class RegularId97 {
         List<SelectHeadItem> listSelectHeadItemTags = new ArrayList<>();
         List<String> itemList;
         // System.out.println(htmlStr);
-        for (int item = 0; item < regularSelectHead.length; item++) {
-            itemList = getObjByRegular(htmlStr, regularSelectHead[item]);
+        for (int item = 0; item < HttpUrl.regularSelectHead.length; item++) {
+            itemList = getObjByRegular(htmlStr, HttpUrl.regularSelectHead[item]);
             // KJLoger.debug("yoyo:--"+ regularSelectHead[item]+"--" + itemStr);
             if (itemList != null) {
                 for (int num = 1; num < itemList.size(); num = num + 2) {
@@ -231,7 +206,7 @@ public class RegularId97 {
 
     public static List<SearchItem> getSearchItem(String html) {
         List<SearchItem> searchItemList = new ArrayList<>();
-        Pattern p = Pattern.compile(zhengZeSearch);
+        Pattern p = Pattern.compile(HttpUrl.zhengZeSearch);
         Matcher m = p.matcher(html);
         while (m.find()) { //循环查找匹配字串
             MatchResult mr = m.toMatchResult();
