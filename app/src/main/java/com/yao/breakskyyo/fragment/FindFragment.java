@@ -128,8 +128,12 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 if(TextUtils.isEmpty(mDummyItem.getType())){
                     typeStr="";
                 }
+                if( YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(mDummyItem.getImgUrl())).length<=0){
+                    img.setImageBitmap(null);
+                }
+
                 type.setText(StringDo.removeNull(typeStr));
-                YOBitmap.getmKJBitmap().display(img,StringDo.removeNull(mDummyItem.getImgUrl()));
+                YOBitmap.getmKJBitmap().display(img, StringDo.removeNull(mDummyItem.getImgUrl()));
                 return view;
             }
         };

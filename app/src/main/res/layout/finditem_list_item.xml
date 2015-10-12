@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:minHeight="200dp"
         android:scaleType="centerCrop"
-        android:background=""
+        android:background="@drawable/abc_list_selector_disabled_holo_light"
        />
 
     <TextView
