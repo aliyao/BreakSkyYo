@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.security.PublicKey;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class AppInfoUtil {
     public static final String BaiduDiskPackageName = "com.baidu.netdisk";
+    public static final String XunleiPackageName = "com.xunlei.downloadprovider";
 
     public static String getVersionName(Context mContext) {
         PackageManager manager;
@@ -71,11 +73,12 @@ public class AppInfoUtil {
         info.signatures;*/
     }
 
-    public static boolean isRunningBaiduDisk(Context context) {
+    public static boolean isRunningApp(Context context,String packageName) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-            if (appProcess.processName.equals(BaiduDiskPackageName)) {
+           // Log.e("appProcess.processName",appProcess.processName);
+            if (appProcess.processName.equals(packageName)) {
                 return true;
                // return appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
             }

@@ -80,10 +80,13 @@ public class AddViewAdapter {
                     //    指定下拉列表的显示数据
                     String[] toDo;
                     if(mdata.get(itemNum).getType()==3){
-                         String[] dos = {"分享", "复制"};
+                         String[] dos = {"分享", "复制","下载"};
+                        toDo=dos;
+                    }else  if(mdata.get(itemNum).getType()==1){
+                         String[] dos = {"分享", "复制", "打开"};
                         toDo=dos;
                     }else{
-                         String[] dos = {"分享", "复制", "打开"};
+                        String[] dos = {"分享", "复制"};
                         toDo=dos;
                     }
 
@@ -99,7 +102,13 @@ public class AddViewAdapter {
                                     copy(itemNum,v);
                                     break;
                                 case 2:
-                                    open(itemNum);
+                                    if(mdata.get(itemNum).getType()==3){
+                                        download( itemNum);
+                                    }else  if(mdata.get(itemNum).getType()==1){
+                                        openBaiduDisk(itemNum);
+                                    }else{
+
+                                    }
                                     break;
 
                             }
@@ -157,8 +166,8 @@ public class AddViewAdapter {
         // 目标应用寻找对话框的标题
         mActivity.startActivity(Intent.createChooser(intent, mdata.get(itemNum).getName()));
     }
-    private void open(int itemNum){
-        if(!AppInfoUtil.isRunningBaiduDisk(mActivity)) {
+    private void openBaiduDisk(int itemNum){
+        if(!AppInfoUtil.isRunningApp(mActivity, AppInfoUtil.BaiduDiskPackageName)) {
             try {
                 PackageManager packageManager = mActivity.getPackageManager();
                 Intent intent= packageManager.getLaunchIntentForPackage(AppInfoUtil.BaiduDiskPackageName);
@@ -191,6 +200,43 @@ public class AddViewAdapter {
             mIntent .putExtra("mima", mdata.get(itemNum).getMima());
         }
         mActivity.startActivity(mIntent);
+    }
+
+    private void download(int itemNum){
+       // if(!AppInfoUtil.isRunningApp(mActivity, AppInfoUtil.XunleiPackageName)) {
+            try {
+                ClipboardManagerDo.copy( mdata.get(itemNum).getUrl(), mActivity);
+                PackageManager packageManager = mActivity.getPackageManager();
+                Intent intent= packageManager.getLaunchIntentForPackage(AppInfoUtil.XunleiPackageName);
+                mActivity.startActivity(intent);
+               /* Message msg= Message.obtain();
+                msg.what=2;
+                msg.obj=itemNum;
+                handlerToWebViewActivity.sendMessageDelayed(msg, 3000);*/
+               // return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Snackbar.make(mActivity.findViewById(R.id.fab), "你还没有安装迅雷，为了下载和在线观看视频，现在安装迅雷！", Snackbar.LENGTH_LONG)
+                        .setAction("安装", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent viewIntent = new
+                                        Intent("android.intent.action.VIEW", Uri.parse("http://www.baidu.com/s?wd=android迅雷"));
+                                mActivity.startActivity(viewIntent);
+                            }
+                        }).show();
+
+                return;
+            }
+       // }
+
+      /*  Intent mIntent= new Intent(mActivity, WebViewActivity.class);
+        mIntent.putExtra("url", mdata.get(itemNum).getUrl());
+        mIntent.putExtra("title", mdata.get(itemNum).getName());
+        if (mdata.get(itemNum).getType()==1){
+            mIntent .putExtra("mima", mdata.get(itemNum).getMima());
+        }
+        mActivity.startActivity(mIntent);*/
     }
 
     Handler handlerToWebViewActivity = new Handler() {
