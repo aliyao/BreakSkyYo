@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by nideyoyo on 2015/10/12.
  */
-public class HttpUrlJson {
+public class JsonInfo {
     int versionCode;
     Date updateAt;
     String mainList;

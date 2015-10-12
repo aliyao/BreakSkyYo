@@ -14,7 +14,7 @@ public class MyApplication extends Application
     // 单例模式获取唯一的MyApplication实例
     public static MyApplication getInstance() {
         if (null == instance) {
-            instance = MyApplication.getInstance();
+            instance=new MyApplication();
         }
         return instance;
     }
@@ -26,14 +26,6 @@ public class MyApplication extends Application
     public void onCreate()
     {
         super.onCreate();//必须调用父类方法\
-        instance = this;
-    }
-    /**
-     * 此方法方便在那些没有context对象的类中使用
-     * @return MyApp实例
-     */
-    public static MyApplication getApplicationInstance()
-    {
-        return instance;
+        instance=this;
     }
 }

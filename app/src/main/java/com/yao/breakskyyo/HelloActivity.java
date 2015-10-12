@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
-import com.yao.breakskyyo.dummy.HttpUrlJson;
+import com.yao.breakskyyo.dummy.JsonInfo;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 
@@ -78,29 +78,28 @@ public class HelloActivity extends AppCompatActivity {
         // mainHandle.sendEmptyMessageDelayed(1,3000);
         getJsonMainBy();
 
+
     }
 
     public void getJsonMainBy() {
         int versionCode = (int) AppInfoUtil.getVersionCode(HelloActivity.this);
         if (versionCode > 0) {
-
-            BmobQuery<HttpUrlJson> query = new BmobQuery<HttpUrlJson>();
+            BmobQuery<JsonInfo> query = new BmobQuery<JsonInfo>();
             //查询playerName叫“比目”的数据
             query.addWhereEqualTo("versionCode", versionCode);
-           MyApplication.getInstance().getApplicationContext().getCacheDir();
-            Date updateAt=Init.getHttpInfo().getUpdateAt();
-            if(updateAt!=null){
+            Date updateAt = Init.getHttpInfo().getUpdateAt();
+            if (updateAt != null) {
                 query.addWhereEqualTo("updateAt", updateAt);
             }
             //返回50条数据，如果不加上这条语句，默认返回10条数据
             query.setLimit(1);
             //执行查询方法
-            query.findObjects(this, new FindListener<HttpUrlJson>() {
+            query.findObjects(this, new FindListener<JsonInfo>() {
                 @Override
-                public void onSuccess(List<HttpUrlJson> object) {
+                public void onSuccess(List<JsonInfo> object) {
                     // TODO Auto-generated method stub
                     // toast("查询成功：共" + object.size() + "条数据。");
-                    for (HttpUrlJson httpUrlJson : object) {
+                    for (JsonInfo httpUrlJson : object) {
                         /*//获得playerName的信息
                         gameScore.getPlayerName();
                         //获得数据的objectId信息
@@ -108,7 +107,7 @@ public class HelloActivity extends AppCompatActivity {
                         //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
                         gameScore.getCreatedAt();*/
                         ACacheUtil.put(HelloActivity.this, ACacheUtil.HttpUrlJson, JSON.toJSONString(httpUrlJson));
-                        Init.getHttpInfo();
+                        Init.InitBmobHttpUrlJson();
                         break;
                     }
                     mainHandle.sendEmptyMessageDelayed(1, 3000);

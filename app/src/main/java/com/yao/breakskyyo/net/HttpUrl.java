@@ -1,13 +1,6 @@
 package com.yao.breakskyyo.net;
 
-import android.text.TextUtils;
-
-import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.Init;
-import com.yao.breakskyyo.db.FileTools;
-import com.yao.breakskyyo.dummy.HttpUrlJson;
-
-import java.util.Objects;
 
 /**
  * 项目名称：BreakSky
