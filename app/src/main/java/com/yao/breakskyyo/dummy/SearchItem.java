@@ -15,13 +15,15 @@ public class SearchItem {
     String hdtag;
     String content;
     String url;
+    String title;
 
-    public SearchItem( String content,String id,String imgUrl,String hdtag){
+    public SearchItem(String id,String title,String imgUrl,String hdtag, String content){
         this.id=id;
         this.imgUrl=imgUrl;
         this.hdtag=hdtag;
         this.content=content;
         this.url="http://www.id97.com/videos/resource/id/"+id+".html";
+        this.title=title;
     }
 
     public String getId() {
@@ -62,5 +64,13 @@ public class SearchItem {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

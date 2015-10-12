@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <ImageView
         android:id="@+id/iv_image"
@@ -28,7 +29,6 @@
         android:paddingBottom="6dp"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
-        android:singleLine="true"
         android:layout_marginTop="10dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceListItemSmall"

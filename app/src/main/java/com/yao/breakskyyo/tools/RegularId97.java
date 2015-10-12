@@ -53,7 +53,7 @@ public class RegularId97 {
     static final String zhengZeNewHtml = "<h3>最新电影：</h3>([\\s\\S]*?)</body>";
 
 
-    static final String  zhengZeSearch="result-item[\\s\\S]*?\"/videos/resource/id/(.*?).html\"[\\s\\S]*?<img class=\"img-thumbnail\" [\\s\\S]*?src=([\\s\\S]*?)>[\\s\\S]*?<button class=\"hdtag\">(.*?)</button>[\\s\\S]*?<div class=\"col-md-7\">([\\s\\S]*?)<p>资源下载地址";
+    static final String  zhengZeSearch="result-item[\\s\\S]*?\"/videos/resource/id/(.*?).html\"[\\s\\S]*?<img class=\"img-thumbnail\"[\\s\\S]*?alt=\"([\\s\\S]*?)\"[\\s\\S]*?src=([\\s\\S]*?)>[\\s\\S]*?<button class=\"hdtag\">(.*?)</button>[\\s\\S]*?<div class=\"col-md-7\">([\\s\\S]*?)<p>资源下载地址";
 
 
     public static InfoVideos getInfoVideos(String htmlStr) {
@@ -235,13 +235,19 @@ public class RegularId97 {
         Matcher m = p.matcher(html);
         while (m.find()) { //循环查找匹配字串
             MatchResult mr = m.toMatchResult();
-            for (int groupItem = 3; groupItem <= mr.groupCount(); groupItem = groupItem + 3) {
+            for (int groupItem = 5; groupItem <= mr.groupCount(); groupItem = groupItem + 5) {
                 if (mr != null && mr.group(groupItem) != null) {
                     System.out.println("group(i)--" + groupItem + "--" + mr.group(groupItem));
-                    searchItemList.add(new SearchItem(mr.group(groupItem - 3), mr.group(groupItem - 2), mr.group(groupItem - 1), mr.group(groupItem)));
+                    String content=mr.group(groupItem);
+                    if (content==null){
+                        content="";
+                    }
+                    content.replaceAll("\n", "").replaceAll("  ", " ").trim();
+                    searchItemList.add(new SearchItem(mr.group(groupItem - 4),mr.group(groupItem - 3), mr.group(groupItem - 2), mr.group(groupItem - 1), mr.group(groupItem)));
                 }
             }
         }
+
         return searchItemList;
     }
 

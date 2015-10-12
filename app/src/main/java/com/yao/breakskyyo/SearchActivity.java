@@ -106,7 +106,7 @@ public class SearchActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DummyItem dummyItem =new  DummyItem(mAdapter.getItem(position).getId(), mAdapter.getItem(position).getImgUrl(),null,null );
+                DummyItem dummyItem =new  DummyItem(mAdapter.getItem(position).getId(), mAdapter.getItem(position).getImgUrl(), mAdapter.getItem(position).getTitle(),null );
                 startActivity(new Intent(SearchActivity.this, InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(dummyItem)));
             }
         });
