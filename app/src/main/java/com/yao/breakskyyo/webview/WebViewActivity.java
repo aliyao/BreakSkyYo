@@ -44,10 +44,10 @@ public class WebViewActivity extends AppCompatActivity {
                 //    指定下拉列表的显示数据
                 String[] toDo;
                 if (!TextUtils.isEmpty(getIntent().getStringExtra("mima"))) {
-                    String[] dos = {"打开浏览器", "分享", "复制", "帮助", "刷新", "退出", "显示密码"};
+                    String[] dos = {"打开浏览器", "分享", "复制", "刷新", "退出", "显示密码"};
                     toDo = dos;
                 } else {
-                    String[] dos = {"打开浏览器", "分享", "复制", "帮助", "刷新", "退出"};
+                    String[] dos = {"打开浏览器", "分享", "复制",  "刷新", "退出"};
                     toDo = dos;
                 }
 
@@ -70,20 +70,12 @@ public class WebViewActivity extends AppCompatActivity {
                                 copy();
                                 break;
                             case 3:
-                               /* Intent intentHellp = new Intent();
-                                intentHellp.setAction(Intent.ACTION_VIEW);
-                                Uri hellp_url = Uri.parse(HttpUrl.HellpUrl);
-                                intentHellp.setData(hellp_url);
-                                startActivity(intentHellp);*/
-                                webView.loadUrl(HttpUrl.HellpUrl);
-                                break;
-                            case 4:
                                 webView.reload();
                                 break;
-                            case 5:
+                            case 4:
                                 finish();
                                 break;
-                            case 6:
+                            case 5:
                                 snackbarMima = Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
                                 snackbarMima.setAction("隐藏", new View.OnClickListener() {
                                     @Override

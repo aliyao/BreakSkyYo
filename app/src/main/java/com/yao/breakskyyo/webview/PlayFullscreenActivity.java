@@ -98,7 +98,7 @@ public class PlayFullscreenActivity extends Activity {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(PlayFullscreenActivity.this);
                 //    指定下拉列表的显示数据
-                String[] toDo = {"推荐UC浏览器", "其他浏览器", "分享", "复制", "帮助", "刷新", "退出"};
+                String[] toDo = {"推荐UC浏览器", "其他浏览器", "分享", "复制", "刷新", "退出"};
                 //    设置一个下拉的列表选择项
                 builder.setItems(toDo, new DialogInterface.OnClickListener() {
                     @Override
@@ -140,12 +140,9 @@ public class PlayFullscreenActivity extends Activity {
                                 copy();
                                 break;
                             case 4:
-                                webView.loadUrl(HttpUrl.HellpUrl);
-                                break;
-                            case 5:
                                 webView.reload();
                                 break;
-                            case 6:
+                            case 5:
                                 finish();
                                 break;
                         }
