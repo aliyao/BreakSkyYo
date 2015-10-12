@@ -13,12 +13,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.webview.WebViewActivity;
 
 public class HelpActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    ListView listview;
+    TextView titleTv,contentTv;
+    ImageView help_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +35,10 @@ public class HelpActivity extends AppCompatActivity
         setContentView(R.layout.activity_help);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        listview=(ListView)findViewById(R.id.list);
+        titleTv=(TextView)findViewById(R.id.title);
+        contentTv=(TextView)findViewById(R.id.content);
+        help_img=(ImageView)findViewById(R.id.help_img);
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +56,8 @@ public class HelpActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        ArrayAdapter adapter = new ArrayAdapter(this,R.layout.help_list_item);
+        listview.setAdapter(adapter);
     }
 
     @Override
