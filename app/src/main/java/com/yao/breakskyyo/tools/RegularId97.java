@@ -242,8 +242,8 @@ public class RegularId97 {
                     if (content==null){
                         content="";
                     }
-                    content.replaceAll("\n", "").replaceAll("  ", " ").trim();
-                    searchItemList.add(new SearchItem(mr.group(groupItem - 4),mr.group(groupItem - 3), mr.group(groupItem - 2), mr.group(groupItem - 1), mr.group(groupItem)));
+                    content=content.replaceAll("\r\n", "").replaceAll("  ", " ").trim();
+                    searchItemList.add(new SearchItem(mr.group(groupItem - 4),mr.group(groupItem - 3), mr.group(groupItem - 2), mr.group(groupItem - 1), content));
                 }
             }
         }
