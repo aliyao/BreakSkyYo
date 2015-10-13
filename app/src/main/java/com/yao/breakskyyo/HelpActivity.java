@@ -99,14 +99,15 @@ public class HelpActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_zaixian) {
-        } else if (id == R.id.nav_uc) {
 
-        } else if (id == R.id.nav_baidudisk) {
+        } else  if (id == R.id.nav_baidudisk) {
 
         } else if (id == R.id.nav_xunlei) {
 
         } else if (id == R.id.nav_computer) {
             startActivity(new Intent(this, WebViewActivity.class).putExtra("url", HttpUrl.HellpUrl));
+        } else if (id == R.id.nav_other) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

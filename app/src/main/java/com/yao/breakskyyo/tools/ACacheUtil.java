@@ -17,6 +17,7 @@ public class ACacheUtil {
     public final  static String ScreenWidth="screenWidth";
     public final  static String ScreenHeight="screenHeight";
     public final  static String ContentTop="contentTop";
+    public final  static String IsShowWifiTip="isShowWifiTip";
 
 
     public static boolean isFirstOpen(Context mContext){
@@ -61,6 +62,15 @@ public class ACacheUtil {
     public static Object getAsObject(Context mContext,String key){
         if(mCache==null){
             mCache = ACache.get(mContext);
+        }
+        return mCache.getAsObject(key);
+    }
+    public static Object getAsObjectDefault(Context mContext,String key,Object defaultObj){
+        if(mCache==null){
+            mCache = ACache.get(mContext);
+        }
+        if(mCache.getAsObject(key)==null){
+            return defaultObj;
         }
         return mCache.getAsObject(key);
     }

@@ -21,6 +21,7 @@ import com.yao.breakskyyo.dummy.AddViewAdapter;
 import com.yao.breakskyyo.dummy.DownloadInfoItem;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
+import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
@@ -59,36 +60,36 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(InfoActivityScrollingActivity.this);
-                        //    指定下拉列表的显示数据
-                        String[] toDo = {"保存", "教程"};
-                        //    设置一个下拉的列表选择项
-                        builder.setItems(toDo, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        mDummyItem.setSaveDate(new Date().getTime());
-                                        String tip = "保存失败";
-                                        switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
-                                            case 1:
-                                                tip = "保存成功";
-                                                break;
-                                            case 2:
-                                                tip = "已经保存";
-                                                break;
-                                        }
-                                        Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
-                                                .setAction("Action", null).show();
-                                        break;
+                AlertDialog.Builder builder = new AlertDialog.Builder(InfoActivityScrollingActivity.this);
+                //    指定下拉列表的显示数据
+                String[] toDo = {"保存", "教程"};
+                //    设置一个下拉的列表选择项
+                builder.setItems(toDo, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                mDummyItem.setSaveDate(new Date().getTime());
+                                String tip = "保存失败";
+                                switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
                                     case 1:
-                                        startActivity(new Intent(InfoActivityScrollingActivity.this,HelpActivity.class));
+                                        tip = "保存成功";
+                                        break;
+                                    case 2:
+                                        tip = "已经保存";
                                         break;
                                 }
-                            }
-                        });
-                        builder.show();
+                                Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                                break;
+                            case 1:
+                                startActivity(new Intent(InfoActivityScrollingActivity.this, HelpActivity.class));
+                                break;
+                        }
                     }
+                });
+                builder.show();
+            }
         });
     }
 
@@ -115,6 +116,16 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         tag.setText(StringDo.removeNull(mDummyItem.getTag()));
         YOBitmap.getmKJBitmap().display(showImg, StringDo.removeNull(mDummyItem.getImgUrl()));
         httpGetItemInfo();
+        if((boolean)ACacheUtil.getAsObjectDefault(InfoActivityScrollingActivity.this,ACacheUtil.IsShowWifiTip,true)){
+            Snackbar.make(findViewById(R.id.fab), "请用wifi看视频，小心流量超了", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("我知道了", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ACacheUtil.put(InfoActivityScrollingActivity.this,ACacheUtil.IsShowWifiTip,false);
+                        }
+                    }).show();
+        }
+
     }
 
     public void httpGetItemInfo() {
