@@ -139,18 +139,18 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 TextView type = (TextView) view.findViewById(R.id.type);
                 TextView tag = (TextView) view.findViewById(R.id.tag);
                 TextView score = (TextView) view.findViewById(R.id.score);
-
+                img.setImageBitmap(null);
 
                 title.setText(mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
                 score.setText(StringDo.removeNull(mDummyItem.getScore()) + "分");
                 String typeStr = "类型：" + mDummyItem.getType();
-                if (TextUtils.isEmpty(mDummyItem.getType())) {
+               /* if (TextUtils.isEmpty(mDummyItem.getType())) {
                     typeStr = "";
-                }
-                if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(mDummyItem.getImgUrl())).length <= 0) {
+                }*/
+               /* if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(mDummyItem.getImgUrl())).length <= 0) {
                     img.setImageBitmap(null);
-                }
+                }*/
 
                 type.setText(StringDo.removeNull(typeStr));
                 YOBitmap.getmKJBitmap().display(img, StringDo.removeNull(mDummyItem.getImgUrl()));

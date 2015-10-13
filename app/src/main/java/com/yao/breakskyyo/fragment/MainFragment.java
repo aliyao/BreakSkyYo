@@ -152,17 +152,17 @@ public class MainFragment extends Fragment {
                 }
 
                 title.setText(dummyItemList.get(0).getContent());
-                if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(dummyItemList.get(0).getImgUrl())).length <= 0) {
+               // if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(dummyItemList.get(0).getImgUrl())).length <= 0) {
                     img.setImageBitmap(null);
-                }
+               // }
                 browseNum.setText(StringDo.removeNull(dummyItemList.get(0).getBrowseNum()));
                 YOBitmap.getmKJBitmap().display(img, StringDo.removeNull(dummyItemList.get(0).getImgUrl()));
 
                 if (dummyItemList.size() > 0 && dummyItemList.get(1) != null) {
                     title2.setText(dummyItemList.get(1).getContent());
-                    if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(dummyItemList.get(1).getImgUrl())).length <= 0) {
+                   // if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(dummyItemList.get(1).getImgUrl())).length <= 0) {
                         img2.setImageBitmap(null);
-                    }
+                   // }
                     browseNum2.setText(StringDo.removeNull(dummyItemList.get(1).getBrowseNum()));
                     YOBitmap.getmKJBitmap().display(img2, StringDo.removeNull(dummyItemList.get(1).getImgUrl()));
                     rl_item2.setVisibility(View.VISIBLE);

@@ -82,9 +82,10 @@ public class SearchActivity extends AppCompatActivity {
                 TextView tv_hdtag = (TextView) view.findViewById(R.id.tv_hdtag);
                 TextView tv_content = (TextView) view.findViewById(R.id.tv_content);
                 ImageView iv_image = (ImageView) view.findViewById(R.id.iv_image);
-                if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(mSearchItem.getImgUrl())).length <= 0) {
-                    iv_image.setImageBitmap(null);
-                }
+                iv_image.setImageBitmap(null);
+               /* if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(mSearchItem.getImgUrl())).length <= 0) {
+
+                }*/
                 YOBitmap.getmKJBitmap().display(iv_image, mSearchItem.getImgUrl());
                 tv_hdtag.setText(mSearchItem.getHdtag());
                 String strHtml = mSearchItem.getContent();
