@@ -155,7 +155,7 @@ public class AddViewAdapter {
         intent.setType("text/plain");
         // 分享的主题
         intent.putExtra(Intent.EXTRA_SUBJECT, mdata.get(itemNum).getName());
-        String text = mdata.get(itemNum).getName() + "---(" + mdata.get(itemNum).getUrl() + ") ";
+        String text = mdata.get(itemNum).getUrl() + "---(" + mdata.get(itemNum).getName() + ") ";
         if (!TextUtils.isEmpty(mdata.get(itemNum).getMima())) {
             text = text + "  (密码--" + mdata.get(itemNum).getMima() + ")";
         }
