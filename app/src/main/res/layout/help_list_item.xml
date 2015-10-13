@@ -7,16 +7,29 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="在线"
+        android:text=""
         android:textSize="20sp"
         android:padding="8dp"
         android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        />
+    <TextView
+        android:id="@+id/instruction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text=""
+        />
+    <Button
+        android:id="@+id/toWebBt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="电脑观看详细教程"
         />
     <ImageView
         android:id="@+id/help_img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
         android:padding="8dp"
         />
     <TextView
@@ -24,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="1.点击打开查看就可以了"
+        android:text=""
         />
 
 </LinearLayout>
