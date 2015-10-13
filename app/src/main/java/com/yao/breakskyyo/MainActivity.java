@@ -4,9 +4,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -28,6 +30,8 @@ import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
 import com.yao.breakskyyo.net.HttpDo;
 import com.yao.breakskyyo.tools.ACacheUtil;
+import com.yao.breakskyyo.tools.AppInfoUtil;
+import com.yao.breakskyyo.tools.ClipboardManagerDo;
 
 import java.lang.reflect.Field;
 
@@ -119,22 +123,67 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+       /* MenuItem actionOpenBaidudisk = menu.findItem(R.id.action_open_baidudisk);
+        MenuItem actionOpenXunlei = menu.findItem(R.id.action_open_xunlei);
+        if () {
+            actionOpenBaidudisk.setVisible(true);
+        } else {
+            actionOpenBaidudisk.setVisible(false);
+        }
+        if () {
+            actionOpenXunlei.setVisible(true);
+        } else {
+            actionOpenXunlei.setVisible(false);
+        }*/
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings:
+                isFinish = true;
+                finish();
+                System.exit(0);
+                return true;
+            case R.id.action_open_baidudisk:
+                try {
+                    PackageManager packageManager = getPackageManager();
+                    Intent intent= packageManager.getLaunchIntentForPackage(AppInfoUtil.BaiduDiskPackageName);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Snackbar.make(findViewById(R.id.fab), "你还没有安装百度云，为了保存和在线观看视频，现在安装百度云！", Snackbar.LENGTH_LONG)
+                            .setAction("安装", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent viewIntent = new
+                                            Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=百度云"));
+                                   startActivity(viewIntent);
+                                }
+                            }).show();
+                }
+                return true;
+            case R.id.action_open_xunlei:
+                try {
+                    PackageManager packageManager = getPackageManager();
+                    Intent intent = packageManager.getLaunchIntentForPackage(AppInfoUtil.XunleiPackageName);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Snackbar.make(findViewById(R.id.fab), "你还没有安装迅雷，为了下载和在线观看视频，现在安装迅雷！", Snackbar.LENGTH_LONG)
+                            .setAction("安装", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent viewIntent = new
+                                            Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=android迅雷"));
+                                    startActivity(viewIntent);
+                                }
+                            }).show();
+                }
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            isFinish = true;
-            finish();
-            System.exit(0);
-            return true;
         }
 
         return super.onOptionsItemSelected(item);

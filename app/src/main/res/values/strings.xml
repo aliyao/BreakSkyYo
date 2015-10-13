@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">破天</string>
     <string name="action_settings">退出应用</string>
+    <string name="action_baidudisk">打开百度云</string>
+    <string name="action_xunlei">打开迅雷</string>
     <string name="title_activity_hello">破天</string>
     <string name="dummy_button">立即进入</string>
     <string name="dummy_content">何时\n石破天惊</string>

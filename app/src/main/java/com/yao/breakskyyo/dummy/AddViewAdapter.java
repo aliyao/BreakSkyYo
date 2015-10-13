@@ -215,7 +215,7 @@ public class AddViewAdapter {
                             @Override
                             public void onClick(View v) {
                                 Intent viewIntent = new
-                                        Intent("android.intent.action.VIEW", Uri.parse("http://www.baidu.com/s?wd=android迅雷"));
+                                        Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com/s?wd=android迅雷"));
                                 mActivity.startActivity(viewIntent);
                             }
                         }).show();
