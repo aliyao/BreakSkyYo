@@ -73,7 +73,7 @@ public class HelloActivity extends AppCompatActivity {
         findViewById(R.id.dummy_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toMainActivity();
+                //toMainActivity();
             }
         });
         // mainHandle.sendEmptyMessageDelayed(1,3000);
