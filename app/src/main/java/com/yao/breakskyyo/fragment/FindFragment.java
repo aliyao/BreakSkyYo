@@ -68,9 +68,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     final String zhengZeType = "<a.*?class=\"movietype\">(.*?)</a>";
     final String zhengZeTag = "[\\s\\S]*?>(.*?)</";
     int pageNum;
-    List<List<SelectHeadItem>> listselectHeadItemlist;
-    Button bt_year, bt_score_sort, bt_national_area, bt_film_area;
-    int selectedNum =0;
+    List<List<SelectHeadItem>> listSelectHeadItemlist;
+    Button bt_select[];
+    int selectedNum =-100;
+    int  positionItem=-100;
 
 
     public static FindFragment newInstance() {
@@ -152,10 +153,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         select_list = (AbsListView) getView().findViewById(R.id.select_list);
         ll_head_select = getView().findViewById(R.id.ll_head_select);
         refreshView = (SwipeRefreshLayout) getView().findViewById(R.id.refreshView);
-        bt_year = (Button) getView().findViewById(R.id.bt_year);
-        bt_score_sort = (Button) getView().findViewById(R.id.bt_score_sort);
-        bt_national_area = (Button) getView().findViewById(R.id.bt_national_area);
-        bt_film_area = (Button) getView().findViewById(R.id.bt_film_area);
+        bt_select=new Button[4];
+        bt_select[0] = (Button) getView().findViewById(R.id.bt_year);
+        bt_select[1] = (Button) getView().findViewById(R.id.bt_score_sort);
+        bt_select[2] = (Button) getView().findViewById(R.id.bt_national_area);
+        bt_select[3] = (Button) getView().findViewById(R.id.bt_film_area);
         mListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -163,10 +165,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 return false;
             }
         });
-        bt_year.setOnClickListener(this);
-        bt_score_sort.setOnClickListener(this);
-        bt_national_area.setOnClickListener(this);
-        bt_film_area.setOnClickListener(this);
+        for (Button bt:
+        bt_select) {
+            bt.setOnClickListener(this);
+        }
         mListView.setAdapter(mAdapter);
         select_list.setAdapter(mSelectAdapter);
         select_list.setVisibility(View.GONE);
@@ -174,7 +176,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                httpGetFindList(1, HttpUrl.FindList);
+                httpGetFindList(1,positionItem);
             }
         });
         mListView.setOnItemClickListener(this);
@@ -182,13 +184,13 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         select_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                httpGetFindList(1,listselectHeadItemlist.get(selectedNum).get(position).getUrl());
+                httpGetFindList(1, position);
                 select_list.setVisibility(View.GONE);
             }
         });
         refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(FindFragment.this.getActivity(), 24));
         refreshView.setRefreshing(true);
-        httpGetFindList(1, HttpUrl.FindList);
+        httpGetFindList(1, -110);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -235,9 +237,26 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyItem>) mAdapter).getItem(position))));
     }
 
-    public void httpGetFindList(final int page, String urlroot) {
+    public void httpGetFindList(final int page,final int position) {
         KJHttp kjh = new KJHttp();
-        String url = urlroot + "page=" + page;
+        String url = HttpUrl.FindList + "&page=" + page;
+        if(position>=0){
+           switch (selectedNum){
+               case 0:
+                   url= url+HttpUrl.year+listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
+                   break;
+               case 1:
+                   url= url+HttpUrl.rating+listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
+                   break;
+               case 2:
+                   url= url+HttpUrl.country+listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
+                   break;
+               case 3:
+                   url= url+HttpUrl.tags+listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
+                   break;
+
+           }
+        }
         kjh.get(url, new HttpCallBack() {
             @Override
             public void onPreStart() {
@@ -251,7 +270,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 ViewInject.longToast("请求成功");
                 System.out.println(t.toString());
                 KJLoger.debug("log:" + t.toString());
-                listselectHeadItemlist = RegularId97.getSelectHeadItem(t.toString());
                 Pattern p = Pattern.compile(zhengZeItem);
                 Matcher m = p.matcher(t.toString());
                 List<Map<String, Object>> result = new ArrayList<>();
@@ -329,8 +347,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     pageNum = page;
                 }
                 ((ArrayAdapter) mAdapter).notifyDataSetChanged();
-
+                positionItem=position;
+                if(position<0) {
+                    listSelectHeadItemlist = RegularId97.getSelectHeadItem(t.toString());
+                }else{
+                    bt_select[selectedNum].setText(listSelectHeadItemlist.get(selectedNum).get(position).getText());
+                }
                 ll_head_select.setVisibility(View.VISIBLE);
+
+
             }
 
             @Override
@@ -389,7 +414,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     mSelectAdapter.clear();
                     List<String> selectHeadItemlistYear = new ArrayList<>();
                     for (SelectHeadItem mSelectHeadItem :
-                            listselectHeadItemlist.get(selectedNum)) {
+                            listSelectHeadItemlist.get(selectedNum)) {
                         selectHeadItemlistYear.add(mSelectHeadItem.getText());
 
                     }
@@ -405,7 +430,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemRating = new ArrayList<>();
                     for (SelectHeadItem mSelectHeadItem :
-                            listselectHeadItemlist.get(selectedNum)) {
+                            listSelectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemRating.add(mSelectHeadItem.getText());
 
                     }
@@ -421,7 +446,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemCountry = new ArrayList<>();
                     for (SelectHeadItem mSelectHeadItem :
-                            listselectHeadItemlist.get(selectedNum)) {
+                            listSelectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemCountry.add(mSelectHeadItem.getText());
 
                     }
@@ -437,7 +462,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemTags = new ArrayList<>();
                     for (SelectHeadItem mSelectHeadItem :
-                            listselectHeadItemlist.get(selectedNum)) {
+                            listSelectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemTags.add(mSelectHeadItem.getText());
 
                     }

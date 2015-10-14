@@ -38,7 +38,7 @@ public class RegularId97 {
     static String regularChiliName = "<a class=\"am-inline am-text-break\" href=\"(.*?)\">(.*?)</a>";
 
     static String[] regular = {regularTable, regularZaixianUrl, regularBaidupanUrl, regularBaidupanName, regularBaidupanUrlMima, regularChiliName};
-    public static String UrlSelectHead = "http://www.id97.com/videos/movie?year=";
+
     static String year = "/videos/movie\\?year=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     static String rating = "/videos/movie\\?rating=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     static String country = "/videos/movie\\?country=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
@@ -99,29 +99,29 @@ public class RegularId97 {
             // KJLoger.debug("yoyo:--"+ regularSelectHead[item]+"--" + itemStr);
             if (itemList != null) {
                 for (int num = 1; num < itemList.size();num=num+2){
-                    KJLoger.debug("yoyo:--" + regularSelectHead[item] + "--" + UrlSelectHead + itemList.get(0) + "---" + UrlSelectHead + itemList.get(1));
+                    //KJLoger.debug("yoyo:--" + regularSelectHead[item] + "--" + UrlSelectHead + itemList.get(0) + "---" + UrlSelectHead + itemList.get(1));
                     switch (item){
                         case 0:
                             SelectHeadItem mSelectHeadItemYear=new SelectHeadItem();
-                            mSelectHeadItemYear.setUrl(UrlSelectHead + itemList.get(num - 1));
+                            mSelectHeadItemYear.setUrl( itemList.get(num - 1));
                             mSelectHeadItemYear.setText(itemList.get(num));
                             listSelectHeadItemYear.add(mSelectHeadItemYear);
                             break;
                         case 1:
                             SelectHeadItem mSelectHeadItemRating=new SelectHeadItem();
-                            mSelectHeadItemRating.setUrl(UrlSelectHead + itemList.get(num - 1));
+                            mSelectHeadItemRating.setUrl(itemList.get(num - 1));
                             mSelectHeadItemRating.setText(itemList.get(num));
                             listSelectHeadItemRating.add(mSelectHeadItemRating);
                             break;
                         case 2:
                             SelectHeadItem mSelectHeadItemCountry=new SelectHeadItem();
-                            mSelectHeadItemCountry.setUrl(UrlSelectHead + itemList.get(num - 1));
+                            mSelectHeadItemCountry.setUrl(itemList.get(num - 1));
                             mSelectHeadItemCountry.setText(itemList.get(num));
                             listSelectHeadItemCountry.add(mSelectHeadItemCountry);
                             break;
                         case 3:
                             SelectHeadItem mSelectHeadItemTags=new SelectHeadItem();
-                            mSelectHeadItemTags.setUrl(UrlSelectHead + itemList.get(num - 1));
+                            mSelectHeadItemTags.setUrl(itemList.get(num - 1));
                             mSelectHeadItemTags.setText(itemList.get(num));
                             listSelectHeadItemTags.add(mSelectHeadItemTags);
                             break;
