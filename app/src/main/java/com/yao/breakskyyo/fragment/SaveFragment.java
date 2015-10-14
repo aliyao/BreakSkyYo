@@ -108,6 +108,8 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
         };
         mListView = (AbsListView) getView().findViewById(android.R.id.list);
         refreshView=(SwipeRefreshLayout) getView().findViewById(R.id.refreshView);
+        getView().findViewById(R.id.ll_head_select).setVisibility(View.GONE);
+        getView().findViewById(R.id.select_list).setVisibility(View.GONE);
         mListView.setAdapter(mAdapter);
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

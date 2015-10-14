@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -25,8 +26,10 @@ import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.dummy.DummyItem;
+import com.yao.breakskyyo.dummy.SelectHeadItem;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.CommonUtil;
+import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 
@@ -52,16 +55,20 @@ import java.util.regex.Pattern;
  * Use the {@link FindFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FindFragment extends Fragment  implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener{
+public class FindFragment extends Fragment implements View.OnClickListener, AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
     private OnFragmentInteractionListener mListener;
-    private AbsListView mListView;
+    private AbsListView mListView, select_list;
+    View ll_head_select;
     SwipeRefreshLayout refreshView;
+    private ArrayAdapter mSelectAdapter;
     private ListAdapter mAdapter;
     final String zhengZeItem = "title=\"(.*?)\" target=\"_blank\" href=\"(.*?)\">[\\s\\S]*?<img alt=\".*?\" title=\".*?\" src=\"(.*?)\".*?>([\\s\\S]*?)</a>[\\s\\S]*?<span class=\"otherinfo\"> - (.*?)分</span></div>[\\s\\S]*?<div class=\"otherinfo\">类型：(.*?)</div>";
     final String zhengZeId = "id/(.*?).html";
     final String zhengZeType = "<a.*?class=\"movietype\">(.*?)</a>";
     final String zhengZeTag = "[\\s\\S]*?>(.*?)</";
     int pageNum;
+    List<List<SelectHeadItem>> listselectHeadItemlist;
+    Button bt_year, bt_score_sort, bt_national_area, bt_film_area;
 
 
     public static FindFragment newInstance() {
@@ -98,7 +105,8 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
         super.onActivityCreated(savedInstanceState);
         init();
     }
-    public void init(){
+
+    public void init() {
 
         mAdapter = new ArrayAdapter<DummyItem>(getActivity(),
                 R.layout.finditem_list_item, DummyContent.ITEMS) {
@@ -123,12 +131,12 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 TextView score = (TextView) view.findViewById(R.id.score);
                 title.setText(mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
-                score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
-                String typeStr="类型："+mDummyItem.getType();
-                if(TextUtils.isEmpty(mDummyItem.getType())){
-                    typeStr="";
+                score.setText(StringDo.removeNull(mDummyItem.getScore()) + "分");
+                String typeStr = "类型：" + mDummyItem.getType();
+                if (TextUtils.isEmpty(mDummyItem.getType())) {
+                    typeStr = "";
                 }
-                if( YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(mDummyItem.getImgUrl())).length<=0){
+                if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(mDummyItem.getImgUrl())).length <= 0) {
                     img.setImageBitmap(null);
                 }
 
@@ -137,20 +145,41 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                 return view;
             }
         };
+        mSelectAdapter = new ArrayAdapter(getActivity(), R.layout.finditem_head_select_item, R.id.tv_select_item_lable);
         mListView = (AbsListView) getView().findViewById(android.R.id.list);
-        refreshView=(SwipeRefreshLayout) getView().findViewById(R.id.refreshView);
+        select_list = (AbsListView) getView().findViewById(R.id.select_list);
+        ll_head_select = getView().findViewById(R.id.ll_head_select);
+        refreshView = (SwipeRefreshLayout) getView().findViewById(R.id.refreshView);
+        bt_year = (Button) getView().findViewById(R.id.bt_year);
+        bt_score_sort = (Button) getView().findViewById(R.id.bt_score_sort);
+        bt_national_area = (Button) getView().findViewById(R.id.bt_national_area);
+        bt_film_area = (Button) getView().findViewById(R.id.bt_film_area);
+
+        bt_year.setOnClickListener(this);
+        bt_score_sort.setOnClickListener(this);
+        bt_national_area.setOnClickListener(this);
+        bt_film_area.setOnClickListener(this);
         mListView.setAdapter(mAdapter);
+        select_list.setAdapter(mSelectAdapter);
+        select_list.setVisibility(View.GONE);
+        ll_head_select.setVisibility(View.GONE);
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                httpGetFindList(1);
+                httpGetFindList(1, HttpUrl.FindList);
             }
         });
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
+        select_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
         refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(FindFragment.this.getActivity(), 24));
-         refreshView.setRefreshing(true);
-        httpGetFindList(1);
+        refreshView.setRefreshing(true);
+        httpGetFindList(1, HttpUrl.FindList);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -191,14 +220,15 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyItem>) mAdapter).getItem(position))));
     }
 
-    public void httpGetFindList(final int page) {
+    public void httpGetFindList(final int page, String urlroot) {
         KJHttp kjh = new KJHttp();
-        String url= HttpUrl.FindList+"page="+page;
+        String url = urlroot + "page=" + page;
         kjh.get(url, new HttpCallBack() {
             @Override
             public void onPreStart() {
@@ -210,13 +240,15 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
             public void onSuccess(String t) {
                 super.onSuccess(t);
                 ViewInject.longToast("请求成功");
+                System.out.println(t.toString());
                 KJLoger.debug("log:" + t.toString());
+                listselectHeadItemlist = RegularId97.getSelectHeadItem(t.toString());
                 Pattern p = Pattern.compile(zhengZeItem);
-                Matcher m = p.matcher(t.toString()); //csdn首页的源代码字符串
+                Matcher m = p.matcher(t.toString());
                 List<Map<String, Object>> result = new ArrayList<>();
                 while (m.find()) { //循环查找匹配字串
                     MatchResult mr = m.toMatchResult();
-                    Map<String, Object> map = new HashMap<>();
+                    Map<String, Object> map = new HashMap<String, Object>();
 
                     for (int groupItem = 1; groupItem <= mr.groupCount(); groupItem++) {
                         if (mr != null && mr.group(groupItem) != null) {
@@ -288,6 +320,8 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
                     pageNum = page;
                 }
                 ((ArrayAdapter) mAdapter).notifyDataSetChanged();
+
+                ll_head_select.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -310,7 +344,7 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent,final View view, final int position, long id) {
+    public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
         Snackbar.make(view, "是否保存", Snackbar.LENGTH_LONG)
                 .setAction("保存", new View.OnClickListener() {
                     @Override
@@ -334,4 +368,71 @@ public class FindFragment extends Fragment  implements AbsListView.OnItemClickLi
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_year:
+                if (select_list.getVisibility() == View.VISIBLE) {
+                    select_list.setVisibility(View.GONE);
+                } else {
+                    select_list.setVisibility(View.VISIBLE);
+                    mSelectAdapter.clear();
+                    List<String> selectHeadItemlistYear = new ArrayList<>();
+                    for (SelectHeadItem mSelectHeadItem :
+                            listselectHeadItemlist.get(0)) {
+                        selectHeadItemlistYear.add(mSelectHeadItem.getText());
+
+                    }
+                    mSelectAdapter.addAll(selectHeadItemlistYear);
+                }
+                break;
+            case R.id.bt_score_sort:
+                if (select_list.getVisibility() == View.VISIBLE) {
+                    select_list.setVisibility(View.GONE);
+                } else {
+                    select_list.setVisibility(View.VISIBLE);
+                    mSelectAdapter.clear();
+                    List<String> listSelectHeadItemRating = new ArrayList<>();
+                    for (SelectHeadItem mSelectHeadItem :
+                            listselectHeadItemlist.get(1)) {
+                        listSelectHeadItemRating.add(mSelectHeadItem.getText());
+
+                    }
+                    mSelectAdapter.addAll(listSelectHeadItemRating);
+                }
+                break;
+            case R.id.bt_national_area:
+                if (select_list.getVisibility() == View.VISIBLE) {
+                    select_list.setVisibility(View.GONE);
+                } else {
+                    select_list.setVisibility(View.VISIBLE);
+                    mSelectAdapter.clear();
+                    List<String> listSelectHeadItemCountry = new ArrayList<>();
+                    for (SelectHeadItem mSelectHeadItem :
+                            listselectHeadItemlist.get(2)) {
+                        listSelectHeadItemCountry.add(mSelectHeadItem.getText());
+
+                    }
+                    mSelectAdapter.addAll(listSelectHeadItemCountry);
+                }
+                break;
+            case R.id.bt_film_area:
+                if (select_list.getVisibility() == View.VISIBLE) {
+                    select_list.setVisibility(View.GONE);
+                } else {
+                    select_list.setVisibility(View.VISIBLE);
+                    mSelectAdapter.clear();
+                    List<String> listSelectHeadItemTags = new ArrayList<>();
+                    for (SelectHeadItem mSelectHeadItem :
+                            listselectHeadItemlist.get(3)) {
+                        listSelectHeadItemTags.add(mSelectHeadItem.getText());
+
+                    }
+                    mSelectAdapter.addAll(listSelectHeadItemTags);
+                }
+                break;
+
+        }
+
+    }
 }
