@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -69,6 +70,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     int pageNum;
     List<List<SelectHeadItem>> listselectHeadItemlist;
     Button bt_year, bt_score_sort, bt_national_area, bt_film_area;
+    int selectedNum =0;
 
 
     public static FindFragment newInstance() {
@@ -154,7 +156,13 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         bt_score_sort = (Button) getView().findViewById(R.id.bt_score_sort);
         bt_national_area = (Button) getView().findViewById(R.id.bt_national_area);
         bt_film_area = (Button) getView().findViewById(R.id.bt_film_area);
-
+        mListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                select_list.setVisibility(View.GONE);
+                return false;
+            }
+        });
         bt_year.setOnClickListener(this);
         bt_score_sort.setOnClickListener(this);
         bt_national_area.setOnClickListener(this);
@@ -174,7 +182,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         select_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                httpGetFindList(1,listselectHeadItemlist.get(selectedNum).get(position).getUrl());
+                select_list.setVisibility(View.GONE);
             }
         });
         refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(FindFragment.this.getActivity(), 24));
@@ -372,14 +381,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_year:
-                if (select_list.getVisibility() == View.VISIBLE) {
+                selectedNum =0;
+                if (selectedNum ==0&&select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> selectHeadItemlistYear = new ArrayList<>();
                     for (SelectHeadItem mSelectHeadItem :
-                            listselectHeadItemlist.get(0)) {
+                            listselectHeadItemlist.get(selectedNum)) {
                         selectHeadItemlistYear.add(mSelectHeadItem.getText());
 
                     }
@@ -387,14 +397,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 }
                 break;
             case R.id.bt_score_sort:
-                if (select_list.getVisibility() == View.VISIBLE) {
+                selectedNum =1;
+                if (selectedNum ==1&&select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemRating = new ArrayList<>();
                     for (SelectHeadItem mSelectHeadItem :
-                            listselectHeadItemlist.get(1)) {
+                            listselectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemRating.add(mSelectHeadItem.getText());
 
                     }
@@ -402,14 +413,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 }
                 break;
             case R.id.bt_national_area:
-                if (select_list.getVisibility() == View.VISIBLE) {
+                selectedNum =2;
+                if (selectedNum ==2&&select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemCountry = new ArrayList<>();
                     for (SelectHeadItem mSelectHeadItem :
-                            listselectHeadItemlist.get(2)) {
+                            listselectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemCountry.add(mSelectHeadItem.getText());
 
                     }
@@ -417,14 +429,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 }
                 break;
             case R.id.bt_film_area:
-                if (select_list.getVisibility() == View.VISIBLE) {
+                selectedNum =3;
+                if (selectedNum ==3&&select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemTags = new ArrayList<>();
                     for (SelectHeadItem mSelectHeadItem :
-                            listselectHeadItemlist.get(3)) {
+                            listselectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemTags.add(mSelectHeadItem.getText());
 
                     }

@@ -20,21 +20,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="评分排序" />
+            android:text="评分" />
 
         <Button
             android:id="@+id/bt_national_area"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="国家地区" />
+            android:text="国家" />
 
         <Button
             android:id="@+id/bt_film_area"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="影视类型" />
+            android:text="类型" />
     </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refreshView"
