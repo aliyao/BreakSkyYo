@@ -81,6 +81,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     int  positionItemCountry=-100;
     int  positionItemTags=-100;
 
+    TextView tv_bottom_text;
+
+    int refreshState=0;//0没有刷新，   1正在刷新
+
 
     public static FindFragment newInstance() {
         FindFragment fragment = new FindFragment();
@@ -140,6 +144,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 TextView type = (TextView) view.findViewById(R.id.type);
                 TextView tag = (TextView) view.findViewById(R.id.tag);
                 TextView score = (TextView) view.findViewById(R.id.score);
+
+
                 title.setText(mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
                 score.setText(StringDo.removeNull(mDummyItem.getScore()) + "分");
@@ -166,6 +172,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         bt_select[1] = (Button) getView().findViewById(R.id.bt_score_sort);
         bt_select[2] = (Button) getView().findViewById(R.id.bt_national_area);
         bt_select[3] = (Button) getView().findViewById(R.id.bt_film_area);
+        tv_bottom_text= (TextView) getView().findViewById(R.id.tv_bottom_text);
+        tv_bottom_text.setVisibility(View.INVISIBLE);
         mListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -192,34 +200,37 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         select_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (selectedNum){
+                if (refreshState==1){
+                    return;
+                }
+                switch (selectedNum) {
                     case 0:
-                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())){
-                            positionItemYear  =-100;
-                        }else{
-                            positionItemYear  =position;
+                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())) {
+                            positionItemYear = -100;
+                        } else {
+                            positionItemYear = position;
                         }
 
                         break;
                     case 1:
-                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())){
-                            positionItemRating  =-100;
-                        }else{
-                            positionItemRating  =position;
+                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())) {
+                            positionItemRating = -100;
+                        } else {
+                            positionItemRating = position;
                         }
                         break;
                     case 2:
-                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())){
-                            positionItemCountry  =-100;
-                        }else{
-                            positionItemCountry  =position;
+                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())) {
+                            positionItemCountry = -100;
+                        } else {
+                            positionItemCountry = position;
                         }
                         break;
                     case 3:
-                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())){
-                            positionItemTags  =-100;
-                        }else{
-                            positionItemTags  =position;
+                        if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())) {
+                            positionItemTags = -100;
+                        } else {
+                            positionItemTags = position;
                         }
                         break;
                 }
@@ -227,8 +238,28 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 select_list.setVisibility(View.GONE);
             }
         });
-        refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(FindFragment.this.getActivity(), 24));
-        refreshView.setRefreshing(true);
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    // 当不滚动时
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        // 判断滚动到底部
+                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                            if (tv_bottom_text.getVisibility() != View.VISIBLE) {
+                                httpGetFindList(pageNum + 1);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+
+            }
+        });
         httpGetFindList(1);
     }
 
@@ -277,8 +308,15 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     }
 
     public void httpGetFindList(final int page) {
+        if (refreshState==1){
+            if(refreshView.isRefreshing()){
+                refreshView.setRefreshing(false);
+            }else{
+                tv_bottom_text.setVisibility(View.INVISIBLE);
+            }
+            return;
+        }
         KJHttp kjh = new KJHttp();
-
         HttpParams params = new HttpParams();
         String url = HttpUrl.FindList + "page=" + page;
         if(positionItemYear>=0) {
@@ -324,7 +362,17 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
             @Override
             public void onPreStart() {
                 super.onPreStart();
+                refreshState=1;
                 KJLoger.debug("在请求开始之前调用");
+                if(page>1){
+                    tv_bottom_text.setText("正在刷新");
+                    tv_bottom_text.setVisibility(View.VISIBLE);
+                }else{
+                    if(!refreshView.isRefreshing()){
+                        refreshView.setRefreshing(true);
+                    }
+                    tv_bottom_text.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -407,6 +455,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 } else {
                     DummyContent.addData(result);
                     pageNum = page;
+                    tv_bottom_text.setVisibility(View.INVISIBLE);
                 }
                 ((ArrayAdapter) mAdapter).notifyDataSetChanged();
                 if (positionItemYear < 0 && positionItemRating < 0 && positionItemCountry < 0 && positionItemTags < 0) {
@@ -425,14 +474,21 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     ((ArrayAdapter) mAdapter).clear();
                     pageNum = 1;
                     ((ArrayAdapter) mAdapter).notifyDataSetChanged();
+                }else{
+                    tv_bottom_text.setText("网络不给力！");
                 }
+
+
             }
 
 
             @Override
             public void onFinish() {
                 super.onFinish();
-                refreshView.setRefreshing(false);
+                if(refreshView.isRefreshing()){
+                    refreshView.setRefreshing(false);
+                }
+                refreshState=0;
                 KJLoger.debug("请求完成，不管成功或者失败都会调用");
             }
 

@@ -42,6 +42,7 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
     private AbsListView mListView;
     SwipeRefreshLayout refreshView;
     private ListAdapter mAdapter;
+    TextView tv_bottom_text;
 
     public static SaveFragment newInstance() {
         SaveFragment fragment = new SaveFragment();
@@ -94,6 +95,8 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
                 TextView type = (TextView) view.findViewById(R.id.type);
                 TextView tag = (TextView) view.findViewById(R.id.tag);
                 TextView score = (TextView) view.findViewById(R.id.score);
+
+
                 title.setText( mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
                 score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
@@ -108,6 +111,8 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
         };
         mListView = (AbsListView) getView().findViewById(android.R.id.list);
         refreshView=(SwipeRefreshLayout) getView().findViewById(R.id.refreshView);
+        tv_bottom_text= (TextView) getView().findViewById(R.id.tv_bottom_text);
+        tv_bottom_text.setVisibility(View.INVISIBLE);
         getView().findViewById(R.id.ll_head_select).setVisibility(View.GONE);
         getView().findViewById(R.id.select_list).setVisibility(View.GONE);
         mListView.setAdapter(mAdapter);

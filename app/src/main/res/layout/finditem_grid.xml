@@ -4,17 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yao.breaksky.fragment.FindItemFragment">
+
     <LinearLayout
         android:id="@+id/ll_head_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/bt_year"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="true"
             android:ellipsize="end"
+            android:singleLine="true"
             android:text="年份" />
 
         <Button
@@ -22,8 +24,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="true"
             android:ellipsize="end"
+            android:singleLine="true"
             android:text="评分" />
 
         <Button
@@ -31,8 +33,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="true"
             android:ellipsize="end"
+            android:singleLine="true"
             android:text="地区" />
 
         <Button
@@ -40,29 +42,48 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="true"
             android:ellipsize="end"
+            android:singleLine="true"
             android:text="类型" />
     </LinearLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refreshView"
+
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/ll_head_select"
-        android:layout_height="match_parent">
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_bottom_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refreshView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/tv_bottom_text">
+
             <GridView
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:numColumns="2" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
+
     <GridView
         android:id="@+id/select_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="3"
         android:layout_below="@+id/ll_head_select"
         android:background="@android:color/white"
-        />
+        android:numColumns="3" />
 
     <TextView
         android:id="@android:id/empty"
