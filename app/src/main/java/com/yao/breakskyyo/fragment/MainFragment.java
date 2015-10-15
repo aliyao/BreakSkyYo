@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class MainFragment extends Fragment  {
     private OnFragmentInteractionListener mListener;
     private ListView mListView;
     SwipeRefreshLayout refreshView;
@@ -71,12 +71,14 @@ public class MainFragment extends Fragment implements  AdapterView.OnItemClickLi
     public void init() {
         mAdapter = new ArrayAdapter<List<DummyItem>>(getActivity(),
                 R.layout.main_list_item) {
+
+            View rl_item2,rl_item1;
             @Override
             public List<DummyItem> getItem(int position) {
                 return super.getItem(position);
             }
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(final int position, View convertView, ViewGroup parent) {
                 View view;
                 if (convertView == null) {
                     view = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.main_list_item, parent, false);
@@ -90,7 +92,36 @@ public class MainFragment extends Fragment implements  AdapterView.OnItemClickLi
                 ImageView img2 = (ImageView) view.findViewById(R.id.image2);
                 TextView title2 = (TextView) view.findViewById(R.id.title2);
                 TextView browseNum2 = (TextView) view.findViewById(R.id.browseNum2);
-                View rl_item2=view.findViewById(R.id.browseNum2);
+                 rl_item2=view.findViewById(R.id.rl_item2);
+                 rl_item1=view.findViewById(R.id.rl_item1);
+                rl_item1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClick(rl_item1, position);
+                    }
+                });
+                rl_item1.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        onItemLongClick(rl_item1,position);
+                        return true;
+                    }
+                });
+
+                rl_item2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClick(rl_item2,position);
+                    }
+                });
+                rl_item2.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        onItemLongClick(rl_item2 position);
+                        return true;
+                    }
+                });
+
                 TextView tv_lable = (TextView) view.findViewById(R.id.tv_lable);
                 if(position==0){
                     tv_lable.setText(R.string.main_hot_text);
@@ -169,10 +200,10 @@ public class MainFragment extends Fragment implements  AdapterView.OnItemClickLi
 
     }
 
-    @Override
+   /* @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyItem>) mAdapter).getItem(position))));
-    }
+    }*/
 
     public void httpGet() {
         KJHttp kjh = new KJHttp();
@@ -238,8 +269,8 @@ public class MainFragment extends Fragment implements  AdapterView.OnItemClickLi
         });
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
+
+    public boolean onItemLongClick( View view, final int position) {
         Snackbar.make(view, "是否保存", Snackbar.LENGTH_LONG)
                 .setAction("保存", new View.OnClickListener() {
                     @Override
