@@ -74,6 +74,7 @@
     <string name="other_instruction_text">同理可以通过分享和复制，利用第三方的软件app进行下载和观看</string>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_hot_text">热门电影：</string>
+    <string name="main_new_text">最近更新：</string>
 
 </resources>

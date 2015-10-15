@@ -41,6 +41,7 @@ public class MainFragment extends Fragment implements  AdapterView.OnItemClickLi
     private ListView mListView;
     SwipeRefreshLayout refreshView;
     private ArrayAdapter mAdapter;
+    int hotSize=-1;
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
@@ -90,6 +91,16 @@ public class MainFragment extends Fragment implements  AdapterView.OnItemClickLi
                 TextView title2 = (TextView) view.findViewById(R.id.title2);
                 TextView browseNum2 = (TextView) view.findViewById(R.id.browseNum2);
                 View rl_item2=view.findViewById(R.id.browseNum2);
+                TextView tv_lable = (TextView) view.findViewById(R.id.tv_lable);
+                if(position==0){
+                    tv_lable.setText(R.string.main_hot_text);
+                    tv_lable.setVisibility(View.VISIBLE);
+                }else if(position==hotSize){
+                    tv_lable.setText(R.string.main_new_text);
+                    tv_lable.setVisibility(View.VISIBLE);
+                }else{
+                    tv_lable.setVisibility(View.GONE);
+                }
 
                 title.setText(dummyItemList.get(0).getContent());
                 if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(dummyItemList.get(0).getImgUrl())).length <= 0) {
@@ -188,6 +199,7 @@ public class MainFragment extends Fragment implements  AdapterView.OnItemClickLi
                     if(dummyItemListList.get(1).size()%2!=0){
                         dummyItemListList.get(1).add(null);
                     }
+                    hotSize=dummyItemListList.get(0).size()/2;
                     List<DummyItem>  dummyItemList=new ArrayList<DummyItem>();
                     dummyItemList.addAll(dummyItemListList.get(0));
                     dummyItemList.addAll(dummyItemListList.get(1));
