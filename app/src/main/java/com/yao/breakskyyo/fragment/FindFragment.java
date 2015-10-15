@@ -317,7 +317,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
             return;
         }
         KJHttp kjh = new KJHttp();
-        HttpParams params = new HttpParams();
         String url = HttpUrl.FindList + "page=" + page;
         if(positionItemYear>=0) {
             url = url + HttpUrl.year + listSelectHeadItemlist.get(0).get(positionItemYear).getUrl();

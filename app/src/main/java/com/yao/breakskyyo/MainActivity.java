@@ -5,10 +5,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,26 +15,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 
-import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.fragment.FindFragment;
+import com.yao.breakskyyo.fragment.MainFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
 import com.yao.breakskyyo.net.HttpDo;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
-import com.yao.breakskyyo.tools.ClipboardManagerDo;
-
-import java.lang.reflect.Field;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener,MainFragment.OnFragmentInteractionListener {
     Fragment fragments[];
     boolean isFinish;
     Toolbar toolbar;
@@ -64,16 +57,16 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().findItem(R.id.nav_slideshow).setChecked(true);
+        navigationView.getMenu().findItem(R.id.nav_main).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
         init();
 
     }
 
     private void init() {
-        toolbar.setSubtitle(R.string.title_section1);
-        fragments = new Fragment[2];
-        fragments[0] = FindFragment.newInstance();
+        toolbar.setSubtitle(R.string.title_section0);
+        fragments = new Fragment[3];
+        fragments[0] = MainFragment.newInstance();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager
                 .beginTransaction();
@@ -84,6 +77,9 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.show(fragments[0]);
         if (fragments[1] != null && fragments[1].isAdded()) {
             fragmentTransaction.hide(fragments[1]);
+        }
+        if (fragments[2] != null && fragments[2].isAdded()) {
+            fragmentTransaction.hide(fragments[2]);
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -195,10 +191,12 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_slideshow) {
+        if (id == R.id.nav_main) {
             showPage(0);
-        } else if (id == R.id.nav_save) {
+        } else if (id == R.id.nav_slideshow) {
             showPage(1);
+        } else if (id == R.id.nav_save) {
+            showPage(2);
         } else if (id == R.id.nav_about) {
             startActivity(new Intent(MainActivity.this, AboutActivity.class));
         } /*else if (id == R.id.nav_manage) {
@@ -216,14 +214,20 @@ public class MainActivity extends AppCompatActivity
 
     private void showPage(int page) {
         switch (page) {
-            case 1:
+            case 2:
                 if (fragments[page] == null) {
                     fragments[page] = SaveFragment.newInstance();
                 }
                 toolbar.setSubtitle(R.string.title_section2);
                 break;
-            case 0:
+            case 1:
+                if (fragments[page] == null) {
+                    fragments[page] = FindFragment.newInstance();
+                }
                 toolbar.setSubtitle(R.string.title_section1);
+                break;
+            case 0:
+                toolbar.setSubtitle(R.string.title_section0);
                 break;
 
         }
@@ -269,8 +273,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void updateSaveFragment() {
-        if (fragments[1] != null && fragments[1].isAdded()) {
-            ((SaveFragment) fragments[1]).update();
+        if (fragments[2] != null && fragments[2].isAdded()) {
+            ((SaveFragment) fragments[2]).update();
         }
     }
 

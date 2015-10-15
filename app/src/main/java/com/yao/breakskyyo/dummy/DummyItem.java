@@ -12,6 +12,7 @@ public class DummyItem {
     public String type;
     public String score;
     public long saveDate;
+    public String browseNum;
 
     public DummyItem(String id, String content, String url, String imgUrl, String tag, String type, String score) {
         this.id = id;
@@ -19,9 +20,10 @@ public class DummyItem {
         this.url = url;
         this.imgUrl = imgUrl;
         this.tag = tag;
-        this.type =type;
+        this.type = type;
         this.score = score;
     }
+
     /*public DummyItem(String id, String content, String url, String imgUrl, String tag, List<String> type, String score,Date saveDate) {
         this.id = id;
         this.content = content;
@@ -32,8 +34,16 @@ public class DummyItem {
         this.score = score;
         this.saveDate=saveDate;
     }*/
-    public DummyItem(){
+    public DummyItem() {
 
+    }
+
+    //Main banner Main hot  new
+    public DummyItem(String id, String imgUrl, String content,String browseNum ) {
+        this.id = id;
+        this.imgUrl = imgUrl;
+        this.content = content;
+        this.browseNum=browseNum;
     }
 
     public String getId() {
@@ -100,6 +110,14 @@ public class DummyItem {
         this.saveDate = saveDate;
     }
 
+    public String getBrowseNum() {
+        return browseNum;
+    }
+
+    public void setBrowseNum(String browseNum) {
+        this.browseNum = browseNum;
+    }
+
     @Override
     public String toString() {
        /* String typeStr = "";
@@ -107,6 +125,6 @@ public class DummyItem {
                 ) {
             typeStr = typeStr + "--" + tp;
         }*/
-        return id + "--" + content + "--" + url + "--" + imgUrl + "--" + tag + "--" + score + "--" ;
+        return id + "--" + content + "--" + url + "--" + imgUrl + "--" + tag + "--" + score + "--";
     }
 }

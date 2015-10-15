@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.yao.breakskyyo.dummy.DummyContent;
+import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
 import com.yao.breakskyyo.dummy.SelectHeadItem;
 
@@ -44,6 +45,20 @@ public class RegularId97 {
     static String country = "/videos/movie\\?country=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     static String tags = "/videos/movie\\?tags=([\\s\\S]*?)\" class=\"movie-tags[\\s\\S]*?>([\\s\\S]*?)<";
     static String[] regularSelectHead = {year, rating, country, tags};
+    static final String zhengZeBanerItem = "<a target=\"_blank\" href=\"/videos/resource/id/(.*?).html\n" +
+            "\">\n" +
+            "        <img src=\"(.*?)\n" +
+            "\" alt=\"(.*?)\">\n";
+
+    static final String zhengZeHotNewItem = "/videos/resource/id/(.*?).html\">\n" +
+            "            <div class=\"index-img\">\n" +
+            "                <img src=\"(.*?)\" alt=\".*?\" />\n" +
+            "            </div>\n" +
+            "            <h3 class=\"am-gallery-title\">(.*?)</h3>\n" +
+            "            <div class=\"am-gallery-desc\">(.*?)<";
+
+    static final String zhengZeHotHtml = "<h3>热门电影：</h3>\n([\\s\\S]*?)<h3>最新电影：</h3>";
+    static final String zhengZeNewHtml = "<h3>最新电影：</h3>([\\s\\S]*?)</body>";
 
 
     public static InfoVideos getInfoVideos(String htmlStr) {
@@ -87,41 +102,95 @@ public class RegularId97 {
         return mInfoVideos;
     }
 
-    public static List< List<SelectHeadItem>> getSelectHeadItem(String htmlStr) {
+    public static List<DummyItem> getBanerItem(String html) {
+        List<DummyItem> dummyItemList = new ArrayList<>();
+        Pattern p = Pattern.compile(zhengZeBanerItem);
+        Matcher m = p.matcher(html);
+        while (m.find()) { //循环查找匹配字串
+            MatchResult mr = m.toMatchResult();
+            for (int groupItem = 3; groupItem <= mr.groupCount(); groupItem = groupItem + 3) {
+                if (mr != null && mr.group(groupItem) != null) {
+                    System.out.println("group(i)--" + groupItem + "--" + mr.group(groupItem));
+                    dummyItemList.add(new DummyItem(mr.group(groupItem - 2), mr.group(groupItem - 1), mr.group(groupItem), null));
+                }
+            }
+        }
+        return dummyItemList;
+    }
+    public static List<List<DummyItem>> getHotNewItem(String html) {
+        List<List<DummyItem>>  dummyItemListList=new ArrayList<>();
+        dummyItemListList.add(getHotNewItemByHotNew(getHotNewHtml(html, zhengZeHotHtml)));
+        dummyItemListList.add(getHotNewItemByHotNew(getHotNewHtml(html, zhengZeNewHtml)));
+        return dummyItemListList;
+    }
+
+    private static List<DummyItem> getHotNewItemByHotNew(String html) {
+        if(TextUtils.isEmpty(html)){
+            return null;
+        }
+        List<DummyItem> dummyItemList = new ArrayList<>();
+        Pattern p = Pattern.compile(zhengZeHotNewItem);
+        Matcher m = p.matcher(html);
+        while (m.find()) { //循环查找匹配字串
+            MatchResult mr = m.toMatchResult();
+            for (int groupItem = 4; groupItem <= mr.groupCount(); groupItem = groupItem + 4) {
+                if (mr != null && mr.group(groupItem) != null) {
+                    System.out.println("group(i)--" + groupItem + "--" + mr.group(groupItem));
+                    dummyItemList.add(new DummyItem(mr.group(groupItem - 3), mr.group(groupItem - 2), mr.group(groupItem - 1), mr.group(groupItem)));
+                }
+            }
+        }
+        return dummyItemList;
+    }
+
+    private static String getHotNewHtml(String html, String zhengZeNewOrHotHtml) {
+        Pattern p = Pattern.compile(zhengZeNewOrHotHtml);
+        Matcher m = p.matcher(html);
+        while (m.find()) { //循环查找匹配字串
+            MatchResult mr = m.toMatchResult();
+            if (mr != null && mr.group(0) != null) {
+                System.out.println("group(i)--" + 0 + "--" + mr.group(0));
+                return mr.group(0);
+            }
+        }
+        return null;
+    }
+
+    public static List<List<SelectHeadItem>> getSelectHeadItem(String htmlStr) {
         List<SelectHeadItem> listSelectHeadItemYear = new ArrayList<>();
-        List<SelectHeadItem> listSelectHeadItemRating = new  ArrayList<>();
-        List<SelectHeadItem> listSelectHeadItemCountry = new  ArrayList<>();
-        List<SelectHeadItem> listSelectHeadItemTags = new  ArrayList<>();
+        List<SelectHeadItem> listSelectHeadItemRating = new ArrayList<>();
+        List<SelectHeadItem> listSelectHeadItemCountry = new ArrayList<>();
+        List<SelectHeadItem> listSelectHeadItemTags = new ArrayList<>();
         List<String> itemList;
-       // System.out.println(htmlStr);
+        // System.out.println(htmlStr);
         for (int item = 0; item < regularSelectHead.length; item++) {
             itemList = getObjByRegular(htmlStr, regularSelectHead[item]);
             // KJLoger.debug("yoyo:--"+ regularSelectHead[item]+"--" + itemStr);
             if (itemList != null) {
-                for (int num = 1; num < itemList.size();num=num+2){
+                for (int num = 1; num < itemList.size(); num = num + 2) {
                     //KJLoger.debug("yoyo:--" + regularSelectHead[item] + "--" + UrlSelectHead + itemList.get(0) + "---" + UrlSelectHead + itemList.get(1));
-                    switch (item){
+                    switch (item) {
                         case 0:
-                            SelectHeadItem mSelectHeadItemYear=new SelectHeadItem();
-                            mSelectHeadItemYear.setUrl( itemList.get(num - 1));
+                            SelectHeadItem mSelectHeadItemYear = new SelectHeadItem();
+                            mSelectHeadItemYear.setUrl(itemList.get(num - 1));
                             mSelectHeadItemYear.setText(itemList.get(num));
                             listSelectHeadItemYear.add(mSelectHeadItemYear);
                             break;
                         case 1:
-                            SelectHeadItem mSelectHeadItemRating=new SelectHeadItem();
+                            SelectHeadItem mSelectHeadItemRating = new SelectHeadItem();
                             mSelectHeadItemRating.setUrl(itemList.get(num - 1));
                             mSelectHeadItemRating.setText(itemList.get(num));
                             listSelectHeadItemRating.add(mSelectHeadItemRating);
                             break;
                         case 2:
-                            SelectHeadItem mSelectHeadItemCountry=new SelectHeadItem();
-                            mSelectHeadItemCountry.setUrl(itemList.get(num-1));
+                            SelectHeadItem mSelectHeadItemCountry = new SelectHeadItem();
+                            mSelectHeadItemCountry.setUrl(itemList.get(num - 1));
                             mSelectHeadItemCountry.setText(itemList.get(num));
                             listSelectHeadItemCountry.add(mSelectHeadItemCountry);
                             break;
                         case 3:
-                            SelectHeadItem mSelectHeadItemTags=new SelectHeadItem();
-                            mSelectHeadItemTags.setUrl(itemList.get(num-1));
+                            SelectHeadItem mSelectHeadItemTags = new SelectHeadItem();
+                            mSelectHeadItemTags.setUrl(itemList.get(num - 1));
                             mSelectHeadItemTags.setText(itemList.get(num));
                             listSelectHeadItemTags.add(mSelectHeadItemTags);
                             break;
@@ -129,11 +198,11 @@ public class RegularId97 {
                 }
             }
         }
-        listSelectHeadItemYear.add(0,new SelectHeadItem("全部"));
-        listSelectHeadItemRating.add(0,new SelectHeadItem("全部"));
-        listSelectHeadItemCountry.add(0,new SelectHeadItem("全部"));
-        listSelectHeadItemTags.add(0,new SelectHeadItem("全部"));
-        List< List<SelectHeadItem>> listListSelectHeadItem=new ArrayList<>();
+        listSelectHeadItemYear.add(0, new SelectHeadItem("全部"));
+        listSelectHeadItemRating.add(0, new SelectHeadItem("全部"));
+        listSelectHeadItemCountry.add(0, new SelectHeadItem("全部"));
+        listSelectHeadItemTags.add(0, new SelectHeadItem("全部"));
+        List<List<SelectHeadItem>> listListSelectHeadItem = new ArrayList<>();
         listListSelectHeadItem.add(listSelectHeadItemYear);
         listListSelectHeadItem.add(listSelectHeadItemRating);
         listListSelectHeadItem.add(listSelectHeadItemCountry);
@@ -150,7 +219,7 @@ public class RegularId97 {
             MatchResult mr = m.toMatchResult();
             for (int groupItem = 1; groupItem <= mr.groupCount(); groupItem++) {
                 if (mr != null && mr.group(groupItem) != null) {
-                     System.out.println(mr.group(groupItem));
+                    System.out.println(mr.group(groupItem));
                     listStr.add(mr.group(groupItem));
                 }
 
