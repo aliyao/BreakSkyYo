@@ -192,7 +192,7 @@ public class MainFragment extends Fragment implements  AdapterView.OnItemClickLi
                     dummyItemList.addAll(dummyItemListList.get(0));
                     dummyItemList.addAll(dummyItemListList.get(1));
                     List<List<DummyItem>>  dummyItemListListResult= new ArrayList<List<DummyItem>>();
-                    for (int num=1; num< dummyItemList.size();num=num+1) {
+                    for (int num=1; num< dummyItemList.size();num=num+2) {
                         List<DummyItem> dummyItemListResult=new ArrayList<DummyItem>();
                         dummyItemListResult.add(dummyItemList.get(num-1));
                         dummyItemListResult.add(dummyItemList.get(num));
