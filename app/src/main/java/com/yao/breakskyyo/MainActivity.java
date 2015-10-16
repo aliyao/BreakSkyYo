@@ -141,6 +141,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.action_search:
+                startActivity(new Intent(MainActivity.this,SearchActivity.class));
+                return true;
             case R.id.action_settings:
                 isFinish = true;
                 finish();

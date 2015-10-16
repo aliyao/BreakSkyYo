@@ -2,6 +2,7 @@
     <string name="app_name">破天</string>
     <string name="action_settings">退出应用</string>
     <string name="action_baidudisk">打开百度云</string>
+    <string name="action_search">搜索</string>
     <string name="action_xunlei">打开迅雷</string>
     <string name="title_activity_hello">破天</string>
     <string name="dummy_button">立即进入</string>
@@ -76,5 +77,6 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="main_hot_text">热门电影：</string>
     <string name="main_new_text">最近更新：</string>
+    <string name="title_activity_search">破天</string>
 
 </resources>
