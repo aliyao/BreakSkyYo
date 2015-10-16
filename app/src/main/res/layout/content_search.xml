@@ -24,11 +24,18 @@
         android:layout_below="@+id/et_word"
         />
 
-    <include
-        android:layout_below="@+id/bt_search"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/refreshView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        layout="@layout/fragment_main"/>
+        android:layout_below="@+id/bt_search">
+
+        <GridView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="2" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
