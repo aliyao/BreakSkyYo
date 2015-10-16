@@ -45,10 +45,7 @@ public class RegularId97 {
     static String country = "/videos/movie\\?country=([\\s\\S]*?)\"[\\s\\S]*?>([\\s\\S]*?)<";
     static String tags = "/videos/movie\\?tags=([\\s\\S]*?)\" class=\"movie-tags[\\s\\S]*?>([\\s\\S]*?)<";
     static String[] regularSelectHead = {year, rating, country, tags};
-    static final String zhengZeBanerItem = "<a target=\"_blank\" href=\"/videos/resource/id/(.*?).html\n" +
-            "\">\n" +
-            "        <img src=\"(.*?)\n" +
-            "\" alt=\"(.*?)\">\n";
+    static final String zhengZeBanerItem = "<a target=\"_blank\" href=\"/videos/resource/id/(.*?).html[\\s\\S]*?\">[\\s\\S]*?<img src=\"([\\s\\S]*?)\" alt=\"(.*?)\"";
 
     static final String zhengZeHotNewItem = "/videos/resource/id/(.*?).html\">[\\s\\S]*?<div class=\"index-img\">[\\s\\S]*?<img src=\"(.*?)\" alt=\".*?\" />[\\s\\S]*?</div>[\\s\\S]*?<h3 class=\"am-gallery-title\">(.*?)</h3>[\\s\\S]*?<div class=\"am-gallery-desc\">(.*?)<";
     static final String zhengZeHotHtml = "<h3>热门电影：</h3>([\\s\\S]*?)<h3>最新电影：</h3>";

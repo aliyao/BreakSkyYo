@@ -2,6 +2,7 @@ package com.yao.breakskyyo.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,12 +37,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainFragment extends Fragment  {
+import cn.bingoogolapple.bgabanner.BGABanner;
+
+public class MainFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ListView mListView;
     SwipeRefreshLayout refreshView;
     private ArrayAdapter<List<DummyItem>> mAdapter;
-    int hotSize=-1;
+    int hotSize = -1;
+    BGABanner bGABanner;
+    View mBannerView;
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
@@ -75,6 +80,7 @@ public class MainFragment extends Fragment  {
             public List<DummyItem> getItem(int position) {
                 return super.getItem(position);
             }
+
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view;
@@ -90,9 +96,9 @@ public class MainFragment extends Fragment  {
                 ImageView img2 = (ImageView) view.findViewById(R.id.image2);
                 TextView title2 = (TextView) view.findViewById(R.id.title2);
                 TextView browseNum2 = (TextView) view.findViewById(R.id.browseNum2);
-                View  rl_item2=view.findViewById(R.id.rl_item2);
-                View  rl_item1=view.findViewById(R.id.rl_item1);
-                Button bt_more_movie=(Button)view.findViewById(R.id.bt_more_movie);
+                View rl_item2 = view.findViewById(R.id.rl_item2);
+                View rl_item1 = view.findViewById(R.id.rl_item1);
+                Button bt_more_movie = (Button) view.findViewById(R.id.bt_more_movie);
                 rl_item1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -102,7 +108,7 @@ public class MainFragment extends Fragment  {
                 rl_item1.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onMainItemLongClick(v,0, position);
+                        onMainItemLongClick(v, 0, position);
                         return true;
                     }
                 });
@@ -116,31 +122,31 @@ public class MainFragment extends Fragment  {
                 rl_item2.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onMainItemLongClick(v,1, position);
+                        onMainItemLongClick(v, 1, position);
                         return true;
                     }
                 });
 
                 TextView tv_lable = (TextView) view.findViewById(R.id.tv_lable);
-                if(position==0){
+                if (position == 0) {
                     tv_lable.setText(R.string.main_hot_text);
                     tv_lable.setVisibility(View.VISIBLE);
-                }else if(position==hotSize){
+                } else if (position == hotSize) {
                     tv_lable.setText(R.string.main_new_text);
                     tv_lable.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     tv_lable.setVisibility(View.GONE);
                 }
 
-                if(position==(getCount()-1)){
+                if (position == (getCount() - 1)) {
                     bt_more_movie.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((MainActivity)getActivity()).toFindItemFragment();
+                            ((MainActivity) getActivity()).toFindItemFragment();
                         }
                     });
                     bt_more_movie.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     bt_more_movie.setVisibility(View.GONE);
                 }
 
@@ -151,7 +157,7 @@ public class MainFragment extends Fragment  {
                 browseNum.setText(StringDo.removeNull(dummyItemList.get(0).getBrowseNum()));
                 YOBitmap.getmKJBitmap().display(img, StringDo.removeNull(dummyItemList.get(0).getImgUrl()));
 
-                if(dummyItemList.size()>0&&dummyItemList.get(1)!=null){
+                if (dummyItemList.size() > 0 && dummyItemList.get(1) != null) {
                     title2.setText(dummyItemList.get(1).getContent());
                     if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(dummyItemList.get(1).getImgUrl())).length <= 0) {
                         img2.setImageBitmap(null);
@@ -159,7 +165,7 @@ public class MainFragment extends Fragment  {
                     browseNum2.setText(StringDo.removeNull(dummyItemList.get(1).getBrowseNum()));
                     YOBitmap.getmKJBitmap().display(img2, StringDo.removeNull(dummyItemList.get(1).getImgUrl()));
                     rl_item2.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     rl_item2.setVisibility(View.INVISIBLE);
                 }
 
@@ -168,9 +174,7 @@ public class MainFragment extends Fragment  {
         };
         mListView = (ListView) getView().findViewById(R.id.lv_main);
         refreshView = (SwipeRefreshLayout) getView().findViewById(R.id.refreshView);
-       View view = getActivity().getLayoutInflater().inflate(R.layout.activity_hello, null, false);
-        mListView.addHeaderView(view);
-        mListView.setAdapter(mAdapter);
+
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -179,6 +183,12 @@ public class MainFragment extends Fragment  {
         });
 
         httpGet();
+    }
+
+    public View getCustomHeaderView(Context context) {
+        View headerView = View.inflate(context, R.layout.main_fragment_head, null);
+        bGABanner = (BGABanner) headerView.findViewById(R.id.banner);
+        return headerView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -234,6 +244,32 @@ public class MainFragment extends Fragment  {
                 super.onSuccess(t);
                 ViewInject.longToast("请求成功");
                 KJLoger.debug("log:" + t.toString());
+                final List<DummyItem> banerDummyItemList = RegularId97.getBanerItem(t.toString());
+                if (banerDummyItemList != null && banerDummyItemList.size() > 0) {
+                    List<View> views = new ArrayList<>();
+                    for (int i = 0; i < banerDummyItemList.size(); i++) {
+                        View baneritem = View.inflate(MainFragment.this.getActivity(), R.layout.main_fragment_head_item, null);
+                        ImageView showimg = (ImageView) baneritem.findViewById(R.id.iv_showImg);
+                        TextView title = (TextView) baneritem.findViewById(R.id.tv_title);
+                        title.setText(banerDummyItemList.get(i).getContent());
+                        final int itemNum = i;
+                        baneritem.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(banerDummyItemList.get(itemNum))));
+                            }
+                        });
+                        YOBitmap.getmKJBitmap().display(showimg, banerDummyItemList.get(i).getImgUrl());
+                        views.add(baneritem);
+                    }
+                    if (mBannerView != null) {
+                        mListView.removeHeaderView(mBannerView);
+                    }
+                    mBannerView = getCustomHeaderView(getActivity());
+                    bGABanner.setViews(views);
+                    mListView.addHeaderView(mBannerView);
+                    mListView.setAdapter(mAdapter);
+                }
                 List<List<DummyItem>> dummyItemListList = RegularId97.getHotNewItem(t.toString());
                 if (dummyItemListList != null && dummyItemListList.size() == 2 && dummyItemListList.get(0) != null) {
                     if (dummyItemListList.get(0).size() % 2 != 0) {
@@ -287,7 +323,7 @@ public class MainFragment extends Fragment  {
                 .setAction("保存", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DummyItem dummyItem =mAdapter.getItem(position).get(itemNum);
+                        DummyItem dummyItem = mAdapter.getItem(position).get(itemNum);
                         dummyItem.setSaveDate(new Date().getTime());
                         String tip = "保存失败";
                         switch (DummyItemDb.save(dummyItem, MainFragment.this.getActivity())) {

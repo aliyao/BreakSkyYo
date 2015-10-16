@@ -26,4 +26,6 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:support-v4:23.0.1'
     compile 'org.kymjs.kjframe:kjframe:2.+'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'cn.bingoogolapple:bga-banner:2.0.3@aar'
 }
