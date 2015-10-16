@@ -6,6 +6,7 @@ import android.util.Log;
 import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
+import com.yao.breakskyyo.dummy.SearchItem;
 import com.yao.breakskyyo.dummy.SelectHeadItem;
 
 import org.kymjs.kjframe.utils.KJLoger;
@@ -50,6 +51,9 @@ public class RegularId97 {
     static final String zhengZeHotNewItem = "/videos/resource/id/(.*?).html\">[\\s\\S]*?<div class=\"index-img\">[\\s\\S]*?<img src=\"(.*?)\" alt=\".*?\" />[\\s\\S]*?</div>[\\s\\S]*?<h3 class=\"am-gallery-title\">(.*?)</h3>[\\s\\S]*?<div class=\"am-gallery-desc\">(.*?)<";
     static final String zhengZeHotHtml = "<h3>热门电影：</h3>([\\s\\S]*?)<h3>最新电影：</h3>";
     static final String zhengZeNewHtml = "<h3>最新电影：</h3>([\\s\\S]*?)</body>";
+
+
+    static final String  zhengZeSearch="result-item[\\s\\S]*?\"/videos/resource/id/(.*?).html\"[\\s\\S]*?<img class=\"img-thumbnail\" [\\s\\S]*?src=([\\s\\S]*?)>[\\s\\S]*?<button class=\"hdtag\">(.*?)</button>[\\s\\S]*?<div class=\"col-md-7\">([\\s\\S]*?)<p>资源下载地址";
 
 
     public static InfoVideos getInfoVideos(String htmlStr) {
@@ -223,5 +227,23 @@ public class RegularId97 {
 
         return listStr;
     }
+
+
+    public static List<SearchItem> getSearchItem(String html) {
+        List<SearchItem> searchItemList = new ArrayList<>();
+        Pattern p = Pattern.compile(zhengZeSearch);
+        Matcher m = p.matcher(html);
+        while (m.find()) { //循环查找匹配字串
+            MatchResult mr = m.toMatchResult();
+            for (int groupItem = 3; groupItem <= mr.groupCount(); groupItem = groupItem + 3) {
+                if (mr != null && mr.group(groupItem) != null) {
+                    System.out.println("group(i)--" + groupItem + "--" + mr.group(groupItem));
+                    searchItemList.add(new SearchItem(mr.group(groupItem - 3), mr.group(groupItem - 2), mr.group(groupItem - 1), mr.group(groupItem)));
+                }
+            }
+        }
+        return searchItemList;
+    }
+
 }
 

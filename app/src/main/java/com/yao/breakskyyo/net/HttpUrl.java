@@ -21,4 +21,6 @@ public class HttpUrl {
     public final static String country = "&country=";
     public final static String tags = "&tags=";
     public final static String page = "&page=";
+
+    public final static String SearchInfo = "http://www.id97.com/videos/search/name/";
 }
