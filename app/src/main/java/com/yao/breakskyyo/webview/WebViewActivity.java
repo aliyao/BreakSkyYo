@@ -115,8 +115,15 @@ public class WebViewActivity extends AppCompatActivity {
         settings.setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                if( url.startsWith("http:") || url.startsWith("https:") ) {
+                    return false;
+                }
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+                //  下面这一行保留的时候，原网页仍报错，新网页正常.所以注释掉后，也就没问题了
+                //          view.loadUrl(url);.
                 return true;
+
             }
 
             @Override
