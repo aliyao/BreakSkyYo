@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     static MainActivity mainActivity;
     NavigationView navigationView;
+    int fragmentsPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +71,29 @@ public class MainActivity extends AppCompatActivity
         toolbar.setSubtitle(R.string.title_section0);
         fragments = new Fragment[3];
         fragments[0] = MainFragment.newInstance();
+        fragments[1] = FindFragment.newInstance();
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager
                 .beginTransaction();
 
-        if (!fragments[0].isAdded()) {
-            fragmentTransaction.replace(R.id.showLayout, fragments[0]);
-        }
-        fragmentTransaction.show(fragments[0]);
-        if (fragments[1] != null && fragments[1].isAdded()) {
-            fragmentTransaction.hide(fragments[1]);
+        Object backAppPages= ACacheUtil.getAsObject(MainActivity.this, ACacheUtil.BackAppPages);
+        if(backAppPages!=null&&((int)backAppPages)>0){
+            if (!fragments[(int)backAppPages].isAdded()) {
+                fragmentTransaction.replace(R.id.showLayout, fragments[(int)backAppPages]);
+            }
+            fragmentTransaction.show(fragments[(int)backAppPages]);
+            if (fragments[0] != null && fragments[0].isAdded()) {
+                fragmentTransaction.hide(fragments[0]);
+            }
+            navigationView.getMenu().findItem(R.id.nav_slideshow).setChecked(true);
+        }else{
+            if (!fragments[0].isAdded()) {
+                fragmentTransaction.replace(R.id.showLayout, fragments[0]);
+            }
+            fragmentTransaction.show(fragments[0]);
+            if (fragments[1] != null && fragments[1].isAdded()) {
+                fragmentTransaction.hide(fragments[1]);
+            }
         }
         if (fragments[2] != null && fragments[2].isAdded()) {
             fragmentTransaction.hide(fragments[2]);
@@ -249,6 +263,7 @@ public class MainActivity extends AppCompatActivity
             }
             if (page == index) {
                 trx.show(fragments[index]);
+                fragmentsPage=index;
             } else {
                 if (fragments[index] != null && fragments[index].isAdded()) {
                     trx.hide(fragments[index]);
@@ -268,6 +283,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void finish() {
         if (isFinish) {
+            if(fragmentsPage==1){
+                ACacheUtil.put(MainActivity.this, ACacheUtil.BackAppPages,fragmentsPage );
+            }else if(fragmentsPage==0){
+                ACacheUtil.put(MainActivity.this, ACacheUtil.BackAppPages,fragmentsPage );
+            }
+            mainActivity=null;
             super.finish();
         } else {
             Snackbar.make(findViewById(R.id.fab), "是否退出", Snackbar.LENGTH_LONG)

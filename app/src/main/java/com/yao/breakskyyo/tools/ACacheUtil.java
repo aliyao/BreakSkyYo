@@ -19,7 +19,7 @@ public class ACacheUtil {
     public final  static String ContentTop="contentTop";
     public final  static String IsShowWifiTip="isShowWifiTip";
     public final  static String HttpUrlJson="httpUrlJson";
-
+    public final  static String BackAppPages="backAppPages";
 
     public static boolean isFirstOpen(Context mContext){
         if(mCache==null){
