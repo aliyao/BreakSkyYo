@@ -15,16 +15,14 @@ public class SearchItem {
     String id;
     String imgUrl;
     String hdtag;
-    String content;
     String url;
     String title;
 
-    public SearchItem(String id,String title,String imgUrl,String hdtag, String content){
+    public SearchItem(String id,String title,String imgUrl,String hdtag,  String url){
         this.id=id;
         this.imgUrl=imgUrl;
         this.hdtag=hdtag;
-        this.content=content;
-        this.url= String.format(HttpUrl.videosResourceIdUrl,id);
+        this.url= url;
         this.title=title;
     }
 
@@ -50,14 +48,6 @@ public class SearchItem {
 
     public void setHdtag(String hdtag) {
         this.hdtag = hdtag;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public String getUrl() {

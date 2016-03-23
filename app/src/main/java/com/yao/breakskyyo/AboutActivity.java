@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.dummy.InfoUpdateApk;
+import com.yao.breakskyyo.entity.UpdateApp;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
@@ -24,7 +25,7 @@ import org.kymjs.kjframe.ui.ViewInject;
 
 public class AboutActivity extends AppCompatActivity {
     Button bt_update;
-    InfoUpdateApk updateApkInfo;
+    UpdateApp updateApkInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +47,8 @@ public class AboutActivity extends AppCompatActivity {
         //HttpDo.updateApp(AboutActivity.this, updateHandle);
     }
     private void refresh(){
-        String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateJson);
-        updateApkInfo= JSON.parseObject(updateJson, InfoUpdateApk.class);
+        String updateJson= (String)ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateAppJson);
+        updateApkInfo= JSON.parseObject(updateJson, UpdateApp.class);
         Object appVersionCode= AppInfoUtil.getVersionCode(AboutActivity.this);
         if(updateJson==null||updateApkInfo==null||updateApkInfo.getVersionCode()==0||appVersionCode==null||appVersionCode.equals(updateApkInfo.getVersionCode())){
             bt_update.setVisibility(View.GONE);

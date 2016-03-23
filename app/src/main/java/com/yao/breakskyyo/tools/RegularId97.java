@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * 修改备注：
  */
 public class RegularId97 {
-
+    /*
     public static InfoVideos getInfoVideos(String htmlStr) {
         String[] regular = {HttpUrl.regularTable, HttpUrl.regularZaixianUrl, HttpUrl.regularBaidupanUrl, HttpUrl.regularBaidupanName, HttpUrl.regularBaidupanUrlMima, HttpUrl.regularChiliName};
         InfoVideos mInfoVideos = new InfoVideos();
@@ -226,7 +226,7 @@ public class RegularId97 {
         }
 
         return searchItemList;
-    }
+    }*/
 
 }
 

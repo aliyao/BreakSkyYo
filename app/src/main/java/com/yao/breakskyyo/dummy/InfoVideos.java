@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class InfoVideos {
     String movie_title;
-    String img_thumbnail;
+   // String img_thumbnail;
     //String movie_payUrl;
     String movie_jvqing;
     String movie_payZaixian;
@@ -32,13 +32,13 @@ public class InfoVideos {
     }
 
 
-    public String getImg_thumbnail() {
+    /*public String getImg_thumbnail() {
         return img_thumbnail;
     }
 
     public void setImg_thumbnail(String img_thumbnail) {
         this.img_thumbnail = img_thumbnail;
-    }
+    }*/
 
    /* public String getMovie_payUrl() {
         return movie_payUrl;

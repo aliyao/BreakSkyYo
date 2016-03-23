@@ -34,7 +34,7 @@ public class FileTools {
     public final static String objectFilePathSinaJsonMain = "/json/jsonMain";
     public final static  String objectFilePathSinaJsonInfo = "/json/jsonInfo";
 
-    public void main(Context mContext){
+   /* public void main(Context mContext){
         check(0);
         int versionCode= (int)AppInfoUtil.getVersionCode(mContext);
         String basePath =getExternalStorageBasePath();
@@ -46,7 +46,7 @@ public class FileTools {
             check(1);
             Init.InitSinaInfoHttpUrlJson();
         }
-    }
+    }*/
 
     public int check(int type){
         int bool=0;

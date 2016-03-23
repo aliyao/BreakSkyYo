@@ -18,17 +18,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.yao.breakskyyo.InfoActivityScrollingActivity;
 import com.yao.breakskyyo.MainActivity;
 import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DummyItem;
+import com.yao.breakskyyo.dummy.InfoVideos;
+import com.yao.breakskyyo.entity.DownloadItem;
+import com.yao.breakskyyo.entity.JsonHead;
+import com.yao.breakskyyo.entity.RecommendInfo;
+import com.yao.breakskyyo.entity.RecommendInfoItem;
+import com.yao.breakskyyo.entity.VideoInfo;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.CommonUtil;
-import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 
+import org.json.JSONObject;
 import org.kymjs.kjframe.KJHttp;
 import org.kymjs.kjframe.http.HttpCallBack;
 import org.kymjs.kjframe.ui.ViewInject;
@@ -36,9 +43,13 @@ import org.kymjs.kjframe.utils.KJLoger;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
+import cn.bmob.v3.AsyncCustomEndpoints;
+import cn.bmob.v3.listener.CloudCodeListener;
 
 public class MainFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
@@ -155,7 +166,7 @@ public class MainFragment extends Fragment {
                // if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(dummyItemList.get(0).getImgUrl())).length <= 0) {
                     img.setImageBitmap(null);
                // }
-                browseNum.setText(StringDo.removeNull(dummyItemList.get(0).getBrowseNum()));
+                browseNum.setVisibility(View.GONE);
                 YOBitmap.getmKJBitmap().display(img, StringDo.removeNull(dummyItemList.get(0).getImgUrl()));
 
                 if (dummyItemList.size() > 0 && dummyItemList.get(1) != null) {
@@ -163,7 +174,7 @@ public class MainFragment extends Fragment {
                    // if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(dummyItemList.get(1).getImgUrl())).length <= 0) {
                         img2.setImageBitmap(null);
                    // }
-                    browseNum2.setText(StringDo.removeNull(dummyItemList.get(1).getBrowseNum()));
+                    browseNum2.setVisibility(View.GONE);
                     YOBitmap.getmKJBitmap().display(img2, StringDo.removeNull(dummyItemList.get(1).getImgUrl()));
                     rl_item2.setVisibility(View.VISIBLE);
                 } else {
@@ -219,9 +230,7 @@ public class MainFragment extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-
+         void onFragmentInteraction(Uri uri);
     }
 
 
@@ -229,24 +238,25 @@ public class MainFragment extends Fragment {
         startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(mAdapter.getItem(position).get(itemNum))));
     }
 
-    public void httpGet() {
-        KJHttp kjh = new KJHttp();
-        kjh.get(HttpUrl.MainList, new HttpCallBack() {
-            @Override
-            public void onPreStart() {
-                super.onPreStart();
-                KJLoger.debug("在请求开始之前调用");
-                if (!refreshView.isRefreshing()) {
-                    refreshView.setRefreshing(true);
-                }
-            }
 
+    public void httpGet() {
+        AsyncCustomEndpoints ace = new AsyncCustomEndpoints();
+        //第一个参数是上下文对象，第二个参数是云端逻辑的方法名称，第三个参数是上传到云端逻辑的参数列表（JSONObject cloudCodeParams），第四个参数是回调类
+        onHttpStart();
+        ace.callEndpoint(MainFragment.this.getActivity(), HttpUrl.getRecommendInfoCloudCodeName, null, new CloudCodeListener() {
             @Override
-            public void onSuccess(String t) {
-                super.onSuccess(t);
+            public void onSuccess(Object object) {
                 ViewInject.longToast("请求成功");
-                KJLoger.debug("log:" + t.toString());
-                final List<DummyItem> banerDummyItemList = RegularId97.getBanerItem(t.toString());
+                KJLoger.debug("log:" + object.toString());
+                JsonHead<RecommendInfo> videoInfoJsonHead = JSON.parseObject(object.toString(), new TypeReference<JsonHead<RecommendInfo>>() {
+                });
+                List<DummyItem> banerDummyItemList=new ArrayList<>();
+                for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getBannerList()){
+                    DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
+                    banerDummyItemList.add(dummyItem);
+                }
+                final List<DummyItem> banerDummyItemListFinal=banerDummyItemList;
+
                 if (banerDummyItemList != null && banerDummyItemList.size() > 0) {
                     List<View> views = new ArrayList<>();
                     for (int i = 0; i < banerDummyItemList.size(); i++) {
@@ -258,7 +268,7 @@ public class MainFragment extends Fragment {
                         baneritem.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(banerDummyItemList.get(itemNum))));
+                                startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(banerDummyItemListFinal.get(itemNum))));
                             }
                         });
                         YOBitmap.getmKJBitmap().display(showimg, banerDummyItemList.get(i).getImgUrl());
@@ -272,7 +282,24 @@ public class MainFragment extends Fragment {
                     mListView.addHeaderView(mBannerView);
                     mListView.setAdapter(mAdapter);
                 }
-                List<List<DummyItem>> dummyItemListList = RegularId97.getHotNewItem(t.toString());
+                List<List<DummyItem>> dummyItemListList =new ArrayList<>();
+
+                List<DummyItem> dummyItemListHot=new ArrayList<>();
+                for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getHotList()){
+                    DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
+                    dummyItemListHot.add(dummyItem);
+                }
+
+                List<DummyItem> dummyItemListNew=new ArrayList<>();
+                for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getNewList()){
+                    DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
+                    dummyItemListNew.add(dummyItem);
+                }
+
+                dummyItemListList.add(dummyItemListHot);
+                dummyItemListList.add(dummyItemListNew);
+
+
                 if (dummyItemListList != null && dummyItemListList.size() == 2 && dummyItemListList.get(0) != null) {
                     if (dummyItemListList.get(0).size() % 2 != 0) {
                         dummyItemListList.get(0).add(null);
@@ -284,7 +311,7 @@ public class MainFragment extends Fragment {
                     List<DummyItem> dummyItemList = new ArrayList<DummyItem>();
                     dummyItemList.addAll(dummyItemListList.get(0));
                     dummyItemList.addAll(dummyItemListList.get(1));
-                    List<List<DummyItem>> dummyItemListListResult = new ArrayList<List<DummyItem>>();
+                    List<List<DummyItem>> dummyItemListListResult = new ArrayList<>();
                     for (int num = 1; num < dummyItemList.size(); num = num + 2) {
                         List<DummyItem> dummyItemListResult = new ArrayList<DummyItem>();
                         dummyItemListResult.add(dummyItemList.get(num - 1));
@@ -297,29 +324,33 @@ public class MainFragment extends Fragment {
 
                 mAdapter.notifyDataSetChanged();
 
+                onFinish();
             }
 
             @Override
-            public void onFailure(int errorNo, String strMsg) {
-                super.onFailure(errorNo, strMsg);
-                KJLoger.debug("exception:" + strMsg);
+            public void onFailure(int code, String msg) {
+                KJLoger.debug("exception:" + msg);
                 mAdapter.clear();
                 mAdapter.notifyDataSetChanged();
                 Snackbar.make(mListView, "网络不给力！！！", Snackbar.LENGTH_LONG).show();
+                onFinish();
             }
 
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
+            private void onFinish() {
                 if (refreshView.isRefreshing()) {
                     refreshView.setRefreshing(false);
                 }
                 KJLoger.debug("请求完成，不管成功或者失败都会调用");
             }
         });
-    }
 
+    }
+    public void onHttpStart() {
+        KJLoger.debug("在请求开始之前调用");
+        if (!refreshView.isRefreshing()) {
+            refreshView.setRefreshing(true);
+        }
+    }
 
     public boolean onMainItemLongClick(final View view, final int itemNum, final int position) {
         Snackbar.make(view, "是否保存", Snackbar.LENGTH_LONG)
@@ -327,7 +358,7 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         DummyItem dummyItem = mAdapter.getItem(position).get(itemNum);
-                        dummyItem.setSaveDate(new Date().getTime());
+                        //dummyItem.setSaveDate(new Date().getTime());
                         String tip = "保存失败";
                         switch (DummyItemDb.save(dummyItem, MainFragment.this.getActivity())) {
                             case 1:
@@ -337,7 +368,6 @@ public class MainFragment extends Fragment {
                             case 2:
                                 tip = "已经保存";
                                 break;
-
                         }
                         Snackbar.make(view, tip, Snackbar.LENGTH_LONG).show();
                     }

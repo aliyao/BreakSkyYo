@@ -11,7 +11,7 @@ import com.yao.breakskyyo.tools.ACacheUtil;
  * Created by nideyoyo on 2015/10/12.
  */
 public class Init {
-    private static JsonInfo httpInfo;
+   /* private static JsonInfo httpInfo;
     public static void InitSinaInfoHttpUrlJson(){
         String basePath = FileTools.getExternalStorageBasePath();
         if(!TextUtils.isEmpty(basePath)){
@@ -40,7 +40,7 @@ public class Init {
 
 
     public static void InitBmobHttpUrlJson(){
-            String httpUrlJsonStr= (String)ACacheUtil.getAsObject(MyApplication.getInstance(),ACacheUtil.HttpUrlJson);
+            String httpUrlJsonStr= (String)ACacheUtil.getAsObject(MyApplication.getInstance(),ACacheUtil.AppJson);
             if(!TextUtils.isEmpty(httpUrlJsonStr)){
                 try {
                     JsonInfo mHttp= JSON.parseObject(httpUrlJsonStr, JsonInfo.class);
@@ -55,5 +55,5 @@ public class Init {
             }
 
         httpInfo=new JsonInfo();
-    }
+    }*/
 }

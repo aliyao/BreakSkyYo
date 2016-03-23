@@ -11,14 +11,15 @@ public class ACacheUtil {
     static ACache mCache;
     final  static String LoginStatus="LoginStatus";//1登录
     final  static String FirstOpen="FirstOpen";//1第一次打开
-    public final  static String UpdateJson="UpdateJson";
-    public final  static String DownloadManager_ID="DownloadManager_ID";
+    public final  static String UpdateAppJson="UpdateAppJson";
+   // public final  static String UpdateJson="UpdateJson";
+    //public final  static String DownloadManager_ID="DownloadManager_ID";
    // public final  static String StatusBarHeight="statusBarHeight";
     public final  static String ScreenWidth="screenWidth";
     public final  static String ScreenHeight="screenHeight";
     public final  static String ContentTop="contentTop";
     public final  static String IsShowWifiTip="isShowWifiTip";
-    public final  static String HttpUrlJson="httpUrlJson";
+    //public final  static String HttpUrlJson="httpUrlJson";
     public final  static String BackAppPages="backAppPages";
 
     public static boolean isFirstOpen(Context mContext){

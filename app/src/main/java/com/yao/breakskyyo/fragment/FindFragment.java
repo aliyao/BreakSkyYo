@@ -1,10 +1,10 @@
 package com.yao.breakskyyo.fragment;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -22,6 +22,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.yao.breakskyyo.InfoActivityScrollingActivity;
 import com.yao.breakskyyo.MainActivity;
 import com.yao.breakskyyo.R;
@@ -29,27 +30,26 @@ import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DummyContent;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.SelectHeadItem;
+import com.yao.breakskyyo.entity.FindItem;
+import com.yao.breakskyyo.entity.InfoFind;
+import com.yao.breakskyyo.entity.JsonHead;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.CommonUtil;
-import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 
-import org.kymjs.kjframe.KJHttp;
-import org.kymjs.kjframe.http.HttpCallBack;
-import org.kymjs.kjframe.http.HttpParams;
+import org.json.JSONObject;
 import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import cn.bmob.v3.AsyncCustomEndpoints;
+import cn.bmob.v3.listener.CloudCodeListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,19 +66,19 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     SwipeRefreshLayout refreshView;
     private ArrayAdapter mSelectAdapter;
     private ListAdapter mAdapter;
-    List<List<SelectHeadItem>> listSelectHeadItemlist;
+    List<List<SelectHeadItem>> listSelectHeadItemlist=new ArrayList<>();
     Button bt_select[];
-    int selectedNum =-100;
+    int selectedNum = -100;
 
     int pageNum;
-    int  positionItemYear=-100;
-    int  positionItemRating=-100;
-    int  positionItemCountry=-100;
-    int  positionItemTags=-100;
+    int positionItemYear = -100;
+    int positionItemRating = -100;
+    int positionItemCountry = -100;
+    int positionItemTags = -100;
 
     TextView tv_bottom_text;
 
-    int refreshState=0;//0没有刷新，   1正在刷新
+    int refreshState = 0;//0没有刷新，   1正在刷新
 
 
     public static FindFragment newInstance() {
@@ -162,12 +162,12 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         select_list = (AbsListView) getView().findViewById(R.id.select_list);
         ll_head_select = getView().findViewById(R.id.ll_head_select);
         refreshView = (SwipeRefreshLayout) getView().findViewById(R.id.refreshView);
-        bt_select=new Button[4];
+        bt_select = new Button[4];
         bt_select[0] = (Button) getView().findViewById(R.id.bt_year);
         bt_select[1] = (Button) getView().findViewById(R.id.bt_score_sort);
         bt_select[2] = (Button) getView().findViewById(R.id.bt_national_area);
         bt_select[3] = (Button) getView().findViewById(R.id.bt_film_area);
-        tv_bottom_text= (TextView) getView().findViewById(R.id.tv_bottom_text);
+        tv_bottom_text = (TextView) getView().findViewById(R.id.tv_bottom_text);
         tv_bottom_text.setVisibility(View.INVISIBLE);
         tv_bottom_text.setEnabled(false);
         mListView.setOnTouchListener(new View.OnTouchListener() {
@@ -177,8 +177,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 return false;
             }
         });
-        for (Button bt:
-        bt_select) {
+        for (Button bt :
+                bt_select) {
             bt.setOnClickListener(this);
         }
         mListView.setAdapter(mAdapter);
@@ -196,7 +196,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         select_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (refreshState==1){
+                if (refreshState == 1) {
                     return;
                 }
                 switch (selectedNum) {
@@ -253,7 +253,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-
             }
         });
         refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(getActivity(), 24));
@@ -285,19 +284,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
     @Override
@@ -306,6 +294,147 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     }
 
     public void httpGetFindList(final int page) {
+        if (refreshState == 1) {
+            if (refreshView.isRefreshing()) {
+                refreshView.setRefreshing(false);
+            } else {
+                tv_bottom_text.setVisibility(View.INVISIBLE);
+            }
+            return;
+        }
+        String paramsStr = HttpUrl.page + page;
+        if (positionItemYear >= 0) {
+            paramsStr = paramsStr + HttpUrl.year + listSelectHeadItemlist.get(0).get(positionItemYear).getUrl();
+            bt_select[0].setText(listSelectHeadItemlist.get(0).get(positionItemYear).getText());
+        } else {
+            bt_select[0].setText("年份");
+        }
+        if (positionItemRating >= 0) {
+            paramsStr = paramsStr + HttpUrl.rating + listSelectHeadItemlist.get(1).get(positionItemRating).getUrl();
+            bt_select[1].setText(listSelectHeadItemlist.get(1).get(positionItemRating).getText());
+        } else {
+            bt_select[1].setText("评分");
+        }
+        if (positionItemCountry >= 0) {
+            String countryStr = listSelectHeadItemlist.get(2).get(positionItemCountry).getUrl();
+            try {
+                countryStr = URLEncoder.encode(countryStr, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            paramsStr = paramsStr + HttpUrl.country + countryStr;
+            bt_select[2].setText(listSelectHeadItemlist.get(2).get(positionItemCountry).getText());
+        } else {
+            bt_select[2].setText("地区");
+        }
+        if (positionItemTags >= 0) {
+            String tagsStr = listSelectHeadItemlist.get(3).get(positionItemTags).getUrl();
+            try {
+                tagsStr = URLEncoder.encode(tagsStr, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            paramsStr = paramsStr + HttpUrl.tags + tagsStr;
+            bt_select[3].setText(listSelectHeadItemlist.get(3).get(positionItemTags).getText());
+        } else {
+            bt_select[3].setText("类型");
+        }
+        Log.e("paramsStr", "paramsStr:" + paramsStr);
+
+        AsyncCustomEndpoints ace = new AsyncCustomEndpoints();
+        //第一个参数是上下文对象，第二个参数是云端逻辑的方法名称，第三个参数是上传到云端逻辑的参数列表（JSONObject cloudCodeParams），第四个参数是回调类
+        JSONObject params = new JSONObject();
+        try {
+            params.put("paramsStr", paramsStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        onHttpStart(page);
+        ace.callEndpoint(FindFragment.this.getActivity(), HttpUrl.getFindInfoCloudCodeName, params, new CloudCodeListener() {
+            @Override
+            public void onSuccess(Object object) {
+                try {
+                    ViewInject.longToast("请求成功");
+                    KJLoger.debug("log:" + object.toString());
+                    JsonHead<InfoFind> listJsonHead = JSON.parseObject(object.toString(), new TypeReference<JsonHead<InfoFind>>() {
+                    });
+                    List<Map<String, Object>> result = new ArrayList<>();
+                    for (FindItem mFindItem : listJsonHead.getInfo().getFindList()) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("title", mFindItem.getTitle());//找到后group(1)是表达式第一个括号的内容
+                        map.put("url", mFindItem.getHrefStr());//group(2)是表达式第二个括号的内容
+                        map.put("id", mFindItem.getId());//找到后group(1)是表达式第一个括号的内容
+                        map.put("imgurl", mFindItem.getImgUrl());//group(2)是表达式第三个括号的内容
+                        map.put("tag", mFindItem.getTag());//找到后group(1)是表达式第一个括号的内容
+                        map.put("score", mFindItem.getScore());
+                        map.put("type", mFindItem.getType());//"|" 找到后group(1)是表达式第一个括号的内容
+                        result.add(map);
+                    }
+                    if (page == 1) {
+                        ((ArrayAdapter) mAdapter).clear();
+                        DummyContent.setData(result);
+                        pageNum = 1;
+                    } else {
+                        DummyContent.addData(result);
+                        pageNum = page;
+                        tv_bottom_text.setVisibility(View.INVISIBLE);
+                    }
+                    ((ArrayAdapter) mAdapter).notifyDataSetChanged();
+                    if (positionItemYear < 0 && positionItemRating < 0 && positionItemCountry < 0 && positionItemTags < 0) {
+                        listSelectHeadItemlist.add(listJsonHead.getInfo().getYearInfo().getTypeList());
+                        listSelectHeadItemlist.add(listJsonHead.getInfo().getScoreInfo().getTypeList());
+                        listSelectHeadItemlist.add(listJsonHead.getInfo().getCountryInfo().getTypeList());
+                        listSelectHeadItemlist.add(listJsonHead.getInfo().getFilmTypeInfo().getTypeList());
+                    }
+                    ll_head_select.setVisibility(View.VISIBLE);
+                    onFinish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                KJLoger.debug("exception:" + msg);
+                if (page == 1) {
+                    ((ArrayAdapter) mAdapter).clear();
+                    pageNum = 1;
+                    ((ArrayAdapter) mAdapter).notifyDataSetChanged();
+                } else {
+                    tv_bottom_text.setText("网络不给力！");
+                    tv_bottom_text.setEnabled(true);
+                }
+                onFinish();
+            }
+
+            private void onFinish() {
+                if (refreshView.isRefreshing()) {
+                    refreshView.setRefreshing(false);
+                }
+                refreshState = 0;
+                KJLoger.debug("请求完成，不管成功或者失败都会调用");
+            }
+        });
+
+    }
+
+    public void onHttpStart(int page) {
+        refreshState = 1;
+        KJLoger.debug("在请求开始之前调用");
+        if (page > 1) {
+            tv_bottom_text.setText("正在刷新");
+            tv_bottom_text.setVisibility(View.VISIBLE);
+        } else {
+            if (!refreshView.isRefreshing()) {
+                refreshView.setRefreshing(true);
+            }
+            tv_bottom_text.setVisibility(View.INVISIBLE);
+        }
+        tv_bottom_text.setEnabled(false);
+    }
+
+  /*  public void httpGetFindList(final int page) {
         if (refreshState==1){
             if(refreshView.isRefreshing()){
                 refreshView.setRefreshing(false);
@@ -378,74 +507,20 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 super.onSuccess(t);
                 ViewInject.longToast("请求成功");
                 KJLoger.debug("log:" + t.toString());
-                Pattern p = Pattern.compile(HttpUrl.zhengZeItem);
-                Matcher m = p.matcher(t.toString());
                 List<Map<String, Object>> result = new ArrayList<>();
-                while (m.find()) { //循环查找匹配字串
-                    MatchResult mr = m.toMatchResult();
+
+                for(){
                     Map<String, Object> map = new HashMap<String, Object>();
-
-                    for (int groupItem = 1; groupItem <= mr.groupCount(); groupItem++) {
-                        if (mr != null && mr.group(groupItem) != null) {
-                            //KJLoger.debug("group(i)--" + groupItem + "--" + mr.group(groupItem));
-                            switch (groupItem) {
-                                case 1:
-                                    map.put("title", mr.group(groupItem));//找到后group(1)是表达式第一个括号的内容
-                                    break;
-                                case 2:
-                                    map.put("url", mr.group(groupItem));//group(2)是表达式第二个括号的内容
-                                    Pattern pID = Pattern.compile(HttpUrl.zhengZeId);
-                                    Matcher mID = pID.matcher(mr.group(groupItem)); //csdn首页的源代码字符串
-                                    mID.find();
-                                    map.put("id", mID.toMatchResult().group(1));//找到后group(1)是表达式第一个括号的内容
-                                    // KJLoger.debug("--" + mID.toMatchResult().group(1));
-                                    break;
-                                case 3:
-                                    map.put("imgurl", mr.group(groupItem));//group(2)是表达式第三个括号的内容
-                                    break;
-                                case 4:
-                                    String htmlTag = mr.group(groupItem);
-                                    if (!TextUtils.isEmpty(htmlTag.trim())) {
-                                        Pattern pTag = Pattern.compile(HttpUrl.zhengZeTag);
-                                        Matcher mTag = pTag.matcher(mr.group(groupItem)); //csdn首页的源代码字符串
-                                        mTag.find();
-                                        map.put("tag", mTag.toMatchResult().group(1));//找到后group(1)是表达式第一个括号的内容
-                                    }
-                                    // map.put("tag", mr.group(groupItem));
-                                    break;
-                                case 5:
-                                    map.put("score", mr.group(groupItem));
-                                    break;
-                                case 6:
-                                    if (!TextUtils.isEmpty(mr.group(groupItem).trim())) {
-                                        Pattern pType = Pattern.compile(HttpUrl.zhengZeType);
-                                        Matcher mType = pType.matcher(mr.group(groupItem));
-                                        // List<String> typeList = new ArrayList<String>();
-                                        String typeStr = "";
-                                        while (mType.find()) { //循环查找匹配字串
-                                            MatchResult mrType = mType.toMatchResult();
-                                            for (int groupTypeItem = 1; groupTypeItem <= mrType.groupCount(); groupTypeItem++) {
-                                                if (mrType != null && mrType.group(groupTypeItem) != null) {
-                                                    if (TextUtils.isEmpty(typeStr)) {
-                                                        typeStr = mrType.group(groupTypeItem);
-                                                    } else {
-                                                        typeStr = typeStr + "|" + mrType.group(groupTypeItem);
-                                                    }
-
-                                                }
-                                            }
-                                        }
-                                        map.put("type", typeStr);//找到后group(1)是表达式第一个括号的内容
-                                    }
-
-                                    break;
-
-                            }
-                        }
-                    }
+                    map.put("title", mr.group(groupItem));//找到后group(1)是表达式第一个括号的内容
+                    map.put("url", mr.group(groupItem));//group(2)是表达式第二个括号的内容
+                    map.put("id", mID.toMatchResult().group(1));//找到后group(1)是表达式第一个括号的内容
+                    map.put("imgurl", mr.group(groupItem));//group(2)是表达式第三个括号的内容
+                    map.put("tag", mTag.toMatchResult().group(1));//找到后group(1)是表达式第一个括号的内容
+                    map.put("score", mr.group(groupItem));
+                    map.put("type", typeStr);//"|" 找到后group(1)是表达式第一个括号的内容
                     result.add(map);
                 }
-                //adapter = new ArrayAdapter(this,R.layout.view,R.id.textview1,list1);
+
                 if (page == 1) {
                     ((ArrayAdapter) mAdapter).clear();
                     DummyContent.setData(result);
@@ -494,7 +569,8 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
 
         });
 
-    }
+    }*/
+
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
@@ -503,7 +579,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     @Override
                     public void onClick(View v) {
                         DummyItem dummyItem = ((ArrayAdapter<DummyItem>) mAdapter).getItem(position);
-                        dummyItem.setSaveDate(new Date().getTime());
+                        //dummyItem.setSaveDate(new Date().getTime());
                         String tip = "保存失败";
                         switch (DummyItemDb.save(dummyItem, FindFragment.this.getActivity())) {
                             case 1:
@@ -525,10 +601,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_year:
-                if (selectedNum ==0&&select_list.getVisibility() == View.VISIBLE) {
+                if (selectedNum == 0 && select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
-                    selectedNum =0;
+                    selectedNum = 0;
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> selectHeadItemlistYear = new ArrayList<>();
@@ -543,10 +619,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 break;
             case R.id.bt_score_sort:
 
-                if (selectedNum ==1&&select_list.getVisibility() == View.VISIBLE) {
+                if (selectedNum == 1 && select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
-                    selectedNum =1;
+                    selectedNum = 1;
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemRating = new ArrayList<>();
@@ -560,10 +636,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 break;
             case R.id.bt_national_area:
 
-                if (selectedNum ==2&&select_list.getVisibility() == View.VISIBLE) {
+                if (selectedNum == 2 && select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
-                    selectedNum =2;
+                    selectedNum = 2;
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemCountry = new ArrayList<>();
@@ -577,10 +653,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 break;
             case R.id.bt_film_area:
 
-                if (selectedNum ==3&&select_list.getVisibility() == View.VISIBLE) {
+                if (selectedNum == 3 && select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
-                    selectedNum  =3;
+                    selectedNum = 3;
                     select_list.setVisibility(View.VISIBLE);
                     mSelectAdapter.clear();
                     List<String> listSelectHeadItemTags = new ArrayList<>();

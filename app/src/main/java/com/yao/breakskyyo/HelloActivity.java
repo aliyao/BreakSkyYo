@@ -11,39 +11,19 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
-import com.yao.breakskyyo.dummy.InfoUpdateApk;
-import com.yao.breakskyyo.dummy.JsonInfo;
+import com.yao.breakskyyo.entity.UpdateApp;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 
-import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 public class HelloActivity extends AppCompatActivity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
     private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
     private static final int UI_ANIMATION_DELAY = 300;
 
     private View mContentView;
@@ -58,17 +38,12 @@ public class HelloActivity extends AppCompatActivity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
-        // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggle();
             }
         });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
         findViewById(R.id.dummy_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,45 +53,38 @@ public class HelloActivity extends AppCompatActivity {
         });
         // mainHandle.sendEmptyMessageDelayed(1,3000);
         getJsonMainBy();
-
-
     }
 
     public void getJsonMainBy() {
         int versionCode = (int) AppInfoUtil.getVersionCode(HelloActivity.this);
         if (versionCode > 0) {
-            BmobQuery<JsonInfo> query = new BmobQuery<JsonInfo>();
-            //查询playerName叫“比目”的数据
-            query.addWhereEqualTo("versionCode", versionCode);
-            //Date updateAt = Init.getHttpInfo().getUpdateAt();
-            //if (updateAt != null) {
-               // query.addWhereEqualTo("updateAt", updateAt);
-           // }
+            BmobQuery<UpdateApp> query = new BmobQuery<>();
+            //条件：版本号大于versionCode
+            query.addWhereGreaterThan("versionCode", versionCode);
+            query.order("-versionCode");
+
+           /* // 根据score字段升序显示数据
+            query.order("score");
+            // 根据score字段降序显示数据
+            query.order("-score");
+            // 多个排序字段可以用（，）号分隔
+            query.order("-score,createdAt");*/
+
             //返回50条数据，如果不加上这条语句，默认返回10条数据
             query.setLimit(1);
             //执行查询方法
-            query.findObjects(this, new FindListener<JsonInfo>() {
+            query.findObjects(this, new FindListener<UpdateApp>() {
                 @Override
-                public void onSuccess(List<JsonInfo> object) {
-                    // TODO Auto-generated method stub
-                    // toast("查询成功：共" + object.size() + "条数据。");
-                    for (JsonInfo httpUrlJson : object) {
-                        InfoUpdateApk infoUpdateApk = new InfoUpdateApk();
-                        infoUpdateApk.setDescription("更新");
-                        infoUpdateApk.setVersionCode(httpUrlJson.getNewVersionCode());
-                        infoUpdateApk.setUrl(httpUrlJson.getUpdateApp());
-                        ACacheUtil.put(HelloActivity.this, ACacheUtil.UpdateJson, JSON.toJSONString(infoUpdateApk));
-                        ACacheUtil.put(HelloActivity.this, ACacheUtil.HttpUrlJson, JSON.toJSONString(httpUrlJson));
-                        Init.InitBmobHttpUrlJson();
-                        break;
+                public void onSuccess(List<UpdateApp> object) {
+                    if(object.size()>0){
+                        UpdateApp mUpdateApp=object.get(object.size()-1);
+                        ACacheUtil.put(HelloActivity.this, ACacheUtil.UpdateAppJson, JSON.toJSONString(mUpdateApp));
                     }
                     mainHandle.sendEmptyMessageDelayed(1, 3000);
                 }
 
                 @Override
                 public void onError(int code, String msg) {
-                    // TODO Auto-generated method stub
-                    //toast("查询失败：" + msg);
                     mainHandle.sendEmptyMessageDelayed(1, 3000);
                 }
             });
@@ -142,18 +110,9 @@ public class HelloActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
         delayedHide(100);
     }
 
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
     View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -173,15 +132,12 @@ public class HelloActivity extends AppCompatActivity {
     }
 
     private void hide() {
-        // Hide UI first
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
         mControlsView.setVisibility(View.GONE);
         mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
@@ -190,11 +146,6 @@ public class HelloActivity extends AppCompatActivity {
         @SuppressLint("InlinedApi")
         @Override
         public void run() {
-            // Delayed removal of status and navigation bar
-
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
             mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -206,12 +157,9 @@ public class HelloActivity extends AppCompatActivity {
 
     @SuppressLint("InlinedApi")
     private void show() {
-        // Show the system bar
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
@@ -219,7 +167,6 @@ public class HelloActivity extends AppCompatActivity {
     Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
-            // Delayed display of UI elements
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.show();
@@ -236,11 +183,6 @@ public class HelloActivity extends AppCompatActivity {
             hide();
         }
     };
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);

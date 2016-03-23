@@ -14,10 +14,8 @@ public class DummyItem {
     public String tag;
     public String type;
     public String score;
-    public long saveDate;
-    public String browseNum;
 
-    public DummyItem(String id, String content, String url, String imgUrl, String tag, String type, String score) {
+    public DummyItem(String id, String content,String url, String imgUrl, String tag,String type,String score) {
         this.id = id;
         this.content = content;
         this.url = url;
@@ -27,16 +25,6 @@ public class DummyItem {
         this.score = score;
     }
     public DummyItem() {
-
-    }
-
-    //Main banner Main hot  new
-    public DummyItem(String id, String imgUrl, String content,String browseNum ) {
-        this.id = id;
-        this.imgUrl = imgUrl;
-        this.content = content;
-        this.browseNum=browseNum;
-        this.url= String.format(HttpUrl.videosResourceIdUrl,id);
     }
 
     public String getId() {
@@ -93,22 +81,6 @@ public class DummyItem {
 
     public void setScore(String score) {
         this.score = score;
-    }
-
-    public long getSaveDate() {
-        return saveDate;
-    }
-
-    public void setSaveDate(long saveDate) {
-        this.saveDate = saveDate;
-    }
-
-    public String getBrowseNum() {
-        return browseNum;
-    }
-
-    public void setBrowseNum(String browseNum) {
-        this.browseNum = browseNum;
     }
 
     @Override

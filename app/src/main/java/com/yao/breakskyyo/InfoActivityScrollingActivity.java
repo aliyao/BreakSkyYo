@@ -16,26 +16,33 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.AddViewAdapter;
 import com.yao.breakskyyo.dummy.DownloadInfoItem;
 import com.yao.breakskyyo.dummy.DummyItem;
 import com.yao.breakskyyo.dummy.InfoVideos;
+import com.yao.breakskyyo.entity.DownloadItem;
+import com.yao.breakskyyo.entity.JsonHead;
+import com.yao.breakskyyo.entity.VideoInfo;
+import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
-import com.yao.breakskyyo.tools.RegularId97;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 import com.yao.breakskyyo.webview.PlayFullscreenActivity;
 
-import org.kymjs.kjframe.KJHttp;
-import org.kymjs.kjframe.http.HttpCallBack;
+import org.json.JSONObject;
 import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.bmob.v3.AsyncCustomEndpoints;
+import cn.bmob.v3.listener.CloudCodeListener;
 
 public class InfoActivityScrollingActivity extends AppCompatActivity {
     DummyItem mDummyItem;
@@ -69,7 +76,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                mDummyItem.setSaveDate(new Date().getTime());
+                                //mDummyItem.setSaveDate(new Date().getTime());
                                 String tip = "保存失败";
                                 switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
                                     case 1:
@@ -116,70 +123,96 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             finish();
             return;
         }
-        if(TextUtils.isEmpty(mDummyItem.getTag())){
+        if (TextUtils.isEmpty(mDummyItem.getTag())) {
             tag.setVisibility(View.GONE);
-        }else{
+        } else {
             tag.setVisibility(View.VISIBLE);
             tag.setText(StringDo.removeNull(mDummyItem.getTag()));
         }
 
         YOBitmap.getmKJBitmap().display(showImg, StringDo.removeNull(mDummyItem.getImgUrl()));
         httpGetItemInfo();
-        if((boolean)ACacheUtil.getAsObjectDefault(InfoActivityScrollingActivity.this,ACacheUtil.IsShowWifiTip,true)){
+        if ((boolean) ACacheUtil.getAsObjectDefault(InfoActivityScrollingActivity.this, ACacheUtil.IsShowWifiTip, true)) {
             Snackbar.make(findViewById(R.id.fab), "请用wifi看视频，小心流量超了", Snackbar.LENGTH_INDEFINITE)
                     .setAction("我知道了", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ACacheUtil.put(InfoActivityScrollingActivity.this,ACacheUtil.IsShowWifiTip,false);
+                            ACacheUtil.put(InfoActivityScrollingActivity.this, ACacheUtil.IsShowWifiTip, false);
                         }
                     }).show();
         }
 
     }
 
+
     public void httpGetItemInfo() {
-        KJHttp kjh = new KJHttp();
-        kjh.get( mDummyItem.getUrl(), new HttpCallBack() {
+        String urlStr = mDummyItem.getUrl();
+        AsyncCustomEndpoints ace = new AsyncCustomEndpoints();
+        //第一个参数是上下文对象，第二个参数是云端逻辑的方法名称，第三个参数是上传到云端逻辑的参数列表（JSONObject cloudCodeParams），第四个参数是回调类
+        JSONObject params = new JSONObject();
+        try {
+            params.put("urlStr", urlStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        onHttpStart();
+        ace.callEndpoint(InfoActivityScrollingActivity.this, HttpUrl.getFilmInfoCloudCodeName, params, new CloudCodeListener() {
             @Override
-            public void onPreStart() {
-                super.onPreStart();
-                KJLoger.debug("在请求开始之前调用");
-            }
-
-            @Override
-            public void onSuccess(String t) {
-                super.onSuccess(t);
+            public void onSuccess(Object object) {
                 ViewInject.longToast("请求成功");
-                KJLoger.debug("yoyo 结果:" +  mDummyItem.getUrl() + "--" + t);
+                KJLoger.debug("yoyo 结果:" + mDummyItem.getUrl() + "--" + object.toString());
+                JsonHead<VideoInfo> videoInfoJsonHead = JSON.parseObject(object.toString(), new TypeReference<JsonHead<VideoInfo>>() {
+                });
 
-                mInfoVideos = RegularId97.getInfoVideos(t);
-                mInfoVideos.setMovie_title(mDummyItem.getContent());
+                InfoVideos mInfoVideos = new InfoVideos();
+                mInfoVideos.setMovie_title(videoInfoJsonHead.getInfo().getTitle());
+                mInfoVideos.setMovie_jvqing(videoInfoJsonHead.getInfo().getContent());
+
+                List<Map<String, String>> regularChili = new ArrayList<>();
+                for (DownloadItem downloadItem : videoInfoJsonHead.getInfo().getChildDownload()) {
+                    if (downloadItem.getType() == 2) {
+                        mInfoVideos.setMovie_payZaixian(downloadItem.getUrl());
+                    } else if (downloadItem.getType() == 1) {
+                        mInfoVideos.setBaiduPanUrl(downloadItem.getUrl());
+                        mInfoVideos.setBaiduPanName(downloadItem.getTitle());
+                        mInfoVideos.setBaiduPanUrlMima(downloadItem.getBaiduPsw());
+                    } else {
+                        Map<String, String> map = new HashMap<>();
+                        map.put("url", downloadItem.getUrl());
+                        map.put("name", downloadItem.getTitle());
+                        regularChili.add(map);
+                    }
+                }
+                mInfoVideos.setRegularChili(regularChili);
+                // mInfoVideos = RegularId97.getInfoVideos(t);
+                // mInfoVideos.setMovie_title(mDummyItem.getContent());
                 initInfoVideos();
+
+                onFinish();
+
             }
 
             @Override
-            public void onFailure(int errorNo, String strMsg) {
-                super.onFailure(errorNo, strMsg);
-                KJLoger.debug("exception:" + strMsg);
-                Snackbar.make(showImg, "网络不给力！！！", Snackbar.LENGTH_INDEFINITE) .setAction("刷新", new View.OnClickListener() {
+            public void onFailure(int code, String msg) {
+                KJLoger.debug("exception:" + msg);
+                Snackbar.make(showImg, "网络不给力！！！", Snackbar.LENGTH_INDEFINITE).setAction("刷新", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         httpGetItemInfo();
                     }
                 }).show();
+                onFinish();
             }
 
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
+            private void onFinish() {
                 KJLoger.debug("请求完成，不管成功或者失败都会调用");
             }
-
-
         });
-
     }
+    public void onHttpStart() {
+        KJLoger.debug("在请求开始之前调用");
+    }
+
 
     public void initInfoVideos() {
         plot_introduction.setText(mInfoVideos.getMovie_jvqing());
