@@ -43,6 +43,7 @@ import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -448,6 +449,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     @Override
                     public void onClick(View v) {
                         DummyItem dummyItem = ((ArrayAdapter<DummyItem>) mAdapter).getItem(position);
+                        dummyItem.setSaveDate(new Date().getTime());
                         String tip = "保存失败";
                         switch (DummyItemDb.save(dummyItem, FindFragment.this.getActivity())) {
                             case 1:

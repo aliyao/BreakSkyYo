@@ -24,28 +24,20 @@ import com.yao.breakskyyo.MainActivity;
 import com.yao.breakskyyo.R;
 import com.yao.breakskyyo.db.DummyItemDb;
 import com.yao.breakskyyo.dummy.DummyItem;
-import com.yao.breakskyyo.dummy.InfoVideos;
-import com.yao.breakskyyo.entity.DownloadItem;
 import com.yao.breakskyyo.entity.JsonHead;
 import com.yao.breakskyyo.entity.RecommendInfo;
 import com.yao.breakskyyo.entity.RecommendInfoItem;
-import com.yao.breakskyyo.entity.VideoInfo;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.CommonUtil;
 import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 
-import org.json.JSONObject;
-import org.kymjs.kjframe.KJHttp;
-import org.kymjs.kjframe.http.HttpCallBack;
 import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
 import cn.bmob.v3.AsyncCustomEndpoints;
@@ -358,7 +350,7 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         DummyItem dummyItem = mAdapter.getItem(position).get(itemNum);
-                        //dummyItem.setSaveDate(new Date().getTime());
+                        dummyItem.setSaveDate(new Date().getTime());
                         String tip = "保存失败";
                         switch (DummyItemDb.save(dummyItem, MainFragment.this.getActivity())) {
                             case 1:

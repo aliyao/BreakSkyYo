@@ -76,7 +76,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                //mDummyItem.setSaveDate(new Date().getTime());
+                                mDummyItem.setSaveDate(new Date().getTime());
                                 String tip = "保存失败";
                                 switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
                                     case 1:

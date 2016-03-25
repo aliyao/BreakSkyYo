@@ -1,8 +1,5 @@
 package com.yao.breakskyyo.dummy;
 
-import com.yao.breakskyyo.net.HttpUrl;
-import com.yao.breakskyyo.tools.StringDo;
-
 /**
  * Created by nideyoyo on 2015/9/7.
  */
@@ -14,6 +11,7 @@ public class DummyItem {
     public String tag;
     public String type;
     public String score;
+    public long saveDate;
 
     public DummyItem(String id, String content,String url, String imgUrl, String tag,String type,String score) {
         this.id = id;
@@ -25,6 +23,14 @@ public class DummyItem {
         this.score = score;
     }
     public DummyItem() {
+    }
+
+    public long getSaveDate() {
+        return saveDate;
+    }
+
+    public void setSaveDate(long saveDate) {
+        this.saveDate = saveDate;
     }
 
     public String getId() {
