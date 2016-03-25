@@ -159,36 +159,37 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         ace.callEndpoint(InfoActivityScrollingActivity.this, HttpUrl.getFilmInfoCloudCodeName, params, new CloudCodeListener() {
             @Override
             public void onSuccess(Object object) {
-                ViewInject.longToast("请求成功");
-                KJLoger.debug("yoyo 结果:" + mDummyItem.getUrl() + "--" + object.toString());
-                JsonHead<VideoInfo> videoInfoJsonHead = JSON.parseObject(object.toString(), new TypeReference<JsonHead<VideoInfo>>() {
-                });
-
-                InfoVideos mInfoVideos = new InfoVideos();
-                mInfoVideos.setMovie_title(videoInfoJsonHead.getInfo().getTitle());
-                mInfoVideos.setMovie_jvqing(videoInfoJsonHead.getInfo().getContent());
-
-                List<Map<String, String>> regularChili = new ArrayList<>();
-                for (DownloadItem downloadItem : videoInfoJsonHead.getInfo().getChildDownload()) {
-                    if (downloadItem.getType() == 2) {
-                        mInfoVideos.setMovie_payZaixian(downloadItem.getUrl());
-                    } else if (downloadItem.getType() == 1) {
-                        mInfoVideos.setBaiduPanUrl(downloadItem.getUrl());
-                        mInfoVideos.setBaiduPanName(downloadItem.getTitle());
-                        mInfoVideos.setBaiduPanUrlMima(downloadItem.getBaiduPsw());
-                    } else {
-                        Map<String, String> map = new HashMap<>();
-                        map.put("url", downloadItem.getUrl());
-                        map.put("name", downloadItem.getTitle());
-                        regularChili.add(map);
+                try {
+                    ViewInject.longToast("请求成功");
+                    KJLoger.debug("yoyo 结果:" + mDummyItem.getUrl() + "--" + object.toString());
+                    JsonHead<VideoInfo> videoInfoJsonHead = JSON.parseObject(object.toString(), new TypeReference<JsonHead<VideoInfo>>() {
+                    });
+                    mInfoVideos = new InfoVideos();
+                    mInfoVideos.setMovie_title(videoInfoJsonHead.getInfo().getTitle());
+                    mInfoVideos.setMovie_jvqing(videoInfoJsonHead.getInfo().getContent());
+                    List<Map<String, String>> regularChili = new ArrayList<>();
+                    for (DownloadItem downloadItem : videoInfoJsonHead.getInfo().getChildDownload()) {
+                        if (downloadItem.getType() == 2) {
+                            mInfoVideos.setMovie_payZaixian(downloadItem.getUrl());
+                        } else if (downloadItem.getType() == 1) {
+                            mInfoVideos.setBaiduPanUrl(downloadItem.getUrl());
+                            mInfoVideos.setBaiduPanName(downloadItem.getTitle());
+                            mInfoVideos.setBaiduPanUrlMima(downloadItem.getBaiduPsw());
+                        } else {
+                            Map<String, String> map = new HashMap<>();
+                            map.put("url", downloadItem.getUrl());
+                            map.put("name", downloadItem.getTitle());
+                            regularChili.add(map);
+                        }
                     }
+                    mInfoVideos.setRegularChili(regularChili);
+                    // mInfoVideos = RegularId97.getInfoVideos(t);
+                    // mInfoVideos.setMovie_title(mDummyItem.getContent());
+                    initInfoVideos();
+                    onFinish();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                mInfoVideos.setRegularChili(regularChili);
-                // mInfoVideos = RegularId97.getInfoVideos(t);
-                // mInfoVideos.setMovie_title(mDummyItem.getContent());
-                initInfoVideos();
-
-                onFinish();
 
             }
 
@@ -209,6 +210,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             }
         });
     }
+
     public void onHttpStart() {
         KJLoger.debug("在请求开始之前调用");
     }
@@ -223,7 +225,7 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
         if (mInfoVideos.getRegularChili() != null) {
             for (Map<String, String> map :
                     mInfoVideos.getRegularChili()) {
-                downloadInfoItemList.add(new DownloadInfoItem(map.get("url"), map.get("name"), null, 3));
+                downloadInfoItemList.add(new DownloadInfoItem( map.get("name"),map.get("url"), null, 3));
             }
         }
         adapter.clearmdata();

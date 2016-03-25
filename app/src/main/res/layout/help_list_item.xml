@@ -20,12 +20,7 @@
         android:padding="8dp"
         android:text=""
         />
-    <Button
-        android:id="@+id/toWebBt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="电脑观看详细教程"
-        />
+
     <ImageView
         android:id="@+id/help_img"
         android:layout_width="match_parent"
