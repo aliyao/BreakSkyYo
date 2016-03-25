@@ -16,28 +16,19 @@
     <string name="title_activity_info_activity_scrolling">详情</string>
     <string name="title_activity_about">关于</string>
     <string name="update_app">查看更新</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-
     <string name="title_activity_web_view">破天</string>
-
     <string name="title_activity_play_fullscreen">破天</string>
     <string name="zai_xian_url">http://m.acfun.tv.id97.com/videos/iframe/(id)?html5=yes</string>
     <string name="title_activity_help">破天</string>
-
-
-
-
-
     <string name="zx_title_text">在线观看</string>
     <string name="zx_instruction_text">现在不是所有的视频都支持在线观看，只有一部分的视频支持在线观看。支持在线观看的视频会出现“立即播放”点击按钮</string>
     <array name="a_zx_array">
         <item name="a_zx1_text">1.点击“立即播放”就可以观看。</item>
-        <item name="a_zx2_text">2.如果不可以观看可以点击当前的屏幕，点击右边的按钮选择用浏览器打开。个人推荐UC浏览器，测试UC浏览器可以播放，但是需要手机下载安装UC浏览器。当然可能其他的一些浏览器也有可以和不可以的。自己可以尝试一下。</item>
+        <item name="a_zx2_text">
+            2.如果不可以观看可以点击当前的屏幕，点击右边的按钮选择用浏览器打开。个人推荐UC浏览器，测试UC浏览器可以播放，但是需要手机下载安装UC浏览器。当然可能其他的一些浏览器也有可以和不可以的。自己可以尝试一下。
+        </item>
         <item name="a_zx3_text">3.这样就可以看了，呵呵</item>
     </array>
-
-
     <string name="baidudisk_title_text">百度云app观看</string>
     <string name="baidudisk_instruction_text">页面的资源下载如果出现“百度网盘”，就可以输入右边的密码进去保存在你的百度云盘里面，这样就可以使用百度云在线观看的，这也是最常最好用的，操作还是挺方便的。但是需要你下载安装和注册登录百度云，实现在线观看。基本大部分都有百度云这种播放资源。</string>
     <array name="b_baidudisk_array">
@@ -51,8 +42,6 @@
         <item name="b_baidudisk8_text">8.点击文件夹进去又可以会显示为空，到时不要担心你下拉刷新一下就可以看到了</item>
         <item name="b_baidudisk9_text">9.现在看到就可以点击在线观看了，现在就要在wifi下看了，不然会要你的流量</item>
     </array>
-
-
     <string name="xunlei_title_text">迅雷下载观看</string>
     <string name="xunlei_instruction_text">页面的资源下载如果没有出现“百度网盘”和密码的就是磁力链接，需要使用迅雷app下载到手机进行观看，如果有迅雷VIP也可以实现在线观看，由于本人没有，这里只说明下载观看的方式，请注意使用wifi小心流量。但是需要你下载安装手机迅雷。</string>
     <array name="c_xunlei_array">
@@ -65,18 +54,11 @@
         <item name="c_xunlei7_text">7.长按输入框选择粘贴，点击下载</item>
         <item name="c_xunlei8_text">8.等待下载种子，下载完成后在“已完成”点击打开选择视频下载就可以了。</item>
     </array>
-
-
     <string name="computer_title_text">电脑观看</string>
-    <string name="computer_instruction_text">这里可以通过复制和分享把链接分享到电脑进行下载和观看</string>
-
-
+    <string name="computer_instruction_text">这里可以通过复制和分享把链接分享到电脑进行下载和观看：\n1、想要在线观看的，请保存到网盘中观看，没有网盘链接或者链接失效的，请百度搜索：百度云离线下载教程。\n2、如需下载电影，请先安装迅雷（旋风），然后右键资源链接，选择迅雷（旋风）下载。\n3、资源名称中含HD为高清，BD为蓝光 ，Mandarin是普通话，Cantonese是粤语，两者都有为双音轨。</string>
     <string name="other_title_text">其他观看</string>
     <string name="other_instruction_text">同理可以通过分享和复制，利用第三方的软件app进行下载和观看</string>
-
-<!-- TODO: Remove or change this placeholder text -->
     <string name="main_hot_text">热门电影：</string>
     <string name="main_new_text">最近更新：</string>
     <string name="title_activity_search">破天</string>
-
 </resources>

@@ -14,12 +14,8 @@ public class HttpUrl {
     public final static String getFindInfoCloudCodeName = "getFindInfo";
     public final static String getRecommendInfoCloudCodeName = "getRecommendInfo";
     public final static String getSearchInfoCloudCodeName = "getSearchInfo";
-
-    //public final static String FindList="http://www.id97.com/videos/movie?";
-    public final static String UpdateApp = "";
-
     public final static String UpdateAppWeb = "http://pan.baidu.com/s/1jGzYX9O";
-    public final static String HellpUrl = "http://www.id97.com/topic/91";
+   // public final static String HellpUrl = "http://www.id97.com/topic/91";
     public final static String page = "page=";
     public static final String SearchBaiduUrl = "http://www.baidu.com/s?wd=";
     public static final String UCUrl = "http://www.uc.cn/";

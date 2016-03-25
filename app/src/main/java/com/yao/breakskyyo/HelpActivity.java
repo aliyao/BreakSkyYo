@@ -107,7 +107,7 @@ public class HelpActivity extends AppCompatActivity
                 TextView contentTv=(TextView)view.findViewById(R.id.content);
                 ImageView help_img=(ImageView)view.findViewById(R.id.help_img);
                 TextView instruction=(TextView)view.findViewById(R.id.instruction);
-                Button toWebBt=(Button)view.findViewById(R.id.toWebBt);
+                //Button toWebBt=(Button)view.findViewById(R.id.toWebBt);
                 if (mHelpItem.getTitle()<=0){
                     titleTv.setVisibility(View.GONE);
                 }else{
@@ -129,7 +129,7 @@ public class HelpActivity extends AppCompatActivity
                     help_img.setImageResource(mHelpItem.getImageResourceId());
                 }
 
-                if(mHelpItem.getPlayType()!=4){
+               /* if(mHelpItem.getPlayType()!=4){
                     toWebBt.setOnClickListener(null);
                     toWebBt.setVisibility(View.GONE);
                 }else{
@@ -140,7 +140,7 @@ public class HelpActivity extends AppCompatActivity
                         }
                     });
                     toWebBt.setVisibility(View.VISIBLE);
-                }
+                }*/
 
                 if(TextUtils.isEmpty(mHelpItem.getContent())){
                     contentTv.setVisibility(View.GONE);
