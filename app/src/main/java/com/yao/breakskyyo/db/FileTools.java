@@ -1,8 +1,6 @@
 package com.yao.breakskyyo.db;
 
-import android.content.Context;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.sina.cloudstorage.auth.AWSCredentials;
@@ -10,8 +8,6 @@ import com.sina.cloudstorage.auth.BasicAWSCredentials;
 import com.sina.cloudstorage.services.scs.SCS;
 import com.sina.cloudstorage.services.scs.SCSClient;
 import com.sina.cloudstorage.services.scs.model.S3Object;
-import com.yao.breakskyyo.Init;
-import com.yao.breakskyyo.tools.AppInfoUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
