@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.yao.breakskyyo.entity.UpdateApp;
+import com.yao.breakskyyo.net.HttpDo;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 
@@ -56,40 +57,7 @@ public class HelloActivity extends AppCompatActivity {
     }
 
     public void getJsonMainBy() {
-        int versionCode = (int) AppInfoUtil.getVersionCode(HelloActivity.this);
-        if (versionCode > 0) {
-            BmobQuery<UpdateApp> query = new BmobQuery<>();
-            //条件：版本号大于versionCode
-            query.addWhereGreaterThan("versionCode", versionCode);
-            query.order("-versionCode");
-
-           /* // 根据score字段升序显示数据
-            query.order("score");
-            // 根据score字段降序显示数据
-            query.order("-score");
-            // 多个排序字段可以用（，）号分隔
-            query.order("-score,createdAt");*/
-
-            //返回50条数据，如果不加上这条语句，默认返回10条数据
-            query.setLimit(1);
-            //执行查询方法
-            query.findObjects(this, new FindListener<UpdateApp>() {
-                @Override
-                public void onSuccess(List<UpdateApp> object) {
-                    if(object.size()>0){
-                        UpdateApp mUpdateApp=object.get(object.size()-1);
-                        ACacheUtil.put(HelloActivity.this, ACacheUtil.UpdateAppJson, JSON.toJSONString(mUpdateApp));
-                    }
-                    mainHandle.sendEmptyMessageDelayed(1, 3000);
-                }
-
-                @Override
-                public void onError(int code, String msg) {
-                    mainHandle.sendEmptyMessageDelayed(1, 3000);
-                }
-            });
-
-        }
+        HttpDo.updateApp(HelloActivity.this,mainHandle,3000);
     }
 
     private void toMainActivity() {
