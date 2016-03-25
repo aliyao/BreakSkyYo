@@ -1,6 +1,7 @@
 package com.yao.breakskyyo;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,6 +60,9 @@ public class AboutActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     DownloadManagerDo.download(AboutActivity.this, updateApkInfo.getUrl());
+                   /* Intent viewIntent = new
+                            Intent(Intent.ACTION_VIEW, Uri.parse(updateApkInfo.getUrl()));
+                    startActivity(viewIntent);*/
                 }
             });
         }
