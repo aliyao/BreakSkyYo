@@ -157,17 +157,17 @@ public class SearchActivity extends AppCompatActivity {
             refreshView.setRefreshing(false);
             return;
         }
-        try {
+        /*try {
             word = URLEncoder.encode(word, "utf-8");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+*/
         AsyncCustomEndpoints ace = new AsyncCustomEndpoints();
         //第一个参数是上下文对象，第二个参数是云端逻辑的方法名称，第三个参数是上传到云端逻辑的参数列表（JSONObject cloudCodeParams），第四个参数是回调类
         JSONObject params = new JSONObject();
         try {
-            params.put("nameStr", word);
+            params.put("word", word);
         } catch (Exception e) {
             e.printStackTrace();
         }
