@@ -23,10 +23,10 @@ public class HttpUrl {
     public final static String UpdateAppWeb = "http://pan.baidu.com/s/1jGzYX9O";
     public final static String HellpUrl = "http://www.id97.com/topic/91";
     //public final static String SearchInfo = "http://www.id97.com/videos/search/name/";
-    public final static String year = "&year=";
+   /* public final static String year = "&year=";
     public final static String rating = "&rating=";
     public final static String country = "&country=";
-    public final static String tags = "&tags=";
+    public final static String tags = "&tags=";*/
     public final static String page = "page=";
 
     public static final String id97Url = "http://www.id97.com/videos/play";

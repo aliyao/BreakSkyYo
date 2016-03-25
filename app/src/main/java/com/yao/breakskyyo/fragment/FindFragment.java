@@ -42,7 +42,6 @@ import org.json.JSONObject;
 import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +65,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     SwipeRefreshLayout refreshView;
     private ArrayAdapter mSelectAdapter;
     private ListAdapter mAdapter;
-    List<List<SelectHeadItem>> listSelectHeadItemlist=new ArrayList<>();
+    List<List<SelectHeadItem>> listSelectHeadItemlist = new ArrayList<>();
     Button bt_select[];
     int selectedNum = -100;
 
@@ -145,13 +144,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
                 score.setText(StringDo.removeNull(mDummyItem.getScore()) + "分");
                 String typeStr = "类型：" + mDummyItem.getType();
-               /* if (TextUtils.isEmpty(mDummyItem.getType())) {
-                    typeStr = "";
-                }*/
-               /* if (YOBitmap.getmKJBitmap().getCache(StringDo.removeNull(mDummyItem.getImgUrl())).length <= 0) {
-                    img.setImageBitmap(null);
-                }*/
-
                 type.setText(StringDo.removeNull(typeStr));
                 YOBitmap.getmKJBitmap().display(img, StringDo.removeNull(mDummyItem.getImgUrl()));
                 return view;
@@ -188,7 +180,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         refreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                httpGetFindList(1);
+                httpGetFindList(1, null);
             }
         });
         mListView.setOnItemClickListener(this);
@@ -199,6 +191,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 if (refreshState == 1) {
                     return;
                 }
+                String paramsStr = null;
                 switch (selectedNum) {
                     case 0:
                         if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())) {
@@ -206,7 +199,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                         } else {
                             positionItemYear = position;
                         }
-
+                        paramsStr = listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
                         break;
                     case 1:
                         if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())) {
@@ -214,6 +207,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                         } else {
                             positionItemRating = position;
                         }
+                        paramsStr = listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
                         break;
                     case 2:
                         if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())) {
@@ -221,6 +215,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                         } else {
                             positionItemCountry = position;
                         }
+                        paramsStr = listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
                         break;
                     case 3:
                         if (TextUtils.isEmpty(listSelectHeadItemlist.get(selectedNum).get(position).getUrl())) {
@@ -228,9 +223,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                         } else {
                             positionItemTags = position;
                         }
+                        paramsStr = listSelectHeadItemlist.get(selectedNum).get(position).getUrl();
                         break;
                 }
-                httpGetFindList(1);
+
+                httpGetFindList(1, paramsStr);
                 select_list.setVisibility(View.GONE);
             }
         });
@@ -243,7 +240,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
                             if (tv_bottom_text.getVisibility() != View.VISIBLE) {
-                                httpGetFindList(pageNum + 1);
+                                httpGetFindList(pageNum + 1, null);
                             }
                         }
                         break;
@@ -257,10 +254,9 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         });
         refreshView.setProgressViewOffset(false, 0, CommonUtil.dip2px(getActivity(), 24));
         refreshView.setRefreshing(true);
-        httpGetFindList(1);
+        httpGetFindList(1, null);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -293,7 +289,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         startActivity(new Intent(getActivity(), InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(((ArrayAdapter<DummyItem>) mAdapter).getItem(position))));
     }
 
-    public void httpGetFindList(final int page) {
+    public void httpGetFindList(final int page, String paramsStr) {
         if (refreshState == 1) {
             if (refreshView.isRefreshing()) {
                 refreshView.setRefreshing(false);
@@ -302,43 +298,55 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
             }
             return;
         }
-        String paramsStr = HttpUrl.page + page;
+
         if (positionItemYear >= 0) {
-            paramsStr = paramsStr + HttpUrl.year + listSelectHeadItemlist.get(0).get(positionItemYear).getUrl();
+            if (TextUtils.isEmpty(paramsStr)) {
+                paramsStr = listSelectHeadItemlist.get(0).get(positionItemYear).getUrl();
+            }
             bt_select[0].setText(listSelectHeadItemlist.get(0).get(positionItemYear).getText());
         } else {
             bt_select[0].setText("年份");
         }
         if (positionItemRating >= 0) {
-            paramsStr = paramsStr + HttpUrl.rating + listSelectHeadItemlist.get(1).get(positionItemRating).getUrl();
+            if (TextUtils.isEmpty(paramsStr)) {
+                paramsStr = listSelectHeadItemlist.get(1).get(positionItemRating).getUrl();
+            }
             bt_select[1].setText(listSelectHeadItemlist.get(1).get(positionItemRating).getText());
         } else {
             bt_select[1].setText("评分");
         }
         if (positionItemCountry >= 0) {
-            String countryStr = listSelectHeadItemlist.get(2).get(positionItemCountry).getUrl();
-            try {
-                countryStr = URLEncoder.encode(countryStr, "utf-8");
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (TextUtils.isEmpty(paramsStr)) {
+                String countryStr = listSelectHeadItemlist.get(2).get(positionItemCountry).getUrl();
+              /*  try {
+                    countryStr = URLEncoder.encode(countryStr, "utf-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
+                paramsStr = countryStr;
             }
-
-            paramsStr = paramsStr + HttpUrl.country + countryStr;
             bt_select[2].setText(listSelectHeadItemlist.get(2).get(positionItemCountry).getText());
         } else {
             bt_select[2].setText("地区");
         }
         if (positionItemTags >= 0) {
-            String tagsStr = listSelectHeadItemlist.get(3).get(positionItemTags).getUrl();
-            try {
+            if (TextUtils.isEmpty(paramsStr)) {
+                String tagsStr = listSelectHeadItemlist.get(3).get(positionItemTags).getUrl();
+            /*try {
                 tagsStr = URLEncoder.encode(tagsStr, "utf-8");
             } catch (Exception e) {
                 e.printStackTrace();
+            }*/
+                paramsStr = tagsStr;
             }
-            paramsStr = paramsStr + HttpUrl.tags + tagsStr;
             bt_select[3].setText(listSelectHeadItemlist.get(3).get(positionItemTags).getText());
         } else {
             bt_select[3].setText("类型");
+        }
+        if (!TextUtils.isEmpty(paramsStr)) {
+            paramsStr = paramsStr + "&" + HttpUrl.page + page;
+        } else {
+            paramsStr = HttpUrl.page + page;
         }
         Log.e("paramsStr", "paramsStr:" + paramsStr);
 
@@ -350,6 +358,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         onHttpStart(page);
         ace.callEndpoint(FindFragment.this.getActivity(), HttpUrl.getFindInfoCloudCodeName, params, new CloudCodeListener() {
             @Override
@@ -381,12 +390,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                         tv_bottom_text.setVisibility(View.INVISIBLE);
                     }
                     ((ArrayAdapter) mAdapter).notifyDataSetChanged();
-                    if (positionItemYear < 0 && positionItemRating < 0 && positionItemCountry < 0 && positionItemTags < 0) {
-                        listSelectHeadItemlist.add(listJsonHead.getInfo().getYearInfo().getTypeList());
-                        listSelectHeadItemlist.add(listJsonHead.getInfo().getScoreInfo().getTypeList());
-                        listSelectHeadItemlist.add(listJsonHead.getInfo().getCountryInfo().getTypeList());
-                        listSelectHeadItemlist.add(listJsonHead.getInfo().getFilmTypeInfo().getTypeList());
-                    }
+                    listSelectHeadItemlist.clear();
+                    listSelectHeadItemlist.add(listJsonHead.getInfo().getYearInfo().getTypeList());
+                    listSelectHeadItemlist.add(listJsonHead.getInfo().getScoreInfo().getTypeList());
+                    listSelectHeadItemlist.add(listJsonHead.getInfo().getCountryInfo().getTypeList());
+                    listSelectHeadItemlist.add(listJsonHead.getInfo().getFilmTypeInfo().getTypeList());
                     ll_head_select.setVisibility(View.VISIBLE);
                     onFinish();
                 } catch (Exception e) {
@@ -416,7 +424,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                 KJLoger.debug("请求完成，不管成功或者失败都会调用");
             }
         });
-
     }
 
     public void onHttpStart(int page) {
@@ -434,144 +441,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         tv_bottom_text.setEnabled(false);
     }
 
-  /*  public void httpGetFindList(final int page) {
-        if (refreshState==1){
-            if(refreshView.isRefreshing()){
-                refreshView.setRefreshing(false);
-            }else{
-                tv_bottom_text.setVisibility(View.INVISIBLE);
-            }
-            return;
-        }
-        KJHttp kjh = new KJHttp();
-        String url = HttpUrl.FindList + HttpUrl.page + page;
-        if(positionItemYear>=0) {
-            url = url + HttpUrl.year + listSelectHeadItemlist.get(0).get(positionItemYear).getUrl();
-            bt_select[0].setText(listSelectHeadItemlist.get(0).get(positionItemYear).getText());
-        }else{
-            bt_select[0].setText("年份");
-        }
-        if(positionItemRating>=0) {
-            url = url + HttpUrl.rating + listSelectHeadItemlist.get(1).get(positionItemRating).getUrl();
-            bt_select[1].setText(listSelectHeadItemlist.get(1).get(positionItemRating).getText());
-        }else{
-            bt_select[1].setText("评分");
-        }
-        if(positionItemCountry>=0) {
-            String countryStr= listSelectHeadItemlist.get(2).get(positionItemCountry).getUrl();
-            try {
-                countryStr= URLEncoder.encode(countryStr, "utf-8");
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            url = url + HttpUrl.country +countryStr;
-            bt_select[2].setText(listSelectHeadItemlist.get(2).get(positionItemCountry).getText());
-        }else{
-            bt_select[2].setText("地区");
-        }
-        if(positionItemTags>=0) {
-            String tagsStr= listSelectHeadItemlist.get(3).get(positionItemTags).getUrl();
-            try {
-                tagsStr= URLEncoder.encode(tagsStr,"utf-8");
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            url = url + HttpUrl.tags +tagsStr;
-            bt_select[3].setText(listSelectHeadItemlist.get(3).get(positionItemTags).getText());
-        }else{
-            bt_select[3].setText("类型");
-        }
-        Log.e("url", "url:" + url);
-
-        kjh.get(url, new HttpCallBack() {
-            @Override
-            public void onPreStart() {
-                super.onPreStart();
-                refreshState=1;
-                KJLoger.debug("在请求开始之前调用");
-                if(page>1){
-                    tv_bottom_text.setText("正在刷新");
-                    tv_bottom_text.setVisibility(View.VISIBLE);
-                }else{
-                    if(!refreshView.isRefreshing()){
-                        refreshView.setRefreshing(true);
-                    }
-                    tv_bottom_text.setVisibility(View.INVISIBLE);
-                }
-                tv_bottom_text.setEnabled(false);
-            }
-
-            @Override
-            public void onSuccess(String t) {
-                super.onSuccess(t);
-                ViewInject.longToast("请求成功");
-                KJLoger.debug("log:" + t.toString());
-                List<Map<String, Object>> result = new ArrayList<>();
-
-                for(){
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("title", mr.group(groupItem));//找到后group(1)是表达式第一个括号的内容
-                    map.put("url", mr.group(groupItem));//group(2)是表达式第二个括号的内容
-                    map.put("id", mID.toMatchResult().group(1));//找到后group(1)是表达式第一个括号的内容
-                    map.put("imgurl", mr.group(groupItem));//group(2)是表达式第三个括号的内容
-                    map.put("tag", mTag.toMatchResult().group(1));//找到后group(1)是表达式第一个括号的内容
-                    map.put("score", mr.group(groupItem));
-                    map.put("type", typeStr);//"|" 找到后group(1)是表达式第一个括号的内容
-                    result.add(map);
-                }
-
-                if (page == 1) {
-                    ((ArrayAdapter) mAdapter).clear();
-                    DummyContent.setData(result);
-                    pageNum = 1;
-                } else {
-                    DummyContent.addData(result);
-                    pageNum = page;
-                    tv_bottom_text.setVisibility(View.INVISIBLE);
-                }
-                ((ArrayAdapter) mAdapter).notifyDataSetChanged();
-                if (positionItemYear < 0 && positionItemRating < 0 && positionItemCountry < 0 && positionItemTags < 0) {
-                    listSelectHeadItemlist = RegularId97.getSelectHeadItem(t.toString());
-                }
-                ll_head_select.setVisibility(View.VISIBLE);
-
-
-            }
-
-            @Override
-            public void onFailure(int errorNo, String strMsg) {
-                super.onFailure(errorNo, strMsg);
-                KJLoger.debug("exception:" + strMsg);
-                if (page == 1) {
-                    ((ArrayAdapter) mAdapter).clear();
-                    pageNum = 1;
-                    ((ArrayAdapter) mAdapter).notifyDataSetChanged();
-                }else{
-                    tv_bottom_text.setText("网络不给力！");
-                    tv_bottom_text.setEnabled(true);
-                }
-
-
-            }
-
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                if(refreshView.isRefreshing()){
-                    refreshView.setRefreshing(false);
-                }
-                refreshState=0;
-                KJLoger.debug("请求完成，不管成功或者失败都会调用");
-            }
-
-
-        });
-
-    }*/
-
-
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
         Snackbar.make(view, "是否保存", Snackbar.LENGTH_LONG)
@@ -579,7 +448,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     @Override
                     public void onClick(View v) {
                         DummyItem dummyItem = ((ArrayAdapter<DummyItem>) mAdapter).getItem(position);
-                        //dummyItem.setSaveDate(new Date().getTime());
                         String tip = "保存失败";
                         switch (DummyItemDb.save(dummyItem, FindFragment.this.getActivity())) {
                             case 1:
@@ -589,7 +457,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                             case 2:
                                 tip = "已经保存";
                                 break;
-
                         }
                         Snackbar.make(view, tip, Snackbar.LENGTH_LONG).show();
                     }
@@ -611,14 +478,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     for (SelectHeadItem mSelectHeadItem :
                             listSelectHeadItemlist.get(selectedNum)) {
                         selectHeadItemlistYear.add(mSelectHeadItem.getText());
-
                     }
                     mSelectAdapter.addAll(selectHeadItemlistYear);
-
                 }
                 break;
             case R.id.bt_score_sort:
-
                 if (selectedNum == 1 && select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
@@ -629,13 +493,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     for (SelectHeadItem mSelectHeadItem :
                             listSelectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemRating.add(mSelectHeadItem.getText());
-
                     }
                     mSelectAdapter.addAll(listSelectHeadItemRating);
                 }
                 break;
             case R.id.bt_national_area:
-
                 if (selectedNum == 2 && select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
@@ -646,13 +508,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     for (SelectHeadItem mSelectHeadItem :
                             listSelectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemCountry.add(mSelectHeadItem.getText());
-
                     }
                     mSelectAdapter.addAll(listSelectHeadItemCountry);
                 }
                 break;
             case R.id.bt_film_area:
-
                 if (selectedNum == 3 && select_list.getVisibility() == View.VISIBLE) {
                     select_list.setVisibility(View.GONE);
                 } else {
@@ -663,16 +523,13 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     for (SelectHeadItem mSelectHeadItem :
                             listSelectHeadItemlist.get(selectedNum)) {
                         listSelectHeadItemTags.add(mSelectHeadItem.getText());
-
                     }
                     mSelectAdapter.addAll(listSelectHeadItemTags);
                 }
                 break;
             case R.id.tv_bottom_text:
-                httpGetFindList(pageNum + 1);
+                httpGetFindList(pageNum + 1, null);
                 break;
-
         }
-
     }
 }
