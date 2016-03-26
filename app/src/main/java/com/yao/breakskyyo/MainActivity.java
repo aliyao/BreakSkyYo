@@ -3,6 +3,7 @@ package com.yao.breakskyyo;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -13,23 +14,29 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.alibaba.fastjson.JSON;
+import com.yao.breakskyyo.entity.UpdateApp;
 import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.MainFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
+import com.yao.breakskyyo.tools.DownloadManagerDo;
+import com.yao.breakskyyo.webview.WebViewActivity;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener,MainFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener {
     Fragment fragments[];
     boolean isFinish;
     Toolbar toolbar;
@@ -41,7 +48,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainActivity=this;
+        mainActivity = this;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -60,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.getMenu().findItem(R.id.nav_main).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
         init();
@@ -76,17 +83,17 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fragmentManager
                 .beginTransaction();
 
-        Object backAppPages= ACacheUtil.getAsObject(MainActivity.this, ACacheUtil.BackAppPages);
-        if(backAppPages!=null&&((int)backAppPages)>0){
-            if (!fragments[(int)backAppPages].isAdded()) {
-                fragmentTransaction.replace(R.id.showLayout, fragments[(int)backAppPages]);
+        Object backAppPages = ACacheUtil.getAsObject(MainActivity.this, ACacheUtil.BackAppPages);
+        if (backAppPages != null && ((int) backAppPages) > 0) {
+            if (!fragments[(int) backAppPages].isAdded()) {
+                fragmentTransaction.replace(R.id.showLayout, fragments[(int) backAppPages]);
             }
-            fragmentTransaction.show(fragments[(int)backAppPages]);
+            fragmentTransaction.show(fragments[(int) backAppPages]);
             if (fragments[0] != null && fragments[0].isAdded()) {
                 fragmentTransaction.hide(fragments[0]);
             }
             navigationView.getMenu().findItem(R.id.nav_slideshow).setChecked(true);
-        }else{
+        } else {
             if (!fragments[0].isAdded()) {
                 fragmentTransaction.replace(R.id.showLayout, fragments[0]);
             }
@@ -102,6 +109,41 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
         //HttpDo.updateApp(this, null);
         phoneInfo();
+        showUpdateAlertDialog();
+    }
+
+    private void showUpdateAlertDialog() {
+        String updateJson = (String) ACacheUtil.getAsObject(MainActivity.this, ACacheUtil.UpdateAppJson);
+        if (TextUtils.isEmpty(updateJson)) return;
+        try {
+            final UpdateApp updateApkInfo = JSON.parseObject(updateJson, UpdateApp.class);
+            int appVersionCode = AppInfoUtil.getVersionCode(MainActivity.this);
+            if (updateApkInfo != null && updateApkInfo.getVersionCode() > 0 && appVersionCode > 0 && appVersionCode != updateApkInfo.getVersionCode()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setIcon(R.mipmap.ic_launcher);
+                builder.setTitle(R.string.update_text);
+                builder.setMessage(updateApkInfo.getDescription());
+                if (updateApkInfo.getUpdateType() != 1) {
+                    builder.setPositiveButton(R.string.update_text, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            DownloadManagerDo.download(MainActivity.this, updateApkInfo.getUrl());
+                        }
+                    });
+                }
+
+                builder.setNegativeButton(R.string.web_update_text, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(MainActivity.this, WebViewActivity.class).putExtra("url", HttpUrl.UpdateAppWeb));
+                    }
+                });
+                builder.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
     }
 
     @Override
@@ -156,7 +198,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.action_search:
-                startActivity(new Intent(MainActivity.this,SearchActivity.class));
+                startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 return true;
             case R.id.action_settings:
                 isFinish = true;
@@ -166,7 +208,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_open_baidudisk:
                 try {
                     PackageManager packageManager = getPackageManager();
-                    Intent intent= packageManager.getLaunchIntentForPackage(AppInfoUtil.BaiduDiskPackageName);
+                    Intent intent = packageManager.getLaunchIntentForPackage(AppInfoUtil.BaiduDiskPackageName);
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -175,8 +217,8 @@ public class MainActivity extends AppCompatActivity
                                 @Override
                                 public void onClick(View v) {
                                     Intent viewIntent = new
-                                            Intent(Intent.ACTION_VIEW, Uri.parse(HttpUrl.SearchBaiduUrl+"百度云"));
-                                   startActivity(viewIntent);
+                                            Intent(Intent.ACTION_VIEW, Uri.parse(HttpUrl.SearchBaiduUrl + "百度云"));
+                                    startActivity(viewIntent);
                                 }
                             }).show();
                 }
@@ -193,7 +235,7 @@ public class MainActivity extends AppCompatActivity
                                 @Override
                                 public void onClick(View v) {
                                     Intent viewIntent = new
-                                            Intent(Intent.ACTION_VIEW, Uri.parse(HttpUrl.SearchBaiduUrl+"android迅雷"));
+                                            Intent(Intent.ACTION_VIEW, Uri.parse(HttpUrl.SearchBaiduUrl + "android迅雷"));
                                     startActivity(viewIntent);
                                 }
                             }).show();
@@ -231,7 +273,8 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void toFindItemFragment(){
+
+    public void toFindItemFragment() {
         navigationView.getMenu().findItem(R.id.nav_slideshow).setChecked(true);
         showPage(1);
     }
@@ -263,7 +306,7 @@ public class MainActivity extends AppCompatActivity
             }
             if (page == index) {
                 trx.show(fragments[index]);
-                fragmentsPage=index;
+                fragmentsPage = index;
             } else {
                 if (fragments[index] != null && fragments[index].isAdded()) {
                     trx.hide(fragments[index]);
@@ -283,12 +326,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void finish() {
         if (isFinish) {
-            if(fragmentsPage==1){
-                ACacheUtil.put(MainActivity.this, ACacheUtil.BackAppPages,fragmentsPage );
-            }else if(fragmentsPage==0){
-                ACacheUtil.put(MainActivity.this, ACacheUtil.BackAppPages,fragmentsPage );
+            if (fragmentsPage == 1) {
+                ACacheUtil.put(MainActivity.this, ACacheUtil.BackAppPages, fragmentsPage);
+            } else if (fragmentsPage == 0) {
+                ACacheUtil.put(MainActivity.this, ACacheUtil.BackAppPages, fragmentsPage);
             }
-            mainActivity=null;
+            mainActivity = null;
             super.finish();
         } else {
             Snackbar.make(findViewById(R.id.fab), "是否退出", Snackbar.LENGTH_LONG)

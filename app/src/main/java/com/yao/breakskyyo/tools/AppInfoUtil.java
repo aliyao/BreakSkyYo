@@ -45,7 +45,7 @@ public class AppInfoUtil {
         info.signatures;*/
     }
 
-    public static Object getVersionCode(Context mContext) {
+    public static int getVersionCode(Context mContext) {
         PackageManager manager;
 
         PackageInfo info = null;

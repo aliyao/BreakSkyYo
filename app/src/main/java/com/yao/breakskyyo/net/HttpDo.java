@@ -25,7 +25,7 @@ import cn.bmob.v3.listener.FindListener;
 public class HttpDo {
 
     public static void updateApp(final Context context, final Handler handle,final long delayMillis) {
-        int versionCode = (int) AppInfoUtil.getVersionCode(context);
+        int versionCode = AppInfoUtil.getVersionCode(context);
         if (versionCode > 0) {
             BmobQuery<UpdateApp> query = new BmobQuery<>();
             //条件：版本号大于versionCode

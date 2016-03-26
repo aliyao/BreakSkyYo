@@ -13,6 +13,7 @@ public class UpdateApp {
     int versionCode;
     String url;
     String description;
+    int updateType;
 
     public int getVersionCode() {
         return versionCode;
@@ -36,5 +37,13 @@ public class UpdateApp {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getUpdateType() {
+        return updateType;
+    }
+
+    public void setUpdateType(int updateType) {
+        this.updateType = updateType;
     }
 }

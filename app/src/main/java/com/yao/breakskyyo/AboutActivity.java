@@ -45,26 +45,36 @@ public class AboutActivity extends AppCompatActivity {
         } else {
             app_version.setText(versionName);
         }
-        HttpDo.updateApp(AboutActivity.this, updateHandle,0);
+       // HttpDo.updateApp(AboutActivity.this, updateHandle,0);
     }
 
     private void refresh() {
-        String updateJson = (String) ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateAppJson);
-        updateApkInfo = JSON.parseObject(updateJson, UpdateApp.class);
-        Object appVersionCode = AppInfoUtil.getVersionCode(AboutActivity.this);
-        if (updateJson == null || updateApkInfo == null || updateApkInfo.getVersionCode() == 0 || appVersionCode == null || appVersionCode.equals(updateApkInfo.getVersionCode())) {
-            bt_update.setVisibility(View.GONE);
-        } else {
-            bt_update.setVisibility(View.VISIBLE);
-            bt_update.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DownloadManagerDo.download(AboutActivity.this, updateApkInfo.getUrl());
+        try {
+            String updateJson = (String) ACacheUtil.getAsObject(AboutActivity.this, ACacheUtil.UpdateAppJson);
+            updateApkInfo = JSON.parseObject(updateJson, UpdateApp.class);
+            int appVersionCode = AppInfoUtil.getVersionCode(AboutActivity.this);
+            if (!TextUtils.isEmpty(updateJson) && updateApkInfo != null && updateApkInfo.getVersionCode() >0 && appVersionCode > 0 && appVersionCode!=updateApkInfo.getVersionCode()) {
+                bt_update.setVisibility(View.VISIBLE);
+                bt_update.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(updateApkInfo.getUpdateType()==1){
+                            startActivity(new Intent(AboutActivity.this, WebViewActivity.class).putExtra("url", HttpUrl.UpdateAppWeb));
+                        }else{
+                            DownloadManagerDo.download(AboutActivity.this, updateApkInfo.getUrl());
+                        }
                    /* Intent viewIntent = new
                             Intent(Intent.ACTION_VIEW, Uri.parse(updateApkInfo.getUrl()));
                     startActivity(viewIntent);*/
-                }
-            });
+                    }
+                });
+            } else {
+                bt_update.setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            bt_update.setVisibility(View.GONE);
+            return;
         }
     }
 

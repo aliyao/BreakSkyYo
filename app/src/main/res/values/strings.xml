@@ -61,4 +61,6 @@
     <string name="main_hot_text">热门电影：</string>
     <string name="main_new_text">最近更新：</string>
     <string name="title_activity_search">破天</string>
+    <string name="update_text">更新</string>
+    <string name="web_update_text">网页更新</string>
 </resources>
