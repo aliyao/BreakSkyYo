@@ -46,6 +46,8 @@ public class HttpDo {
                     if (object.size() > 0) {
                         UpdateApp mUpdateApp = object.get(object.size() - 1);
                         ACacheUtil.put(context, ACacheUtil.UpdateAppJson, JSON.toJSONString(mUpdateApp));
+                    }else{
+                        ACacheUtil.put(context, ACacheUtil.UpdateAppJson, null);
                     }
                     if (handle != null) {
                         handle.sendEmptyMessageDelayed(1,delayMillis);
