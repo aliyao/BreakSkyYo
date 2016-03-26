@@ -392,7 +392,6 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                         tv_bottom_text.setVisibility(View.INVISIBLE);
                     }
                     ((ArrayAdapter) mAdapter).notifyDataSetChanged();
-                    mListView.setSelection(0);//滚动到头部
                     listSelectHeadItemlist.clear();
                     listSelectHeadItemlist.add(listJsonHead.getInfo().getYearInfo().getTypeList());
                     listSelectHeadItemlist.add(listJsonHead.getInfo().getScoreInfo().getTypeList());
@@ -430,6 +429,10 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
     }
 
     public void onHttpStart(int page) {
+        if(page==1){
+            mListView.setSelection(0);//滚动到头部
+        }
+
         refreshState = 1;
         KJLoger.debug("在请求开始之前调用");
         if (page > 1) {
