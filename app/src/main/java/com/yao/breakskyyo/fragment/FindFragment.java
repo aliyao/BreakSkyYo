@@ -371,6 +371,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
                     });
                     List<Map<String, Object>> result = new ArrayList<>();
                     for (FindItem mFindItem : listJsonHead.getInfo().getFindList()) {
+
                         Map<String, Object> map = new HashMap<>();
                         map.put("title", mFindItem.getTitle());//找到后group(1)是表达式第一个括号的内容
                         map.put("url", mFindItem.getHrefStr());//group(2)是表达式第二个括号的内容
