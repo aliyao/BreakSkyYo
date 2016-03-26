@@ -1,7 +1,6 @@
 package com.yao.breakskyyo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -10,11 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,29 +23,19 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.yao.breakskyyo.dummy.DummyItem;
-import com.yao.breakskyyo.dummy.InfoVideos;
 import com.yao.breakskyyo.dummy.SearchItem;
-import com.yao.breakskyyo.entity.DownloadItem;
 import com.yao.breakskyyo.entity.JsonHead;
 import com.yao.breakskyyo.entity.SearchInfo;
 import com.yao.breakskyyo.entity.SearchInfoItem;
-import com.yao.breakskyyo.entity.VideoInfo;
 import com.yao.breakskyyo.net.HttpUrl;
-import com.yao.breakskyyo.tools.RegularId97;
-import com.yao.breakskyyo.tools.StringDo;
 import com.yao.breakskyyo.tools.YOBitmap;
 
 import org.json.JSONObject;
-import org.kymjs.kjframe.KJHttp;
-import org.kymjs.kjframe.http.HttpCallBack;
 import org.kymjs.kjframe.ui.ViewInject;
 import org.kymjs.kjframe.utils.KJLoger;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.bmob.v3.AsyncCustomEndpoints;
 import cn.bmob.v3.listener.CloudCodeListener;
