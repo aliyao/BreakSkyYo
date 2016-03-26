@@ -16,4 +16,11 @@ public class StringDo {
         }
         return mObject+"";
     }
+
+    public static String removeStr(Object mObject,String str1,String str2){
+        if(mObject==null){
+            return "";
+        }
+        return (mObject+"").replaceAll(str1,str2);
+    }
 }

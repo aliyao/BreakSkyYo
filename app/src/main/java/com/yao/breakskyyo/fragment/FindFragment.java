@@ -143,7 +143,7 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
 
                 title.setText(mDummyItem.getContent());
                 tag.setText(StringDo.removeNull(mDummyItem.getTag()));
-                score.setText(StringDo.removeNull(mDummyItem.getScore()) + "分");
+                score.setText(StringDo.removeStr(StringDo.removeStr(mDummyItem.getScore(),"-","")," ",""));
                 String typeStr = "类型：" + mDummyItem.getType();
                 type.setText(StringDo.removeNull(typeStr));
                 YOBitmap.getmKJBitmap().display(img, StringDo.removeNull(mDummyItem.getImgUrl()));

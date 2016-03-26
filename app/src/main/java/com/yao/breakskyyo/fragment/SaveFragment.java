@@ -107,7 +107,7 @@ public class SaveFragment extends Fragment implements AbsListView.OnItemClickLis
                 if(TextUtils.isEmpty(mDummyItem.getScore())){
                     score.setVisibility(View.GONE);
                 }else{
-                    score.setText(StringDo.removeNull(mDummyItem.getScore())+"分");
+                    score.setText(StringDo.removeStr(StringDo.removeStr(mDummyItem.getScore(),"-","")," ",""));
                     score.setVisibility(View.VISIBLE);
                 }
                 if(TextUtils.isEmpty(mDummyItem.getType())){
