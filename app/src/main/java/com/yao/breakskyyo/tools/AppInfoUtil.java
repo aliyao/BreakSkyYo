@@ -1,14 +1,10 @@
 package com.yao.breakskyyo.tools;
 
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.text.TextUtils;
-import android.util.Log;
 
-import java.security.PublicKey;
 import java.util.List;
 
 /**
