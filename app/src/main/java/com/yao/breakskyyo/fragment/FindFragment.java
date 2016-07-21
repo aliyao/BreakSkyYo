@@ -344,7 +344,11 @@ public class FindFragment extends Fragment implements View.OnClickListener, AbsL
         } else {
             bt_select[3].setText("类型");
         }
+
         if (!TextUtils.isEmpty(paramsStr)) {
+            if(!paramsStr.contains("?")){
+                paramsStr=paramsStr+"?";
+            }
             paramsStr = paramsStr + "&" + HttpUrl.page + page;
         } else {
             paramsStr = HttpUrl.page + page;
