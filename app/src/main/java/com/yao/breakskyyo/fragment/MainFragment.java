@@ -243,10 +243,13 @@ public class MainFragment extends Fragment {
                 JsonHead<RecommendInfo> videoInfoJsonHead = JSON.parseObject(object.toString(), new TypeReference<JsonHead<RecommendInfo>>() {
                 });
                 List<DummyItem> banerDummyItemList=new ArrayList<>();
-                for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getBannerList()){
-                    DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
-                    banerDummyItemList.add(dummyItem);
+                if(videoInfoJsonHead!=null&&videoInfoJsonHead.getInfo()!=null&&videoInfoJsonHead.getInfo().getBannerList()!=null){
+                    for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getBannerList()){
+                        DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
+                        banerDummyItemList.add(dummyItem);
+                    }
                 }
+
                 final List<DummyItem> banerDummyItemListFinal=banerDummyItemList;
 
                 if (banerDummyItemList != null && banerDummyItemList.size() > 0) {
@@ -277,15 +280,20 @@ public class MainFragment extends Fragment {
                 List<List<DummyItem>> dummyItemListList =new ArrayList<>();
 
                 List<DummyItem> dummyItemListHot=new ArrayList<>();
-                for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getHotList()){
-                    DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
-                    dummyItemListHot.add(dummyItem);
+                if(videoInfoJsonHead!=null&&videoInfoJsonHead.getInfo()!=null&&videoInfoJsonHead.getInfo().getHotList()!=null){
+                    for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getHotList()){
+                        DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
+                        dummyItemListHot.add(dummyItem);
+                    }
                 }
 
+
                 List<DummyItem> dummyItemListNew=new ArrayList<>();
-                for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getNewList()){
-                    DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
-                    dummyItemListNew.add(dummyItem);
+                if(videoInfoJsonHead!=null&&videoInfoJsonHead.getInfo()!=null&&videoInfoJsonHead.getInfo().getNewList()!=null) {
+                    for (RecommendInfoItem mRecommendInfoItem : videoInfoJsonHead.getInfo().getNewList()) {
+                        DummyItem dummyItem = new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(), mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(), mRecommendInfoItem.getType(), mRecommendInfoItem.getScore());
+                        dummyItemListNew.add(dummyItem);
+                    }
                 }
 
                 dummyItemListList.add(dummyItemListHot);
