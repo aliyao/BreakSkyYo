@@ -168,11 +168,11 @@ public class SearchActivity extends AppCompatActivity {
                 JsonHead<SearchInfo> jsonHead = JSON.parseObject(object.toString(), new TypeReference<JsonHead<SearchInfo>>() {
                 });
                 List<SearchItem> searchItemList =new ArrayList<>();
-                for(SearchInfoItem searchInfoItem:jsonHead.getInfo().getSearchInfo()){
-                    searchItemList.add(new SearchItem(searchInfoItem.getId(),searchInfoItem.getTitle(),searchInfoItem.getImgUrl(),searchInfoItem.getTag(),  searchInfoItem.getHrefStr()));
+                if(jsonHead!=null&&jsonHead.getInfo()!=null&&jsonHead.getInfo().getSearchInfo()!=null){
+                    for(SearchInfoItem searchInfoItem:jsonHead.getInfo().getSearchInfo()){
+                        searchItemList.add(new SearchItem(searchInfoItem.getId(),searchInfoItem.getTitle(),searchInfoItem.getImgUrl(),searchInfoItem.getTag(),  searchInfoItem.getHrefStr()));
+                    }
                 }
-
-
                 mAdapter.clear();
                 if (searchItemList != null && searchItemList.size() > 0) {
                     mAdapter.addAll(searchItemList);
