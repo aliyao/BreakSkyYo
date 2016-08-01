@@ -19,24 +19,42 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.yao.breakskyyo.R;
-import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ClipboardManagerDo;
 
 public class WebViewActivity extends AppCompatActivity {
     WebView webView;
     FloatingActionButton fab;
     ProgressBar progressBar;
-     Snackbar  snackbarMima;
+    Snackbar snackbarMima;
+    String jsInputPwdUrl="pan.baidu.com/wap/init?";
+    String jsTextInputPwdAndClick = "(function() {\n" +
+            "var isHasIdAccessCode=false;\n" +
+            "if(document.getElementById(\"accessCode\")!=undefined){\n" +
+            "document.getElementById(\"accessCode\").value = \"%1$s\";\n" +
+            "isHasIdAccessCode=true;\n" +
+            "}\n" +
+            "if(isHasIdAccessCode&&document.getElementById(\"getfileBtn\")!=undefined){\n" +
+            "document.getElementById(\"getfileBtn\").click();\n" +
+            "}\n" +
+            "})();";
+
+    String jsSaveBaiduYunUrl="pan.baidu.com/wap/link?";
+    String jsSaveBaiduYunClick ="\n" +
+            "(function() {\n" +
+            "if(document.getElementById(\"saveAll\")!=undefined){\n" +
+            "document.getElementById(\"saveAll\").click();\n" +
+            "}})();";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        String pwd=getIntent().getStringExtra("mima");
+        jsTextInputPwdAndClick=jsTextInputPwdAndClick.replace("%1$s",pwd);//替换成密码
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,7 +65,7 @@ public class WebViewActivity extends AppCompatActivity {
                     String[] dos = {"打开浏览器", "分享", "复制", "刷新", "退出", "显示密码"};
                     toDo = dos;
                 } else {
-                    String[] dos = {"打开浏览器", "分享", "复制",  "刷新", "退出"};
+                    String[] dos = {"打开浏览器", "分享", "复制", "刷新", "退出"};
                     toDo = dos;
                 }
 
@@ -105,9 +123,9 @@ public class WebViewActivity extends AppCompatActivity {
         WebSettings settings = webView.getSettings();
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-        String url =getIntent().getStringExtra("url");
+        String url = getIntent().getStringExtra("url");
 
-        if(TextUtils.isEmpty(url)){
+        if (TextUtils.isEmpty(url)) {
             finish();
         }
         webView.loadUrl(url);
@@ -115,7 +133,7 @@ public class WebViewActivity extends AppCompatActivity {
         settings.setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if( url.startsWith("http:") || url.startsWith("https:") ) {
+                if (url.startsWith("http:") || url.startsWith("https:")) {
                     return false;
                 }
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -129,10 +147,14 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if(webView.canGoBack()&&snackbarMima!=null){
+                if (webView.canGoBack() && snackbarMima != null) {
                     snackbarMima.dismiss();
                 }
-
+                if(url.contains(jsInputPwdUrl)){
+                    webView.loadUrl("javascript:" + jsTextInputPwdAndClick);
+                }else if(url.contains(jsSaveBaiduYunUrl)){
+                    webView.loadUrl("javascript:" + jsSaveBaiduYunClick);
+                }
             }
         });
         webView.setWebChromeClient(new WebChromeClient() {
@@ -149,8 +171,8 @@ public class WebViewActivity extends AppCompatActivity {
                 }
             }
         });
-        if(!TextUtils.isEmpty(getIntent().getStringExtra("mima"))){
-          snackbarMima=Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
+        if (!TextUtils.isEmpty(getIntent().getStringExtra("mima"))) {
+            snackbarMima = Snackbar.make(fab, "密码：" + getIntent().getStringExtra("mima"), Snackbar.LENGTH_INDEFINITE);
             snackbarMima.setAction("隐藏", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -162,20 +184,21 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     private void copy() {
-        String text = getIntent().getStringExtra("title") + "---(" + getIntent().getStringExtra("url")  + ") ";
-        if(!TextUtils.isEmpty(getIntent().getStringExtra("mima"))) {
-            text = text + "  (密码--" +getIntent().getStringExtra("mima") + ")";
+        String text = getIntent().getStringExtra("title") + "---(" + getIntent().getStringExtra("url") + ") ";
+        if (!TextUtils.isEmpty(getIntent().getStringExtra("mima"))) {
+            text = text + "  (密码--" + getIntent().getStringExtra("mima") + ")";
         }
         ClipboardManagerDo.copy(text, WebViewActivity.this);
         Snackbar.make(webView, "复制成功", Snackbar.LENGTH_LONG).show();
     }
+
     private void share() {
         // 分享的intent
         Intent intent = new Intent(Intent.ACTION_SEND);
         // 分享的数据类型
         intent.setType("text/plain");
         // 分享的主题
-        intent.putExtra(Intent.EXTRA_SUBJECT,getIntent().getStringExtra("title"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra("title"));
         String text = getIntent().getStringExtra("title") + "---(" + getIntent().getStringExtra("url") + ") ";
         if (!TextUtils.isEmpty(getIntent().getStringExtra("mima"))) {
             text = text + "  (密码--" + getIntent().getStringExtra("mima") + ")";
@@ -187,16 +210,15 @@ public class WebViewActivity extends AppCompatActivity {
         // 目标应用寻找对话框的标题
         startActivity(Intent.createChooser(intent, getIntent().getStringExtra("title")));
     }
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack())
-        {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
             webView.goBack();
             return true;
         }
 
-        return super.onKeyDown(keyCode,event);
+        return super.onKeyDown(keyCode, event);
 
     }
 
