@@ -109,10 +109,11 @@ public class SearchActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DummyItem dummyItem = new DummyItem(((SearchItem) parent.getAdapter().getItem(position)).getId(),
-                        ((SearchItem) parent.getAdapter().getItem(position)).getTitle(),null,
-                        ((SearchItem) parent.getAdapter().getItem(position)).getImgUrl(),null,null,
-                         null);
+                SearchItem searchItem=(SearchItem) parent.getAdapter().getItem(position);
+                DummyItem dummyItem = new DummyItem(searchItem.getId(),
+                        searchItem.getTitle(),searchItem.getUrl(),
+                        searchItem.getImgUrl(),searchItem.getHdtag(),null,
+                        searchItem.getScore());
               //  String id, String content,String url, String imgUrl, String tag,String type,String score
                 startActivity(new Intent(SearchActivity.this, InfoActivityScrollingActivity.class).putExtra("jsonFindItemInfo", JSON.toJSONString(dummyItem)));
             }
@@ -170,7 +171,7 @@ public class SearchActivity extends AppCompatActivity {
                 List<SearchItem> searchItemList =new ArrayList<>();
                 if(jsonHead!=null&&jsonHead.getInfo()!=null&&jsonHead.getInfo().getSearchInfo()!=null){
                     for(SearchInfoItem searchInfoItem:jsonHead.getInfo().getSearchInfo()){
-                        searchItemList.add(new SearchItem(searchInfoItem.getId(),searchInfoItem.getTitle(),searchInfoItem.getImgUrl(),searchInfoItem.getTag(),  searchInfoItem.getHrefStr()));
+                        searchItemList.add(new SearchItem(searchInfoItem.getId(),searchInfoItem.getTitle(),searchInfoItem.getImgUrl(),searchInfoItem.getTag(),  searchInfoItem.getHrefStr(),searchInfoItem.getScore()));
                     }
                 }
                 mAdapter.clear();

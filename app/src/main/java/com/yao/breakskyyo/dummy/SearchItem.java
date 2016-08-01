@@ -1,7 +1,5 @@
 package com.yao.breakskyyo.dummy;
 
-import com.yao.breakskyyo.net.HttpUrl;
-
 /**
  * 项目名称：BreakSkyYo
  * 类描述：
@@ -17,13 +15,15 @@ public class SearchItem {
     String hdtag;
     String url;
     String title;
+    String score;
 
-    public SearchItem(String id,String title,String imgUrl,String hdtag,  String url){
-        this.id=id;
-        this.imgUrl=imgUrl;
-        this.hdtag=hdtag;
-        this.url= url;
-        this.title=title;
+    public SearchItem(String id, String title, String imgUrl, String hdtag,String url, String score) {
+        this.id = id;
+        this.imgUrl = imgUrl;
+        this.hdtag = hdtag;
+        this.url = url;
+        this.title = title;
+        this.score = score;
     }
 
     public String getId() {
@@ -64,5 +64,13 @@ public class SearchItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
     }
 }
