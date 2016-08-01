@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="100dp"
+            android:minHeight="300dp"
             android:layout_marginLeft="@dimen/text_margin"
             android:layout_marginRight="@dimen/text_margin"
             android:layout_marginTop="@dimen/text_margin">
@@ -43,18 +44,18 @@
                 android:layout_below="@+id/plot_introduction"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="16dp"
-                android:textSize="16sp"
-                android:text="资源下载：" />
-          <LinearLayout
-              android:id="@+id/resource_download_list"
-              android:layout_below="@+id/resource_download"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              >
+                android:text="资源下载："
+                android:textSize="16sp" />
 
-          </LinearLayout>
-           
+            <LinearLayout
+                android:id="@+id/resource_download_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/resource_download"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
         </RelativeLayout>
     </ScrollView>
 </android.support.v4.widget.NestedScrollView>
