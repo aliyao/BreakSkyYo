@@ -281,7 +281,11 @@ public class MainFragment extends Fragment {
 
                 List<DummyItem> dummyItemListHot=new ArrayList<>();
                 if(videoInfoJsonHead!=null&&videoInfoJsonHead.getInfo()!=null&&videoInfoJsonHead.getInfo().getHotList()!=null){
-                    for(RecommendInfoItem mRecommendInfoItem:videoInfoJsonHead.getInfo().getHotList()){
+                    List<RecommendInfoItem> hotList=videoInfoJsonHead.getInfo().getHotList();
+                    if(hotList.size()>2&&hotList.size()%2==1){
+                       hotList.remove(hotList.size()-1);
+                    }
+                    for(RecommendInfoItem mRecommendInfoItem:hotList){
                         DummyItem dummyItem=new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(),mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(),mRecommendInfoItem.getType(),mRecommendInfoItem.getScore());
                         dummyItemListHot.add(dummyItem);
                     }
@@ -290,7 +294,11 @@ public class MainFragment extends Fragment {
 
                 List<DummyItem> dummyItemListNew=new ArrayList<>();
                 if(videoInfoJsonHead!=null&&videoInfoJsonHead.getInfo()!=null&&videoInfoJsonHead.getInfo().getNewList()!=null) {
-                    for (RecommendInfoItem mRecommendInfoItem : videoInfoJsonHead.getInfo().getNewList()) {
+                    List<RecommendInfoItem> newList=videoInfoJsonHead.getInfo().getNewList();
+                    if(newList.size()>2&&newList.size()%2==1){
+                        newList.remove(newList.size()-1);
+                    }
+                    for (RecommendInfoItem mRecommendInfoItem : newList) {
                         DummyItem dummyItem = new DummyItem(mRecommendInfoItem.getId(), mRecommendInfoItem.getTitle(), mRecommendInfoItem.getHrefStr(), mRecommendInfoItem.getImgUrl(), mRecommendInfoItem.getTag(), mRecommendInfoItem.getType(), mRecommendInfoItem.getScore());
                         dummyItemListNew.add(dummyItem);
                     }
