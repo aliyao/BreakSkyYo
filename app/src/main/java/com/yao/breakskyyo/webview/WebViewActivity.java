@@ -26,6 +26,8 @@ public class WebViewActivity extends AppCompatActivity {
     FloatingActionButton fab;
     ProgressBar progressBar;
     Snackbar snackbarMima;
+    boolean isRunJsTextInputPwdAndClick=true;//只运行一次
+    boolean isRunJsSaveBaiduYunClick=true;//只运行一次
     String jsInputPwdUrl="pan.baidu.com/wap/init?";
     String jsTextInputPwdAndClick = "(function() {\n" +
             "var isHasIdAccessCode=false;\n" +
@@ -38,7 +40,8 @@ public class WebViewActivity extends AppCompatActivity {
             "}\n" +
             "})();";
 
-    String jsSaveBaiduYunUrl="pan.baidu.com/wap/link?";
+    String jsSaveBaiduYunUrl1="pan.baidu.com/wap/link?";
+    String jsSaveBaiduYunUrl2="pan.baidu.com/s/";
     String jsSaveBaiduYunClick ="\n" +
             "(function() {\n" +
             "if(document.getElementById(\"saveAll\")!=undefined){\n" +
@@ -150,9 +153,11 @@ public class WebViewActivity extends AppCompatActivity {
                 if (webView.canGoBack() && snackbarMima != null) {
                     snackbarMima.dismiss();
                 }
-                if(url.contains(jsInputPwdUrl)){
+                if(isRunJsTextInputPwdAndClick&&url.contains(jsInputPwdUrl)){
+                    isRunJsTextInputPwdAndClick=false;
                     webView.loadUrl("javascript:" + jsTextInputPwdAndClick);
-                }else if(url.contains(jsSaveBaiduYunUrl)){
+                }else if(isRunJsSaveBaiduYunClick&&(url.contains(jsSaveBaiduYunUrl1)||url.contains(jsSaveBaiduYunUrl2))){
+                    isRunJsSaveBaiduYunClick=false;
                     webView.loadUrl("javascript:" + jsSaveBaiduYunClick);
                 }
             }
