@@ -51,6 +51,13 @@ public class AddViewAdapter {
         mdata.addAll(data);
     }
 
+    public int getCount(){
+        if(mdata==null){
+            return 0;
+        }
+        return mdata.size();
+    }
+
     public void clearmdata() {
         mdata = new ArrayList<>();
     }
@@ -75,51 +82,7 @@ public class AddViewAdapter {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                /*    builder.setIcon(R.mipmap.ic_launcher);*/
-                   /* builder.setTitle("操作");*/
-                    //    指定下拉列表的显示数据
-                    String[] toDo;
-                    if(mdata.get(itemNum).getType()==3){
-                         String[] dos = {"分享", "复制","下载"};
-                        toDo=dos;
-                    }else  if(mdata.get(itemNum).getType()==1){
-                         String[] dos = {"分享", "复制", "打开"};
-                        toDo=dos;
-                    }else{
-                        String[] dos = {"分享", "复制"};
-                        toDo=dos;
-                    }
-
-                    //    设置一个下拉的列表选择项
-                    builder.setItems(toDo, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case 0:
-                                    share(itemNum);
-                                    break;
-                                case 1:
-                                    copy(itemNum,v);
-                                    break;
-                                case 2:
-                                    if(mdata.get(itemNum).getType()==3){
-                                        download( itemNum);
-                                    }else  if(mdata.get(itemNum).getType()==1){
-                                        openBaiduDisk(itemNum);
-                                    }else{
-
-                                    }
-                                    break;
-
-                            }
-
-
-                        }
-                    });
-                    builder.show();
-
-
+                    openClickDialog(itemNum);
                 }
             });
 
@@ -127,7 +90,67 @@ public class AddViewAdapter {
         }
     }
 
-    private void copy(int itemNum,final View v) {
+    private void openClickDialog(final int itemNum){
+        if(itemNum>=mdata.size()){
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        //    指定下拉列表的显示数据
+        String[] toDo;
+        if(mdata.get(itemNum).getType()==3){
+            String[] dos = {"分享", "复制","下载"};
+            toDo=dos;
+        }else  if(mdata.get(itemNum).getType()==1){
+            String[] dos = {"分享", "复制", "打开"};
+            toDo=dos;
+        }else{
+            String[] dos = {"分享", "复制"};
+            toDo=dos;
+        }
+
+        //    设置一个下拉的列表选择项
+        builder.setItems(toDo, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        share(itemNum);
+                        break;
+                    case 1:
+                        copy(itemNum);
+                        break;
+                    case 2:
+                        if(mdata.get(itemNum).getType()==3){
+                            download( itemNum);
+                        }else  if(mdata.get(itemNum).getType()==1){
+                            openBaiduDisk(itemNum);
+                        }else{
+
+                        }
+                        break;
+
+                }
+
+
+            }
+        });
+        builder.show();
+    }
+
+    public void openResource(final int itemNum) {
+        if(itemNum>=mdata.size()){
+            return;
+        }
+        if(mdata.get(itemNum).getType()==3){
+            download( itemNum);
+        }else  if(mdata.get(itemNum).getType()==1){
+            openBaiduDisk(itemNum);
+        }else{
+
+        }
+    }
+
+    private void copy(int itemNum) {
         String text="";
         switch (mdata.get(itemNum).getType()){
             case 1:
@@ -147,7 +170,7 @@ public class AddViewAdapter {
 
         }
         ClipboardManagerDo.copy(text, mActivity);
-        Snackbar.make(v, "复制成功", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(ll_list, "复制成功", Snackbar.LENGTH_LONG).show();
     }
     private void share(int itemNum) {
         // 分享的intent

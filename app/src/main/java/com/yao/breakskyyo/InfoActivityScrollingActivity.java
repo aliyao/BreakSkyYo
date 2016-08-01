@@ -69,30 +69,39 @@ public class InfoActivityScrollingActivity extends AppCompatActivity {
             public void onClick(final View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(InfoActivityScrollingActivity.this);
                 //    指定下拉列表的显示数据
-                String[] toDo = {"保存", "教程"};
+                String[] toDo = {"打开","收藏信息", "教程"};
                 //    设置一个下拉的列表选择项
                 builder.setItems(toDo, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
+                                if(adapter!=null&&adapter.getCount()>0){
+                                    adapter.openResource(0);
+                                }else{
+                                    String tip="无法打开";
+                                    Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null).show();
+                                }
+                                break;
+                            case 1:
                                 mDummyItem.setSaveDate(new Date().getTime());
-                                String tip = "保存失败";
+                                String tip = "收藏失败";
                                 switch (DummyItemDb.save(mDummyItem, InfoActivityScrollingActivity.this)) {
                                     case 1:
-                                        tip = "保存成功";
+                                        tip = "收藏成功";
                                         if (MainActivity.mainActivity != null) {
                                             MainActivity.mainActivity.updateSaveFragment();
                                         }
                                         break;
                                     case 2:
-                                        tip = "已经保存";
+                                        tip = "已经收藏";
                                         break;
                                 }
                                 Snackbar.make(view, tip, Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                                 break;
-                            case 1:
+                            case 2:
                                 startActivity(new Intent(InfoActivityScrollingActivity.this, HelpActivity.class));
                                 break;
                         }
