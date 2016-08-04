@@ -1,6 +1,7 @@
 package com.yao.breakskyyo;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,7 +61,12 @@ public class AboutActivity extends AppCompatActivity {
                         if(updateApkInfo.getUpdateType()==1){
                             DownloadManagerDo.download(AboutActivity.this, updateApkInfo.getUrl());
                         }else{
-                            startActivity(new Intent(AboutActivity.this, WebViewActivity.class).putExtra("url", updateApkInfo.getUrl()));
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            Uri content_url = Uri.parse(updateApkInfo.getUrl());
+                            intent.setData(content_url);
+                            startActivity(intent);
+                           // startActivity(new Intent(AboutActivity.this, WebViewActivity.class).putExtra("url", updateApkInfo.getUrl()));
                         }
                    /* Intent viewIntent = new
                             Intent(Intent.ACTION_VIEW, Uri.parse(updateApkInfo.getUrl()));

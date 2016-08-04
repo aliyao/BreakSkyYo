@@ -44,7 +44,7 @@
         android:gravity="center"
         android:textSize="12sp"
         android:layout_alignParentBottom="true"
-        android:text="nideyoyo@163.com—仅供测试和学习交流" />
+        android:text="nideyoyo@163.com" />
 
     <TextView
         android:id="@+id/description"

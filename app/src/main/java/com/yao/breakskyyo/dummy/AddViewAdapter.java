@@ -220,6 +220,7 @@ public class AddViewAdapter {
         Intent mIntent= new Intent(mActivity, WebViewActivity.class);
         mIntent.putExtra("url", mdata.get(itemNum).getUrl());
         mIntent.putExtra("title", mdata.get(itemNum).getName());
+        mIntent.putExtra(WebViewActivity.URL_TYPE,WebViewActivity.URL_TYPE_BAIDUYUN);
         if (mdata.get(itemNum).getType()==1){
             mIntent .putExtra("mima", mdata.get(itemNum).getMima());
         }
@@ -256,7 +257,7 @@ public class AddViewAdapter {
             Intent mIntent = new Intent(mActivity.getApplication(), WebViewActivity.class);
             mIntent.putExtra("url", mdata.get(num).getUrl());
             mIntent.putExtra("title", mdata.get(num).getName());
-
+            mIntent.putExtra(WebViewActivity.URL_TYPE,WebViewActivity.URL_TYPE_BAIDUYUN);
             if (mdata.get(num).getType()==1){
                 mIntent .putExtra("mima", mdata.get(num).getMima());
             }

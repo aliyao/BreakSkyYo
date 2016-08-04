@@ -160,7 +160,12 @@ public class MainActivity extends AppCompatActivity
                 builder.setNegativeButton(R.string.web_update_text, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(MainActivity.this, WebViewActivity.class).putExtra("url", updateApkInfo.getUrl()));
+                        //startActivity(new Intent(MainActivity.this, WebViewActivity.class).putExtra("url", updateApkInfo.getUrl()));
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        Uri content_url = Uri.parse(updateApkInfo.getUrl());
+                        intent.setData(content_url);
+                        startActivity(intent);
                     }
                 });
                 builder.show();

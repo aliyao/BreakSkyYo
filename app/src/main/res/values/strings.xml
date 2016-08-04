@@ -63,4 +63,11 @@
     <string name="title_activity_search">破天</string>
     <string name="update_text">更新</string>
     <string name="web_update_text">网页更新</string>
+
+    <string name="web_open_browser_text">打开浏览器</string>
+    <string name="web_share_text">分享</string>
+    <string name="web_copy_text">复制</string>
+    <string name="web_refresh_text">刷新</string>
+    <string name="web_back_text">退出</string>
+    <string name="web_show_pwd_text">显示密码</string>
 </resources>
