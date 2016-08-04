@@ -24,7 +24,7 @@ import cn.bmob.v3.listener.FindListener;
  */
 public class HttpDo {
 
-    public static void updateApp(final Context context, final Handler handle,final long delayMillis) {
+    public static void updateApp(final Context context, final Handler handle) {
         int versionCode = AppInfoUtil.getVersionCode(context);
         if (versionCode > 0) {
             BmobQuery<UpdateApp> query = new BmobQuery<>();
@@ -50,13 +50,13 @@ public class HttpDo {
                         ACacheUtil.put(context, ACacheUtil.UpdateAppJson, null);
                     }
                     if (handle != null) {
-                        handle.sendEmptyMessageDelayed(1,delayMillis);
+                        handle.sendEmptyMessage(1);
                     }
                 }
 
                 @Override
                 public void onError(int code, String msg) {
-                    if (handle != null) handle.sendEmptyMessageDelayed(0,delayMillis);
+                    if (handle != null) handle.sendEmptyMessage(0);
                 }
             });
         }

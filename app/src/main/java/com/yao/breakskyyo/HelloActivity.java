@@ -57,7 +57,8 @@ public class HelloActivity extends AppCompatActivity {
     }
 
     public void getJsonMainBy() {
-        HttpDo.updateApp(HelloActivity.this,mainHandle,3000);
+        //HttpDo.updateApp(HelloActivity.this.getApplicationContext(),mainHandle,3000);
+        mainHandle.sendEmptyMessageDelayed(1,3000);
     }
 
     private void toMainActivity() {
@@ -70,6 +71,8 @@ public class HelloActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
+                toMainActivity();
+            }else{
                 toMainActivity();
             }
         }

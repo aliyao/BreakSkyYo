@@ -57,7 +57,10 @@ public class WebViewActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         String pwd=getIntent().getStringExtra("mima");
-        jsTextInputPwdAndClick=jsTextInputPwdAndClick.replace("%1$s",pwd);//替换成密码
+        if(!TextUtils.isEmpty(pwd)){
+            jsTextInputPwdAndClick=jsTextInputPwdAndClick.replace("%1$s",pwd);//替换成密码
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

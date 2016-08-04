@@ -58,9 +58,9 @@ public class AboutActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         if(updateApkInfo.getUpdateType()==1){
-                            startActivity(new Intent(AboutActivity.this, WebViewActivity.class).putExtra("url", HttpUrl.UpdateAppWeb));
-                        }else{
                             DownloadManagerDo.download(AboutActivity.this, updateApkInfo.getUrl());
+                        }else{
+                            startActivity(new Intent(AboutActivity.this, WebViewActivity.class).putExtra("url", updateApkInfo.getUrl()));
                         }
                    /* Intent viewIntent = new
                             Intent(Intent.ACTION_VIEW, Uri.parse(updateApkInfo.getUrl()));
@@ -87,7 +87,7 @@ public class AboutActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.update_app) {
-            HttpDo.updateApp(AboutActivity.this, updateHandle,0);
+            HttpDo.updateApp(AboutActivity.this, updateHandle);
             startActivity(new Intent(this, WebViewActivity.class).putExtra("url", HttpUrl.UpdateAppWeb));
             return true;
         }

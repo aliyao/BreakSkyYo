@@ -13,7 +13,7 @@ public class UpdateApp {
     int versionCode;
     String url;
     String description;
-    int updateType;
+    int updateType;//0网页更新  1下载更新
 
     public int getVersionCode() {
         return versionCode;

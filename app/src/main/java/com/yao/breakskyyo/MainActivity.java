@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -29,11 +31,14 @@ import com.yao.breakskyyo.entity.UpdateApp;
 import com.yao.breakskyyo.fragment.FindFragment;
 import com.yao.breakskyyo.fragment.MainFragment;
 import com.yao.breakskyyo.fragment.SaveFragment;
+import com.yao.breakskyyo.net.HttpDo;
 import com.yao.breakskyyo.net.HttpUrl;
 import com.yao.breakskyyo.tools.ACacheUtil;
 import com.yao.breakskyyo.tools.AppInfoUtil;
 import com.yao.breakskyyo.tools.DownloadManagerDo;
 import com.yao.breakskyyo.webview.WebViewActivity;
+
+import org.kymjs.kjframe.ui.ViewInject;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FindFragment.OnFragmentInteractionListener, SaveFragment.OnFragmentInteractionListener, MainFragment.OnFragmentInteractionListener {
@@ -71,8 +76,29 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().findItem(R.id.nav_main).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
         init();
-
+        toolbar.post(new Runnable() {
+            @Override
+            public void run() {
+                HttpDo.updateApp(MainActivity.this, updateHandle);
+            }
+        });
     }
+
+    Handler updateHandle = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    ViewInject.longToast("网络不给力");
+                    break;
+                case 1:
+                    showUpdateAlertDialog();
+                    break;
+            }
+        }
+    };
+
 
     private void init() {
         toolbar.setSubtitle(R.string.title_section0);
@@ -109,7 +135,6 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
         //HttpDo.updateApp(this, null);
         phoneInfo();
-        showUpdateAlertDialog();
     }
 
     private void showUpdateAlertDialog() {
@@ -123,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                 builder.setIcon(R.mipmap.ic_launcher);
                 builder.setTitle(R.string.update_text);
                 builder.setMessage(updateApkInfo.getDescription());
-                if (updateApkInfo.getUpdateType() != 1) {
+                if (updateApkInfo.getUpdateType() == 1) {
                     builder.setPositiveButton(R.string.update_text, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -135,7 +160,7 @@ public class MainActivity extends AppCompatActivity
                 builder.setNegativeButton(R.string.web_update_text, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(MainActivity.this, WebViewActivity.class).putExtra("url", HttpUrl.UpdateAppWeb));
+                        startActivity(new Intent(MainActivity.this, WebViewActivity.class).putExtra("url", updateApkInfo.getUrl()));
                     }
                 });
                 builder.show();
